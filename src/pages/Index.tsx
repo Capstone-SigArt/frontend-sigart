@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Search, User, Settings, LogOut, Edit, Link, Google } from 'lucide-react';
+import { Search, User, Settings, LogOut, Edit, Link, Globe } from 'lucide-react';
 
 const Index = () => {
   const [currentScreen, setCurrentScreen] = useState('signin');
@@ -94,7 +94,7 @@ const Index = () => {
               variant="outline" 
               className="w-full h-12 border-gray-600 text-gray-300 hover:bg-gray-700/50 transition-all duration-200"
             >
-              <Google className="w-5 h-5 mr-2" />
+              <Globe className="w-5 h-5 mr-2" />
               Continue with Google
             </Button>
             <p className="text-center text-sm">
@@ -137,7 +137,7 @@ const Index = () => {
               <Checkbox 
                 id="link-character" 
                 checked={linkCharacter}
-                onCheckedChange={setLinkCharacter}
+                onCheckedChange={(checked) => setLinkCharacter(checked === true)}
                 className="border-gray-600 data-[state=checked]:bg-teal-500"
               />
               <label htmlFor="link-character" className="text-white text-sm font-medium">
