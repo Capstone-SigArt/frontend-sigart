@@ -1,15 +1,16 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search, Heart, Share2, Eye, Download, Filter } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import ModernNavigation from '@/components/ModernNavigation';
 
 const CommunityArt = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const navigate = useNavigate();
 
   const categories = ['All', 'Digital', 'Traditional', 'Photography', 'Mixed Media', 'Sculptures'];
 
@@ -100,6 +101,10 @@ const CommunityArt = () => {
     console.log(`Toggled like for artwork ${artworkId}`);
   };
 
+  const handleArtworkClick = (artworkId: number) => {
+    navigate(`/community-party/${artworkId}`);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
       <ModernNavigation 
@@ -153,6 +158,7 @@ const CommunityArt = () => {
             <Card 
               key={artwork.id} 
               className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
+              onClick={() => handleArtworkClick(artwork.id)}
             >
               <CardContent className="p-0">
                 <div className="relative overflow-hidden">

@@ -13,6 +13,7 @@ import EventDetails from "./pages/EventDetails";
 import HostParty from "./pages/HostParty";
 import MyParties from "./pages/MyParties";
 import CommunityArt from "./pages/CommunityArt";
+import CommunityPartyDetails from "./pages/CommunityPartyDetails";
 import UserStudio from "./pages/UserStudio";
 import Resources from "./pages/Resources";
 import Auth from "./pages/Auth";
@@ -72,6 +73,11 @@ const App = () => (
             <Route path="/event/:eventId" element={
               <ProtectedRoute>
                 <EventDetails />
+              </ProtectedRoute>
+            } />
+            <Route path="/community-party/:partyId" element={
+              <ProtectedRoute>
+                <CommunityPartyDetails />
               </ProtectedRoute>
             } />
             <Route path="*" element={<NotFound />} />
