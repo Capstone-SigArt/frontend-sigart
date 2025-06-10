@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Search } from 'lucide-react';
+import ProfileDropdown from '@/components/ProfileDropdown';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('Browse');
@@ -79,10 +79,8 @@ const Index = () => {
               <h1 className="text-3xl font-bold text-foreground">SigArt</h1>
             </div>
             
-            {/* Profile */}
-            <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center border-2 border-border">
-              <span className="text-sm font-medium text-muted-foreground">Profile</span>
-            </div>
+            {/* Profile Dropdown */}
+            <ProfileDropdown />
           </div>
         </div>
       </div>
