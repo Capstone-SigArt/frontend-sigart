@@ -1,16 +1,19 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate, useParams } from 'react-router-dom';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import UploadArtModal from '@/components/UploadArtModal';
+import ArtDetailsModal from '@/components/ArtDetailsModal';
 
 const EventDetails = () => {
   const [activeTab, setActiveTab] = useState('Schedule');
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [artDetailsModalOpen, setArtDetailsModalOpen] = useState(false);
+  const [selectedArt, setSelectedArt] = useState(null);
   const navigate = useNavigate();
   const { eventId } = useParams();
 
@@ -46,6 +49,29 @@ const EventDetails = () => {
     { id: 3, name: "Artist", info: "Art Title 1 2 hrs ago", avatar: "" },
     { id: 4, name: "Artist", info: "Art Title 1 2 hrs ago", avatar: "" }
   ];
+
+  const handleUploadArt = (artData: any) => {
+    console.log('Art uploaded:', artData);
+    // Handle art upload logic here
+  };
+
+  const handleArtClick = (attendee: any) => {
+    // Mock art data for the details modal
+    const mockArtData = {
+      title: "Art Title",
+      artist: attendee.name,
+      uploadDate: "1/1/25",
+      toolsUsed: "Procreate",
+      tags: ["#pixelart", "#doodle"],
+      additionalNotes: "5 minute sketch",
+      likes: 23,
+      taggedCharacters: ["Character 1", "Character 2", "Character 3"],
+      imageUrl: "https://images.unsplash.com/photo-1541961017774-22349e4a1262",
+      referenceImageUrl: "https://images.unsplash.com/photo-1541961017774-22349e4a1262"
+    };
+    setSelectedArt(mockArtData);
+    setArtDetailsModalOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -168,7 +194,11 @@ const EventDetails = () => {
                 <h3 className="text-xl font-semibold text-foreground">Event Gallery</h3>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">Upload your masterpiece!</span>
-                  <Button size="sm" variant="outline">
+                  <Button 
+                    size="sm" 
+                    variant="outline"
+                    onClick={() => setUploadModalOpen(true)}
+                  >
                     Upload Art
                   </Button>
                 </div>
@@ -178,7 +208,11 @@ const EventDetails = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {/* Top Row - Attendees with avatars */}
                 {attendees.map((attendee) => (
-                  <Card key={attendee.id} className="bg-background border-border">
+                  <Card 
+                    key={attendee.id} 
+                    className="bg-background border-border cursor-pointer hover:shadow-lg transition-shadow"
+                    onClick={() => handleArtClick(attendee)}
+                  >
                     <CardContent className="p-4">
                       <div className="flex flex-col items-center space-y-2">
                         <Avatar className="w-16 h-16">
@@ -211,6 +245,19 @@ const EventDetails = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modals */}
+      <UploadArtModal
+        open={uploadModalOpen}
+        onOpenChange={setUploadModalOpen}
+        onUpload={handleUploadArt}
+      />
+      
+      <ArtDetailsModal
+        open={artDetailsModalOpen}
+        onOpenChange={setArtDetailsModalOpen}
+        artData={selectedArt}
+      />
     </div>
   );
 };
