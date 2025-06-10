@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Edit, Bookmark, Heart } from 'lucide-react';
@@ -34,11 +33,14 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl">
+      <DialogContent className="max-w-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
             {artData.title}
           </DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground text-center">
+            View artwork details and interact with the community.
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
@@ -195,3 +197,5 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 };
 
 export default ArtDetailsModal;
+
+</edits_to_apply>

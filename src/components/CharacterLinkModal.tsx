@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -42,13 +42,16 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-md max-h-[90vh] overflow-y-auto bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl p-6 z-50">
+      <DialogContent className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-md max-h-[90vh] overflow-y-auto bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl p-6 z-[9999]">
         <DialogHeader className="pb-4">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-lg font-semibold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
               Link your FFXIV Character
             </DialogTitle>
           </div>
+          <DialogDescription className="text-sm text-muted-foreground">
+            Search for and link your Final Fantasy XIV characters to your profile.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <div className="space-y-3">
