@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Studio from "./pages/Studio";
 import Schedule from "./pages/Schedule";
 import EventDetails from "./pages/EventDetails";
+import HostParty from "./pages/HostParty";
+import MyParties from "./pages/MyParties";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +24,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/studio" element={<Studio />} />
           <Route path="/schedule" element={<Schedule />} />
+          <Route path="/host-party" element={<HostParty />} />
+          <Route path="/my-parties" element={<MyParties />} />
           <Route path="/event/:eventId" element={<EventDetails />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
