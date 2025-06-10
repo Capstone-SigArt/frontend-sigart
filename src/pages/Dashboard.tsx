@@ -1,11 +1,15 @@
+
 import React from 'react';
-import { Calendar, Plus, TrendingUp, Users } from 'lucide-react';
+import { Calendar, Plus, TrendingUp, Users, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const upcomingEvents = [
     {
       id: 1,
@@ -58,7 +62,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="px-4 py-6 max-w-md mx-auto">
+    <div className="px-4 py-6 max-w-full mx-auto">
       {/* Welcome */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-foreground mb-2">Welcome back, Jordan!</h1>
@@ -67,21 +71,21 @@ const Dashboard = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-3 mb-6">
-        <Card className="bg-card border-border">
+        <Card className="bg-card border-border cursor-pointer" onClick={() => navigate('/gallery')}>
           <CardContent className="p-4 text-center">
             <TrendingUp className="w-6 h-6 text-primary mx-auto mb-2" />
             <div className="text-lg font-bold text-card-foreground">24</div>
             <div className="text-xs text-muted-foreground">Artworks</div>
           </CardContent>
         </Card>
-        <Card className="bg-card border-border">
+        <Card className="bg-card border-border cursor-pointer" onClick={() => navigate('/profile')}>
           <CardContent className="p-4 text-center">
             <Users className="w-6 h-6 text-primary mx-auto mb-2" />
             <div className="text-lg font-bold text-card-foreground">1.2k</div>
             <div className="text-xs text-muted-foreground">Followers</div>
           </CardContent>
         </Card>
-        <Card className="bg-card border-border">
+        <Card className="bg-card border-border cursor-pointer" onClick={() => navigate('/calendar')}>
           <CardContent className="p-4 text-center">
             <Calendar className="w-6 h-6 text-primary mx-auto mb-2" />
             <div className="text-lg font-bold text-card-foreground">5</div>
@@ -93,11 +97,25 @@ const Dashboard = () => {
       {/* Upcoming Events */}
       <Card className="bg-card border-border mb-6">
         <CardHeader className="pb-3">
-          <CardTitle className="text-card-foreground text-lg">Upcoming Events</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-card-foreground text-lg">Upcoming Events</CardTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/calendar')}
+              className="text-primary hover:text-primary/90"
+            >
+              View All <ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-3">
           {upcomingEvents.map((event) => (
-            <div key={event.id} className="flex items-center justify-between">
+            <div
+              key={event.id}
+              className="flex items-center justify-between cursor-pointer hover:bg-muted/50 p-2 rounded"
+              onClick={() => navigate(`/event/${event.id}`)}
+            >
               <div>
                 <p className="text-card-foreground font-medium text-sm">{event.title}</p>
                 <p className="text-muted-foreground text-xs">{event.date} at {event.time}</p>
@@ -107,20 +125,23 @@ const Dashboard = () => {
               </Badge>
             </div>
           ))}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full text-primary hover:text-primary/90 hover:bg-muted"
-          >
-            View All Events
-          </Button>
         </CardContent>
       </Card>
 
       {/* Trending Art */}
       <Card className="bg-card border-border mb-6">
         <CardHeader className="pb-3">
-          <CardTitle className="text-card-foreground text-lg">Trending Art</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-card-foreground text-lg">Trending Art</CardTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/browse')}
+              className="text-primary hover:text-primary/90"
+            >
+              Browse All <ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3">
@@ -173,12 +194,16 @@ const Dashboard = () => {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-2 gap-3">
-        <Button className="h-16 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 flex-col">
+        <Button
+          onClick={() => navigate('/create-event')}
+          className="h-16 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 flex-col"
+        >
           <Plus className="w-5 h-5 mb-1" />
           <span className="text-xs">Create Event</span>
         </Button>
-        <Button 
-          variant="outline" 
+        <Button
+          onClick={() => navigate('/upload-art')}
+          variant="outline"
           className="h-16 border-border text-muted-foreground hover:bg-muted flex-col"
         >
           <TrendingUp className="w-5 h-5 mb-1" />

@@ -36,14 +36,29 @@ const Profile = () => {
   };
 
   const stats = [
-    { label: 'Artworks', value: user.stats.artworks, icon: Image },
-    { label: 'Followers', value: `${user.stats.followers}k`, icon: Users },
-    { label: 'Following', value: user.stats.following, icon: Heart },
-    { label: 'Events', value: user.stats.events, icon: Calendar },
+    { label: 'Artworks', value: user.stats.artworks, icon: Image, onClick: () => navigate('/gallery') },
+    { label: 'Followers', value: `${user.stats.followers}k`, icon: Users, onClick: () => console.log('View followers') },
+    { label: 'Following', value: user.stats.following, icon: Heart, onClick: () => console.log('View following') },
+    { label: 'Events', value: user.stats.events, icon: Calendar, onClick: () => navigate('/calendar') },
   ];
 
+  const handleEditProfile = () => {
+    console.log('Edit profile clicked');
+    // Navigate to edit profile or open modal
+  };
+
+  const handleShare = () => {
+    console.log('Share profile clicked');
+    // Share profile functionality
+  };
+
+  const handleLinkCharacter = () => {
+    console.log('Link new character clicked');
+    // Open character linking modal
+  };
+
   return (
-    <div className="px-4 py-6 max-w-md mx-auto">
+    <div className="px-4 py-6 max-w-full mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-foreground">Profile</h1>
@@ -75,11 +90,17 @@ const Profile = () => {
               <Button
                 size="sm"
                 className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600"
+                onClick={handleEditProfile}
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Profile
               </Button>
-              <Button variant="outline" size="sm" className="border-border text-muted-foreground">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="border-border text-muted-foreground"
+                onClick={handleShare}
+              >
                 <Share className="w-4 h-4 mr-2" />
                 Share
               </Button>
@@ -89,7 +110,11 @@ const Profile = () => {
           {/* Stats */}
           <div className="grid grid-cols-4 gap-4">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
+              <div 
+                key={index} 
+                className="text-center cursor-pointer hover:bg-muted/50 p-2 rounded-lg transition-colors"
+                onClick={stat.onClick}
+              >
                 <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center mx-auto mb-2">
                   <stat.icon className="w-5 h-5 text-primary" />
                 </div>
@@ -130,6 +155,7 @@ const Profile = () => {
             variant="outline"
             size="sm"
             className="w-full mt-4 border-border text-muted-foreground hover:bg-muted"
+            onClick={handleLinkCharacter}
           >
             Link New Character
           </Button>
@@ -141,6 +167,7 @@ const Profile = () => {
         <Button
           variant="outline"
           className="h-16 border-border text-muted-foreground hover:bg-muted flex-col"
+          onClick={() => navigate('/gallery')}
         >
           <Image className="w-5 h-5 mb-1" />
           <span className="text-xs">My Gallery</span>
@@ -148,6 +175,7 @@ const Profile = () => {
         <Button
           variant="outline"
           className="h-16 border-border text-muted-foreground hover:bg-muted flex-col"
+          onClick={() => navigate('/calendar')}
         >
           <Calendar className="w-5 h-5 mb-1" />
           <span className="text-xs">My Events</span>

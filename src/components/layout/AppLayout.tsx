@@ -8,7 +8,7 @@ const AppLayout = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main className="pb-20 pt-16">
+      <main className="pb-20 pt-16 w-full max-w-[80%] mx-auto">
         <Outlet />
       </main>
       <BottomNavigation />

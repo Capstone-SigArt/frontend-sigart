@@ -1,15 +1,23 @@
 
 import React, { useState } from 'react';
-import { Search, Plus, MoreVertical, MessageSquare } from 'lucide-react';
+import { Search, Plus, MoreVertical, MessageSquare, Send } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useNavigate } from 'react-router-dom';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 
 const Messages = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isNewChatOpen, setIsNewChatOpen] = useState(false);
   const navigate = useNavigate();
 
   const conversations = [
@@ -21,7 +29,8 @@ const Messages = () => {
       timestamp: "2m ago",
       unread: 3,
       avatar: null,
-      online: true
+      online: true,
+      lastSender: "Sarah Kim"
     },
     {
       id: 2,
@@ -31,7 +40,8 @@ const Messages = () => {
       timestamp: "1h ago",
       unread: 1,
       avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b8b5?w=100&h=100&fit=crop&crop=face",
-      online: true
+      online: true,
+      lastSender: "Maya Rodriguez"
     },
     {
       id: 3,
@@ -41,7 +51,8 @@ const Messages = () => {
       timestamp: "3h ago",
       unread: 0,
       avatar: null,
-      online: false
+      online: false,
+      lastSender: "Alex Chen"
     },
     {
       id: 4,
@@ -51,7 +62,8 @@ const Messages = () => {
       timestamp: "1d ago",
       unread: 0,
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-      online: false
+      online: false,
+      lastSender: "Jordan Kim"
     },
     {
       id: 5,
@@ -61,8 +73,15 @@ const Messages = () => {
       timestamp: "2d ago",
       unread: 0,
       avatar: null,
-      online: false
+      online: false,
+      lastSender: "Group"
     }
+  ];
+
+  const contacts = [
+    { id: 1, name: "Alex Chen", avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face", online: true },
+    { id: 2, name: "Sarah Kim", avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b8b5?w=100&h=100&fit=crop&crop=face", online: true },
+    { id: 3, name: "Maya Rodriguez", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face", online: false },
   ];
 
   const filteredConversations = conversations.filter(conv =>
@@ -74,16 +93,58 @@ const Messages = () => {
     navigate(`/chat/${conversationId}`);
   };
 
+  const handleNewChat = (contactId: number) => {
+    setIsNewChatOpen(false);
+    navigate(`/chat/${contactId}`);
+  };
+
   return (
-    <div className="px-4 py-6 max-w-md mx-auto">
+    <div className="px-4 py-6 max-w-full mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-foreground">Messages</h1>
-        <Button
-          size="icon"
-          className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600"
-        >
-          <Plus className="w-5 h-5" />
-        </Button>
+        <Dialog open={isNewChatOpen} onOpenChange={setIsNewChatOpen}>
+          <DialogTrigger asChild>
+            <Button
+              size="icon"
+              className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600"
+            >
+              <Plus className="w-5 h-5" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Start New Conversation</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-3">
+              {contacts.map((contact) => (
+                <div
+                  key={contact.id}
+                  className="flex items-center space-x-3 p-3 hover:bg-muted rounded-lg cursor-pointer"
+                  onClick={() => handleNewChat(contact.id)}
+                >
+                  <div className="relative">
+                    <Avatar className="w-10 h-10">
+                      <AvatarImage src={contact.avatar} />
+                      <AvatarFallback className="bg-gradient-to-r from-teal-400 to-cyan-500 text-white">
+                        {contact.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    {contact.online && (
+                      <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-background"></div>
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-foreground">{contact.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {contact.online ? 'Online' : 'Offline'}
+                    </p>
+                  </div>
+                  <Send className="w-4 h-4 text-muted-foreground" />
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Search */}
@@ -99,11 +160,11 @@ const Messages = () => {
       </div>
 
       {/* Conversations */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         {filteredConversations.map((conversation, index) => (
           <Card
             key={conversation.id}
-            className="bg-card border-border hover:bg-muted/50 transition-all duration-300 cursor-pointer animate-fade-in"
+            className="bg-card border-border hover:bg-muted/30 transition-all duration-200 cursor-pointer animate-fade-in"
             style={{ animationDelay: `${index * 50}ms` }}
             onClick={() => handleConversationClick(conversation.id)}
           >
@@ -130,21 +191,24 @@ const Messages = () => {
                     </h3>
                     <div className="flex items-center space-x-2">
                       {conversation.unread > 0 && (
-                        <Badge className="bg-primary text-primary-foreground text-xs px-2 py-1">
+                        <Badge className="bg-primary text-primary-foreground text-xs px-2 py-1 min-w-[20px] h-5 flex items-center justify-center">
                           {conversation.unread}
                         </Badge>
                       )}
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
                         {conversation.timestamp}
                       </span>
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground truncate">
-                    {conversation.lastMessage}
+                    {conversation.type === 'group' && !conversation.lastMessage.includes(':') 
+                      ? `${conversation.lastSender}: ${conversation.lastMessage}`
+                      : conversation.lastMessage
+                    }
                   </p>
                 </div>
                 
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
+                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity">
                   <MoreVertical className="w-4 h-4" />
                 </Button>
               </div>
@@ -176,7 +240,10 @@ const Messages = () => {
           <p className="text-muted-foreground text-sm mb-4">
             Connect with other artists and start chatting!
           </p>
-          <Button className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600">
+          <Button 
+            className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600"
+            onClick={() => setIsNewChatOpen(true)}
+          >
             Start a Conversation
           </Button>
         </div>

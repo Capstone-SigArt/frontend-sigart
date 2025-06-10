@@ -65,6 +65,16 @@ const Browse = () => {
       tags: ["Traditional", "Workshop", "Painting"],
       attendees: 67,
       category: "Workshops"
+    },
+    {
+      id: 6,
+      title: "VR Art Exhibition",
+      date: "Dec 28, 2024",
+      location: "Tech Gallery",
+      image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop",
+      tags: ["Digital", "VR", "Exhibition"],
+      attendees: 95,
+      category: "Exhibitions"
     }
   ];
 
@@ -79,8 +89,13 @@ const Browse = () => {
     navigate(`/event/${eventId}`);
   };
 
+  const handleFilterClick = (filter: string) => {
+    setActiveFilter(filter);
+    console.log('Filter changed to:', filter);
+  };
+
   return (
-    <div className="px-4 py-6 max-w-md mx-auto">
+    <div className="px-4 py-6 max-w-full mx-auto">
       {/* Search Bar */}
       <div className="relative mb-6">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
@@ -134,7 +149,7 @@ const Browse = () => {
                 ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
                 : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
-            onClick={() => setActiveFilter(filter)}
+            onClick={() => handleFilterClick(filter)}
           >
             {filter}
           </Badge>

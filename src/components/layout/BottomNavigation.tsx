@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 const BottomNavigation = () => {
   const navItems = [
-    { icon: Home, label: 'Home', path: '/' },
+    { icon: Home, label: 'Home', path: '/dashboard' },
     { icon: Search, label: 'Browse', path: '/browse' },
     { icon: Plus, label: 'Create', path: '/create' },
     { icon: MessageSquare, label: 'Messages', path: '/messages' },
@@ -15,7 +15,7 @@ const BottomNavigation = () => {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-gray-800/95 backdrop-blur-sm border-t border-gray-700 z-50">
-      <div className="flex items-center justify-around h-16 max-w-md mx-auto px-4">
+      <div className="flex items-center justify-around h-16 max-w-[80%] mx-auto px-4">
         {navItems.map(({ icon: Icon, label, path }) => (
           <NavLink
             key={path}
