@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,11 +6,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { User, Upload, Edit } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import ProfileDropdown from '@/components/ProfileDropdown';
 
 const Studio = () => {
   const [activeTab, setActiveTab] = useState('My Studio');
   const [isEditMode, setIsEditMode] = useState(true);
+  const navigate = useNavigate();
+  
   const [profile, setProfile] = useState({
     username: 'SampleUserName',
     characterName: 'FirstName LastName',
@@ -53,6 +55,15 @@ const Studio = () => {
     return tagsString.split(' ').filter(tag => tag.startsWith('#'));
   };
 
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
+    if (tab === 'Browse') {
+      navigate('/');
+    } else if (tab === 'Schedule') {
+      navigate('/schedule');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -86,7 +97,7 @@ const Studio = () => {
                     ? 'bg-primary text-primary-foreground' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                 }`}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => handleTabClick(tab)}
               >
                 {tab}
               </Button>

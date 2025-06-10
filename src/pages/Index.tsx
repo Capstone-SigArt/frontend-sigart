@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import ProfileDropdown from '@/components/ProfileDropdown';
 
 const Index = () => {
@@ -14,6 +15,7 @@ const Index = () => {
     tags: '',
     host: ''
   });
+  const navigate = useNavigate();
 
   // Mock event data that matches the image layout
   const events = [
@@ -65,6 +67,15 @@ const Index = () => {
     'Browse', 'Schedule', 'Create', 'My Parties', 'Showcase', 'My Studio', 'Resources'
   ];
 
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
+    if (tab === 'Schedule') {
+      navigate('/schedule');
+    } else if (tab === 'My Studio') {
+      navigate('/studio');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -98,7 +109,7 @@ const Index = () => {
                     ? 'bg-primary text-primary-foreground' 
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
                 }`}
-                onClick={() => setActiveTab(tab)}
+                onClick={() => handleTabClick(tab)}
               >
                 {tab}
               </Button>
