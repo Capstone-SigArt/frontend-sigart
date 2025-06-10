@@ -34,9 +34,9 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-background border-border">
+      <DialogContent className="max-w-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center text-foreground">
+          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
             {artData.title}
           </DialogTitle>
         </DialogHeader>
@@ -44,21 +44,21 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
         <div className="space-y-4">
           {/* Image Display */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="border border-border rounded-lg p-2 bg-muted/50">
+            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20">
               <img 
                 src={artData.imageUrl} 
                 alt={artData.title}
-                className="w-full h-48 object-cover rounded"
+                className="w-full h-48 object-cover rounded-xl"
               />
             </div>
             {artData.referenceImageUrl && (
-              <div className="border border-border rounded-lg p-2 bg-muted/50">
+              <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20">
                 <img 
                   src={artData.referenceImageUrl} 
                   alt="Reference"
-                  className="w-full h-48 object-cover rounded"
+                  className="w-full h-48 object-cover rounded-xl"
                 />
-                <div className="text-center text-sm text-muted-foreground mt-2">
+                <div className="text-center text-sm text-slate-600 dark:text-slate-400 mt-2 font-medium">
                   Reference Image
                 </div>
               </div>
@@ -66,19 +66,19 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           </div>
 
           {/* Artist Info */}
-          <div className="flex items-center justify-center gap-4">
-            <div className="flex items-center gap-2">
-              <Avatar className="w-12 h-12">
-                <AvatarFallback className="bg-blue-500 text-white">
-                  <div className="w-6 h-6 bg-blue-400 rounded-full"></div>
+          <div className="flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-2xl">
+            <div className="flex items-center gap-3">
+              <Avatar className="w-12 h-12 border-2 border-sky-300">
+                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
+                  AS
                 </AvatarFallback>
               </Avatar>
               <div className="text-center">
-                <div className="text-sm text-muted-foreground">Artist</div>
-                <div className="text-sm text-muted-foreground">profile</div>
+                <div className="text-sm text-slate-600 dark:text-slate-400">Artist</div>
+                <div className="text-sm text-slate-500 dark:text-slate-500">profile</div>
               </div>
             </div>
-            <div className="text-foreground font-medium">{artData.artist}</div>
+            <div className="text-slate-700 dark:text-slate-300 font-semibold text-lg">{artData.artist}</div>
           </div>
 
           {/* Additional Info Toggle */}
@@ -86,7 +86,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
             <Button
               variant="outline"
               onClick={() => setShowAdditionalInfo(!showAdditionalInfo)}
-              className="w-48"
+              className="w-48 rounded-xl border-sky-200 hover:bg-sky-50 dark:border-sky-600 dark:hover:bg-sky-900/30 transition-all"
             >
               Additional Info {showAdditionalInfo ? '▲' : '▼'}
             </Button>
@@ -94,62 +94,86 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 
           {/* Additional Info Content */}
           {showAdditionalInfo && (
-            <div className="grid grid-cols-2 gap-6 p-4 border border-border rounded-lg bg-muted/50">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-blue-500" />
-                  <span className="text-sm font-medium">Uploaded on:</span>
-                  <span className="text-sm text-muted-foreground">{artData.uploadDate}</span>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <Edit className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Tools Used:</span>
-                  <span className="text-sm text-muted-foreground">{artData.toolsUsed}</span>
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <Bookmark className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm font-medium">Tags:</span>
-                  <span className="text-sm text-muted-foreground">{artData.tags.join(' ')}</span>
-                </div>
-                
-                <div className="flex items-start gap-2">
-                  <Calendar className="h-4 w-4 text-muted-foreground mt-0.5" />
+            <div className="grid grid-cols-2 gap-6 p-6 border border-sky-200 dark:border-sky-600 rounded-2xl bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 backdrop-blur-sm">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                    <Calendar className="h-4 w-4 text-white" />
+                  </div>
                   <div>
-                    <div className="text-sm font-medium">Additional Notes:</div>
-                    <div className="text-sm text-muted-foreground">{artData.additionalNotes}</div>
+                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Uploaded on:</span>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">{artData.uploadDate}</div>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
-                  <Heart 
-                    className={`h-4 w-4 ${isLiked ? 'text-red-500 fill-red-500' : 'text-muted-foreground'}`} 
-                  />
-                  <span className="text-sm font-medium">Likes:</span>
-                  <span className="text-sm text-muted-foreground">{artData.likes}</span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleLike}
-                    className="ml-auto px-4 py-1 text-xs"
-                  >
-                    {isLiked ? 'Unlike' : 'Like/Unlike'}
-                  </Button>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-500 rounded-lg flex items-center justify-center">
+                    <Edit className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Tools Used:</span>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">{artData.toolsUsed}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-sky-500 rounded-lg flex items-center justify-center">
+                    <Bookmark className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Tags:</span>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">{artData.tags.join(' ')}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-lg flex items-center justify-center mt-0.5">
+                    <Calendar className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">Additional Notes:</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">{artData.additionalNotes}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-red-500 rounded-lg flex items-center justify-center">
+                    <Heart 
+                      className={`h-4 w-4 text-white ${isLiked ? 'fill-white' : ''}`} 
+                    />
+                  </div>
+                  <div className="flex items-center gap-3 flex-1">
+                    <div>
+                      <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Likes:</span>
+                      <div className="text-sm text-slate-600 dark:text-slate-400">{artData.likes}</div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleLike}
+                      className={`ml-auto px-4 py-1 text-xs rounded-lg transition-all ${
+                        isLiked 
+                          ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white border-transparent hover:from-pink-600 hover:to-red-600' 
+                          : 'border-sky-200 hover:bg-sky-50 dark:border-sky-600 dark:hover:bg-sky-900/30'
+                      }`}
+                    >
+                      {isLiked ? 'Unlike' : 'Like'}
+                    </Button>
+                  </div>
                 </div>
               </div>
 
               <div>
-                <div className="text-sm font-medium mb-2">Tagged Characters</div>
-                <div className="space-y-2">
+                <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Tagged Characters</div>
+                <div className="space-y-3">
                   {artData.taggedCharacters.map((character, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <Avatar className="w-8 h-8">
-                        <AvatarFallback className="bg-blue-500 text-white text-xs">
-                          <div className="w-4 h-4 bg-blue-400 rounded-full"></div>
+                    <div key={index} className="flex items-center gap-3 p-2 bg-white/60 dark:bg-slate-700/60 rounded-xl">
+                      <Avatar className="w-8 h-8 border border-sky-300">
+                        <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-xs font-bold">
+                          {character.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-sm text-muted-foreground">—</span>
+                      <span className="text-sm text-slate-600 dark:text-slate-400">{character}</span>
                     </div>
                   ))}
                 </div>
@@ -158,11 +182,11 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           )}
 
           {/* Note about features */}
-          <div className="text-xs text-muted-foreground p-3 bg-muted/30 rounded border border-border">
-            Although not an early on priority, likes could be tied to features for party owners to host contests or 
+          <div className="text-xs text-slate-600 dark:text-slate-400 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/10 dark:to-emerald-900/10 rounded-xl border border-sky-200 dark:border-sky-600">
+            <strong className="text-slate-700 dark:text-slate-300">Feature Note:</strong> Although not an early priority, likes could be tied to features for party owners to host contests or 
             other events inside their "party" to give a more fun and social atmosphere to each party. Many of the 
             current party hosts like to do giveaways or things of this nature, thus this could be a good way to handle 
-            these needs externally
+            these needs externally.
           </div>
         </div>
       </DialogContent>

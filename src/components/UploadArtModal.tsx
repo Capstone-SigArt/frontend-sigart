@@ -80,9 +80,9 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-background border-border">
+      <DialogContent className="max-w-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center text-foreground">
+          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
             Upload your art!
           </DialogTitle>
         </DialogHeader>
@@ -90,20 +90,20 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
         <div className="grid grid-cols-2 gap-6">
           {/* Left side - Image upload */}
           <div className="space-y-4">
-            <div className="h-64 border-2 border-dashed border-border rounded-lg flex flex-col items-center justify-center bg-muted/50">
+            <div className="h-64 border-2 border-dashed border-sky-300 dark:border-sky-600 rounded-2xl flex flex-col items-center justify-center bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20">
               {imagePreview ? (
                 <img 
                   src={imagePreview} 
                   alt="Preview" 
-                  className="max-h-60 max-w-full object-contain rounded"
+                  className="max-h-60 max-w-full object-contain rounded-xl"
                 />
               ) : (
                 <>
                   <div className="text-center">
-                    <div className="text-muted-foreground mb-2">Image</div>
-                    <div className="text-muted-foreground">preview</div>
+                    <div className="text-slate-600 dark:text-slate-300 mb-2 font-medium">Image</div>
+                    <div className="text-slate-500 dark:text-slate-400">preview</div>
                   </div>
-                  <Upload className="h-8 w-8 text-muted-foreground mt-4" />
+                  <Upload className="h-8 w-8 text-sky-500 mt-4" />
                 </>
               )}
             </div>
@@ -116,7 +116,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
             />
             <label
               htmlFor="image-upload"
-              className="block w-full text-center py-2 px-4 bg-muted text-muted-foreground rounded cursor-pointer hover:bg-muted/80"
+              className="block w-full text-center py-3 px-4 bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl cursor-pointer transition-all shadow-lg hover:shadow-xl"
             >
               Choose Image
             </label>
@@ -125,63 +125,63 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
           {/* Right side - Form fields */}
           <div className="space-y-4">
             <div>
-              <Label htmlFor="title" className="text-foreground">Title</Label>
+              <Label htmlFor="title" className="text-slate-700 dark:text-slate-300 font-medium">Title</Label>
               <Input
                 id="title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="bg-background border-border"
+                className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
               />
             </div>
 
             <div>
-              <Label htmlFor="toolsUsed" className="text-foreground">
+              <Label htmlFor="toolsUsed" className="text-slate-700 dark:text-slate-300 font-medium">
                 Tools used?
-                <span className="text-muted-foreground text-xs ml-1">(Separate with ",")</span>
+                <span className="text-slate-500 dark:text-slate-400 text-xs ml-1">(Separate with ",")</span>
               </Label>
               <Input
                 id="toolsUsed"
                 value={toolsUsed}
                 onChange={(e) => setToolsUsed(e.target.value)}
-                className="bg-background border-border"
+                className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
               />
             </div>
 
             <div>
-              <Label htmlFor="tags" className="text-foreground">
+              <Label htmlFor="tags" className="text-slate-700 dark:text-slate-300 font-medium">
                 Tags?
-                <span className="text-muted-foreground text-xs ml-1">(Separate with ",")</span>
+                <span className="text-slate-500 dark:text-slate-400 text-xs ml-1">(Separate with ",")</span>
               </Label>
               <Input
                 id="tags"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
-                className="bg-background border-border"
+                className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
               />
             </div>
 
             <div>
-              <Label htmlFor="notesDescription" className="text-foreground">Notes/Description?</Label>
+              <Label htmlFor="notesDescription" className="text-slate-700 dark:text-slate-300 font-medium">Notes/Description?</Label>
               <Textarea
                 id="notesDescription"
                 value={notesDescription}
                 onChange={(e) => setNotesDescription(e.target.value)}
-                className="bg-background border-border min-h-[80px]"
+                className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm min-h-[80px]"
               />
             </div>
 
             <div>
-              <Label htmlFor="taggedCharacterNames" className="text-foreground">Tagged Character names</Label>
+              <Label htmlFor="taggedCharacterNames" className="text-slate-700 dark:text-slate-300 font-medium">Tagged Character names</Label>
               <Input
                 id="taggedCharacterNames"
                 value={taggedCharacterNames}
                 onChange={(e) => setTaggedCharacterNames(e.target.value)}
-                className="bg-background border-border"
+                className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
               />
             </div>
 
             <div>
-              <Label className="text-foreground">Reference Image (optional)</Label>
+              <Label className="text-slate-700 dark:text-slate-300 font-medium">Reference Image (optional)</Label>
               <div className="flex items-center gap-2">
                 <input
                   type="file"
@@ -192,12 +192,12 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
                 />
                 <label
                   htmlFor="reference-upload"
-                  className="px-3 py-1 bg-muted text-muted-foreground rounded cursor-pointer hover:bg-muted/80 text-sm"
+                  className="px-4 py-2 bg-white/60 dark:bg-slate-700/60 border border-sky-200 dark:border-sky-600 text-slate-600 dark:text-slate-300 rounded-xl cursor-pointer hover:bg-sky-50 dark:hover:bg-sky-900/30 transition-all text-sm"
                 >
                   upload
                 </label>
                 {referenceImage && (
-                  <span className="text-sm text-muted-foreground">{referenceImage.name}</span>
+                  <span className="text-sm text-slate-600 dark:text-slate-400 truncate">{referenceImage.name}</span>
                 )}
               </div>
             </div>
@@ -209,13 +209,13 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
           <Button
             variant="outline"
             onClick={handleCancel}
-            className="px-8"
+            className="px-8 rounded-xl border-sky-200 hover:bg-sky-50 dark:border-sky-600 dark:hover:bg-sky-900/30"
           >
             Cancel
           </Button>
           <Button
             onClick={handleUpload}
-            className="px-8"
+            className="px-8 bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg"
             disabled={!title || !selectedImage}
           >
             Upload

@@ -43,12 +43,14 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-      <Card className="w-full max-w-md mx-4 bg-white">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+      <Card className="w-full max-w-md mx-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl">
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-semibold">Link your FFXIV Character</CardTitle>
-            <Button variant="ghost" size="sm" onClick={onClose}>
+            <CardTitle className="text-lg font-semibold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+              Link your FFXIV Character
+            </CardTitle>
+            <Button variant="ghost" size="sm" onClick={onClose} className="rounded-lg hover:bg-sky-50 dark:hover:bg-sky-900/30">
               <X className="h-4 w-4" />
             </Button>
           </div>
@@ -59,42 +61,44 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
               placeholder="Character Name"
               value={characterName}
               onChange={(e) => setCharacterName(e.target.value)}
-              className="w-full"
+              className="w-full bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
             />
             <Input
               placeholder="Datacenter/Server"
               value={datacenter}
               onChange={(e) => setDatacenter(e.target.value)}
-              className="w-full"
+              className="w-full bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
             />
             <Button 
               onClick={handleSearch}
-              className="w-full bg-gray-600 hover:bg-gray-700 text-white"
+              className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white rounded-xl shadow-lg"
             >
               <Search className="w-4 h-4 mr-2" />
               Search
             </Button>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-3">
             {linkedCharacters.map((character, index) => (
-              <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                <div className="flex items-center space-x-2">
-                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-xs">+</span>
+              <div key={index} className="flex items-center justify-between p-3 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border border-sky-200 dark:border-sky-600">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full flex items-center justify-center">
+                    <Plus className="text-white text-sm" />
                   </div>
-                  <span className="text-sm">{character.name}</span>
-                  <Badge variant="secondary" className="text-xs">
-                    {character.datacenter}
-                  </Badge>
+                  <div>
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{character.name}</span>
+                    <Badge variant="secondary" className="ml-2 text-xs bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300">
+                      {character.datacenter}
+                    </Badge>
+                  </div>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => removeCharacter(index)}
-                  className="h-6 w-6 p-0 hover:bg-red-100"
+                  className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg"
                 >
-                  <X className="h-3 w-3" />
+                  <X className="h-3 w-3 text-red-500" />
                 </Button>
               </div>
             ))}
@@ -102,7 +106,8 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
 
           <Button 
             onClick={handleLinkCharacter}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white"
+            disabled={!characterName || !datacenter}
+            className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Link Character
           </Button>
