@@ -40,8 +40,14 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
     setLinkedCharacters(linkedCharacters.filter((_, i) => i !== index));
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-md bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[10000]">
         <DialogHeader className="pb-4">
           <div className="flex items-center justify-between">
@@ -69,6 +75,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
             />
             <Button 
               onClick={handleSearch}
+              type="button"
               className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white rounded-xl shadow-lg"
             >
               <Search className="w-4 h-4 mr-2" />
@@ -93,7 +100,12 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => removeCharacter(index)}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    removeCharacter(index);
+                  }}
                   className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg"
                 >
                   <X className="h-3 w-3 text-red-500" />
@@ -104,6 +116,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
 
           <Button 
             onClick={handleLinkCharacter}
+            type="button"
             disabled={!characterName || !datacenter}
             className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
