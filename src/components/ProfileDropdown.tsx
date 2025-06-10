@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,6 +15,7 @@ import CharacterLinkModal from './CharacterLinkModal';
 
 const ProfileDropdown = () => {
   const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     console.log('Logging out...');
@@ -27,7 +29,7 @@ const ProfileDropdown = () => {
 
   const handleEditStudio = () => {
     console.log('Opening edit studio...');
-    // Add edit studio logic here
+    navigate('/studio');
   };
 
   return (
