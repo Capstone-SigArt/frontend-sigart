@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -5,32 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate, useParams } from 'react-router-dom';
-import ProfileDropdown from '@/components/ProfileDropdown';
+import ModernNavigation from '@/components/ModernNavigation';
 import UploadArtModal from '@/components/UploadArtModal';
 import ArtDetailsModal from '@/components/ArtDetailsModal';
 
 const EventDetails = () => {
-  const [activeTab, setActiveTab] = useState('Schedule');
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [artDetailsModalOpen, setArtDetailsModalOpen] = useState(false);
   const [selectedArt, setSelectedArt] = useState(null);
   const navigate = useNavigate();
   const { eventId } = useParams();
-
-  const navigationTabs = [
-    'Browse', 'Schedule', 'Create', 'My Parties', 'Showcase', 'My Studio', 'Resources'
-  ];
-
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
-    if (tab === 'Browse') {
-      navigate('/');
-    } else if (tab === 'My Studio') {
-      navigate('/studio');
-    } else if (tab === 'Schedule') {
-      navigate('/schedule');
-    }
-  };
 
   // Mock event data
   const eventData = {
@@ -74,130 +59,107 @@ const EventDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center border-2 border-border">
-                <span className="text-sm font-medium text-muted-foreground">Logo</span>
-              </div>
-              <h1 className="text-3xl font-bold text-foreground">SigArt</h1>
-            </div>
-            
-            {/* Profile Dropdown */}
-            <ProfileDropdown />
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation Tabs */}
-      <div className="border-b border-border bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex space-x-1 overflow-x-auto py-2">
-            {navigationTabs.map((tab) => (
-              <Button
-                key={tab}
-                variant={activeTab === tab ? "default" : "ghost"}
-                className={`whitespace-nowrap transition-all duration-200 ${
-                  activeTab === tab 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                }`}
-                onClick={() => handleTabClick(tab)}
-              >
-                {tab}
-              </Button>
-            ))}
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+      <ModernNavigation 
+        title="Event Details" 
+        subtitle="Join the creative gathering"
+      />
 
       {/* Event Details Content */}
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <Card className="bg-card border-border">
-          <CardContent className="p-6">
+        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
+          <CardContent className="p-8">
             {/* Event Header */}
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-foreground mb-4">{eventData.title}</h2>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+                {eventData.title}
+              </h2>
               
               {/* Banner/Flyer Image Placeholder */}
-              <div className="w-full h-32 bg-muted/50 border-2 border-dashed border-border rounded-lg flex items-center justify-center mb-6">
-                <span className="text-muted-foreground italic">Banner/Flyer Image for party</span>
+              <div className="w-full h-48 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 border-2 border-dashed border-sky-300 dark:border-sky-600 rounded-2xl flex items-center justify-center mb-8">
+                <div className="text-center">
+                  <div className="text-xl font-medium text-sky-600 dark:text-sky-400 mb-2">
+                    Banner/Flyer Image for party
+                  </div>
+                  <div className="text-sm text-slate-500 dark:text-slate-400">
+                    Event promotional image will appear here
+                  </div>
+                </div>
               </div>
 
               {/* Event Details Form */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                <div>
-                  <Label htmlFor="hostName" className="text-sm font-medium text-foreground">Host Name</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="space-y-2">
+                  <Label htmlFor="hostName" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Host Name</Label>
                   <Input 
                     id="hostName" 
                     value={eventData.hostName} 
                     readOnly 
-                    className="bg-background border-border"
+                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="dateTime" className="text-sm font-medium text-foreground">Date/Time</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="dateTime" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Date/Time</Label>
                   <Input 
                     id="dateTime" 
                     value={eventData.dateTime} 
                     readOnly 
-                    className="bg-background border-border"
+                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="description" className="text-sm font-medium text-foreground">Description</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Description</Label>
                   <Input 
                     id="description" 
                     value={eventData.description} 
                     readOnly 
-                    className="bg-background border-border"
+                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="theme" className="text-sm font-medium text-foreground">Theme</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="theme" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Theme</Label>
                   <Input 
                     id="theme" 
                     value={eventData.theme} 
                     readOnly 
-                    className="bg-background border-border"
+                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   />
                 </div>
               </div>
 
               {/* Tags and Action Buttons */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+                <div className="flex flex-wrap gap-3">
                   {eventData.tags.map((tag, index) => (
                     <span 
                       key={index}
-                      className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-sm border border-border"
+                      className="px-4 py-2 bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 text-sky-700 dark:text-sky-300 rounded-full text-sm font-medium border border-sky-200 dark:border-sky-600"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm">
-                    Join/Leave
-                  </Button>
-                </div>
+                <Button 
+                  className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl shadow-lg px-6"
+                >
+                  Join/Leave
+                </Button>
               </div>
             </div>
 
             {/* Event Gallery Section */}
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold text-foreground">Event Gallery</h3>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Upload your masterpiece!</span>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+                  Event Gallery
+                </h3>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">
+                    Upload your masterpiece!
+                  </span>
                   <Button 
-                    size="sm" 
-                    variant="outline"
                     onClick={() => setUploadModalOpen(true)}
+                    className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg px-6"
                   >
                     Upload Art
                   </Button>
@@ -205,25 +167,29 @@ const EventDetails = () => {
               </div>
 
               {/* Gallery Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Top Row - Attendees with avatars */}
                 {attendees.map((attendee) => (
                   <Card 
                     key={attendee.id} 
-                    className="bg-background border-border cursor-pointer hover:shadow-lg transition-shadow"
+                    className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
                     onClick={() => handleArtClick(attendee)}
                   >
-                    <CardContent className="p-4">
-                      <div className="flex flex-col items-center space-y-2">
-                        <Avatar className="w-16 h-16">
+                    <CardContent className="p-6">
+                      <div className="flex flex-col items-center space-y-4">
+                        <Avatar className="w-20 h-20 border-4 border-sky-200 dark:border-sky-600">
                           <AvatarImage src={attendee.avatar} />
-                          <AvatarFallback className="bg-blue-500 text-white">
-                            <div className="w-8 h-8 bg-blue-400 rounded-full"></div>
+                          <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-lg font-bold">
+                            {attendee.name.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="text-center">
-                          <p className="text-sm font-medium text-foreground">{attendee.name}</p>
-                          <p className="text-xs text-muted-foreground">{attendee.info}</p>
+                          <p className="font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                            {attendee.name}
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            {attendee.info}
+                          </p>
                         </div>
                       </div>
                     </CardContent>
@@ -232,10 +198,17 @@ const EventDetails = () => {
 
                 {/* Bottom Row - Empty slots */}
                 {[1, 2, 3, 4].map((slot) => (
-                  <Card key={`empty-${slot}`} className="bg-background border-border">
-                    <CardContent className="p-4">
-                      <div className="h-24 bg-muted/30 rounded border-2 border-dashed border-border flex items-center justify-center">
-                        <span className="text-xs text-muted-foreground">Empty slot</span>
+                  <Card key={`empty-${slot}`} className="bg-white/40 dark:bg-slate-700/40 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl">
+                    <CardContent className="p-6">
+                      <div className="h-32 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="text-sm font-medium text-sky-600 dark:text-sky-400 mb-1">
+                            Empty slot
+                          </div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400">
+                            Waiting for artist
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
