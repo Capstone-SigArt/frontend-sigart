@@ -42,7 +42,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="fixed left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-full max-w-md max-h-[90vh] overflow-y-auto bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl p-6 z-[10000]">
+      <DialogContent className="max-w-md bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[10000]">
         <DialogHeader className="pb-4">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-lg font-semibold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
@@ -94,7 +94,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
                   variant="ghost"
                   size="sm"
                   onClick={() => removeCharacter(index)}
-                  className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg cursor-pointer"
+                  className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg"
                 >
                   <X className="h-3 w-3 text-red-500" />
                 </Button>
@@ -105,7 +105,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
           <Button 
             onClick={handleLinkCharacter}
             disabled={!characterName || !datacenter}
-            className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Link Character
           </Button>
