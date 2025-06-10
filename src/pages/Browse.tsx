@@ -1,14 +1,19 @@
 
 import React, { useState } from 'react';
-import { Search, Filter, MapPin, Calendar, Tag, Map, List } from 'lucide-react';
+import { Search, Filter, MapPin, Calendar, Map, List } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 
 const Browse = () => {
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState('All');
+  const navigate = useNavigate();
+
+  const filters = ['All', 'Digital Art', 'Workshops', 'Exhibitions', 'Gaming', 'Fantasy'];
 
   const events = [
     {
@@ -18,44 +23,78 @@ const Browse = () => {
       location: "Virtual Gallery",
       image: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=300&fit=crop",
       tags: ["Digital", "Showcase", "Virtual"],
-      attendees: 142
+      attendees: 142,
+      category: "Digital Art"
     },
     {
       id: 2,
       title: "Character Design Workshop",
-      date: "Dec 18, 2024",
+      date: "Dec 18, 2024", 
       location: "Creative Studio",
       image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=300&fit=crop",
       tags: ["Workshop", "Character", "Design"],
-      attendees: 89
+      attendees: 89,
+      category: "Workshops"
     },
     {
       id: 3,
       title: "Fantasy Art Convention",
       date: "Dec 20, 2024",
-      location: "Convention Center",
+      location: "Convention Center", 
       image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop",
       tags: ["Fantasy", "Convention", "Art"],
-      attendees: 256
+      attendees: 256,
+      category: "Fantasy"
+    },
+    {
+      id: 4,
+      title: "Digital Gaming Art Exhibition",
+      date: "Dec 22, 2024",
+      location: "Gaming Hub",
+      image: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=300&fit=crop",
+      tags: ["Gaming", "Digital", "Exhibition"],
+      attendees: 178,
+      category: "Gaming"
+    },
+    {
+      id: 5,
+      title: "Traditional Art Workshop",
+      date: "Dec 25, 2024",
+      location: "Art Center",
+      image: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=400&h=300&fit=crop",
+      tags: ["Traditional", "Workshop", "Painting"],
+      attendees: 67,
+      category: "Workshops"
     }
   ];
+
+  const filteredEvents = events.filter(event => {
+    const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         event.location.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter = activeFilter === 'All' || event.category === activeFilter;
+    return matchesSearch && matchesFilter;
+  });
+
+  const handleEventClick = (eventId: number) => {
+    navigate(`/event/${eventId}`);
+  };
 
   return (
     <div className="px-4 py-6 max-w-md mx-auto">
       {/* Search Bar */}
       <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
         <Input
           type="text"
           placeholder="Search events, artists, or themes..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 pr-12 bg-gray-800/50 border-gray-700 text-white placeholder-gray-400 h-12"
+          className="pl-10 pr-12 bg-background border-border text-foreground placeholder-muted-foreground h-12"
         />
         <Button
           variant="ghost"
           size="icon"
-          className="absolute right-1 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+          className="absolute right-1 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
         >
           <Filter className="w-5 h-5" />
         </Button>
@@ -63,8 +102,8 @@ const Browse = () => {
 
       {/* View Toggle */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-bold text-white">Discover Events</h2>
-        <div className="flex bg-gray-800/50 rounded-lg p-1">
+        <h2 className="text-xl font-bold text-foreground">Discover Events</h2>
+        <div className="flex bg-muted rounded-lg p-1">
           <Button
             variant={viewMode === 'list' ? 'default' : 'ghost'}
             size="sm"
@@ -86,24 +125,30 @@ const Browse = () => {
 
       {/* Filter Tags */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
-        {['All', 'Digital Art', 'Workshops', 'Exhibitions', 'Gaming', 'Fantasy'].map((tag) => (
+        {filters.map((filter) => (
           <Badge
-            key={tag}
-            variant={tag === 'All' ? 'default' : 'secondary'}
-            className="whitespace-nowrap cursor-pointer hover:bg-teal-600"
+            key={filter}
+            variant={filter === activeFilter ? 'default' : 'secondary'}
+            className={`whitespace-nowrap cursor-pointer transition-colors ${
+              filter === activeFilter 
+                ? 'bg-primary text-primary-foreground hover:bg-primary/90' 
+                : 'bg-muted text-muted-foreground hover:bg-muted/80'
+            }`}
+            onClick={() => setActiveFilter(filter)}
           >
-            {tag}
+            {filter}
           </Badge>
         ))}
       </div>
 
       {/* Events List */}
       <div className="space-y-4">
-        {events.map((event, index) => (
+        {filteredEvents.map((event, index) => (
           <Card
             key={event.id}
-            className="bg-gray-800/50 border-gray-700 hover:bg-gray-800/70 transition-all duration-300 cursor-pointer animate-fade-in"
+            className="bg-card border-border hover:bg-muted/50 transition-all duration-300 cursor-pointer animate-fade-in"
             style={{ animationDelay: `${index * 100}ms` }}
+            onClick={() => handleEventClick(event.id)}
           >
             <CardContent className="p-0">
               <div className="flex">
@@ -113,10 +158,10 @@ const Browse = () => {
                   className="w-24 h-24 object-cover rounded-l-lg"
                 />
                 <div className="flex-1 p-4">
-                  <h3 className="font-semibold text-white mb-1 line-clamp-1">
+                  <h3 className="font-semibold text-card-foreground mb-1 line-clamp-1">
                     {event.title}
                   </h3>
-                  <div className="flex items-center text-gray-400 text-sm mb-2">
+                  <div className="flex items-center text-muted-foreground text-sm mb-2">
                     <Calendar className="w-4 h-4 mr-1" />
                     <span className="mr-3">{event.date}</span>
                     <MapPin className="w-4 h-4 mr-1" />
@@ -130,7 +175,7 @@ const Browse = () => {
                         </Badge>
                       ))}
                     </div>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-muted-foreground">
                       {event.attendees} attending
                     </span>
                   </div>
@@ -140,6 +185,28 @@ const Browse = () => {
           </Card>
         ))}
       </div>
+
+      {/* No Results */}
+      {filteredEvents.length === 0 && (
+        <div className="text-center py-12">
+          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+            <Search className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <h3 className="text-foreground font-semibold mb-2">No events found</h3>
+          <p className="text-muted-foreground text-sm mb-4">
+            Try adjusting your search or filters
+          </p>
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              setSearchQuery('');
+              setActiveFilter('All');
+            }}
+          >
+            Clear Filters
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

@@ -5,8 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
+  const navigate = useNavigate();
+  
   const user = {
     name: "Jordan Davis",
     username: "@jordanart",
@@ -43,14 +46,19 @@ const Profile = () => {
     <div className="px-4 py-6 max-w-md mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-white">Profile</h1>
-        <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white">
+        <h1 className="text-2xl font-bold text-foreground">Profile</h1>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="text-muted-foreground hover:text-foreground"
+          onClick={() => navigate('/settings')}
+        >
           <Settings className="w-6 h-6" />
         </Button>
       </div>
 
       {/* Profile Info */}
-      <Card className="bg-gray-800/50 border-gray-700 mb-6">
+      <Card className="bg-card border-border mb-6">
         <CardContent className="p-6">
           <div className="text-center mb-6">
             <Avatar className="w-24 h-24 mx-auto mb-4">
@@ -59,9 +67,9 @@ const Profile = () => {
                 {user.name.split(' ').map(n => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
-            <h2 className="text-xl font-bold text-white mb-1">{user.name}</h2>
-            <p className="text-gray-400 text-sm mb-3">{user.username}</p>
-            <p className="text-gray-300 text-sm leading-relaxed mb-4">{user.bio}</p>
+            <h2 className="text-xl font-bold text-card-foreground mb-1">{user.name}</h2>
+            <p className="text-muted-foreground text-sm mb-3">{user.username}</p>
+            <p className="text-card-foreground text-sm leading-relaxed mb-4">{user.bio}</p>
             
             <div className="flex gap-2 justify-center">
               <Button
@@ -71,7 +79,7 @@ const Profile = () => {
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Profile
               </Button>
-              <Button variant="outline" size="sm" className="border-gray-600 text-gray-300">
+              <Button variant="outline" size="sm" className="border-border text-muted-foreground">
                 <Share className="w-4 h-4 mr-2" />
                 Share
               </Button>
@@ -82,11 +90,11 @@ const Profile = () => {
           <div className="grid grid-cols-4 gap-4">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
-                <div className="w-10 h-10 bg-gray-700/50 rounded-lg flex items-center justify-center mx-auto mb-2">
-                  <stat.icon className="w-5 h-5 text-teal-400" />
+                <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center mx-auto mb-2">
+                  <stat.icon className="w-5 h-5 text-primary" />
                 </div>
-                <div className="text-lg font-bold text-white">{stat.value}</div>
-                <div className="text-xs text-gray-400">{stat.label}</div>
+                <div className="text-lg font-bold text-card-foreground">{stat.value}</div>
+                <div className="text-xs text-muted-foreground">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -94,9 +102,9 @@ const Profile = () => {
       </Card>
 
       {/* Linked Characters */}
-      <Card className="bg-gray-800/50 border-gray-700 mb-6">
+      <Card className="bg-card border-border mb-6">
         <CardContent className="p-4">
-          <h3 className="text-white font-semibold mb-4">Linked Characters</h3>
+          <h3 className="text-card-foreground font-semibold mb-4">Linked Characters</h3>
           <div className="space-y-3">
             {user.characters.map((character, index) => (
               <div key={index} className="flex items-center space-x-3">
@@ -109,8 +117,8 @@ const Profile = () => {
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
-                  <p className="text-white font-medium text-sm">{character.name}</p>
-                  <p className="text-gray-400 text-xs">{character.server}</p>
+                  <p className="text-card-foreground font-medium text-sm">{character.name}</p>
+                  <p className="text-muted-foreground text-xs">{character.server}</p>
                 </div>
                 <Badge variant="outline" className="text-xs">
                   Active
@@ -121,7 +129,7 @@ const Profile = () => {
           <Button
             variant="outline"
             size="sm"
-            className="w-full mt-4 border-gray-600 text-gray-300 hover:bg-gray-700/50"
+            className="w-full mt-4 border-border text-muted-foreground hover:bg-muted"
           >
             Link New Character
           </Button>
@@ -132,14 +140,14 @@ const Profile = () => {
       <div className="grid grid-cols-2 gap-3">
         <Button
           variant="outline"
-          className="h-16 border-gray-600 text-gray-300 hover:bg-gray-700/50 flex-col"
+          className="h-16 border-border text-muted-foreground hover:bg-muted flex-col"
         >
           <Image className="w-5 h-5 mb-1" />
           <span className="text-xs">My Gallery</span>
         </Button>
         <Button
           variant="outline"
-          className="h-16 border-gray-600 text-gray-300 hover:bg-gray-700/50 flex-col"
+          className="h-16 border-border text-muted-foreground hover:bg-muted flex-col"
         >
           <Calendar className="w-5 h-5 mb-1" />
           <span className="text-xs">My Events</span>

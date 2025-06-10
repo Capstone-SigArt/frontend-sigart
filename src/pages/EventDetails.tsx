@@ -1,21 +1,23 @@
 
 import React, { useState } from 'react';
-import { ArrowLeft, Calendar, MapPin, Users, Heart, Share, Link } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Users, Heart, Share, Link, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EventDetails = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [isLiked, setIsLiked] = useState(false);
   const [isRSVPed, setIsRSVPed] = useState(false);
 
+  // Mock event data - in real app this would come from API based on id
   const event = {
-    id: 1,
+    id: id || '1',
     title: "Digital Art Showcase: Future Visions",
-    description: "Join us for an immersive digital art experience featuring cutting-edge works from emerging and established artists. Explore virtual galleries, interactive installations, and live digital painting demonstrations.",
+    description: "Join us for an immersive digital art experience featuring cutting-edge works from emerging and established artists. Explore virtual galleries, interactive installations, and live digital painting demonstrations. This event brings together the most innovative digital artists from around the world to showcase their latest creations and share their creative processes.",
     date: "December 15, 2024",
     time: "7:00 PM - 11:00 PM",
     location: "Virtual Gallery Space",
@@ -24,16 +26,19 @@ const EventDetails = () => {
     host: {
       name: "Alex Chen",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-      role: "Gallery Curator"
+      role: "Gallery Curator",
+      bio: "Digital art curator with 10+ years of experience"
     },
     tags: ["Digital Art", "Virtual", "Interactive", "Showcase"],
     attendees: 142,
-    maxAttendees: 200
+    maxAttendees: 200,
+    price: "Free",
+    requirements: ["Stable internet connection", "VR headset (optional)", "Discord account"]
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-slate-900">
-      {/* Header */}
+    <div className="min-h-screen bg-background">
+      {/* Header Image */}
       <div className="relative">
         <img
           src={event.image}
@@ -71,35 +76,40 @@ const EventDetails = () => {
       <div className="px-4 py-6 max-w-md mx-auto">
         {/* Event Info */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-white mb-3">{event.title}</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-3">{event.title}</h1>
           
           <div className="space-y-3 mb-4">
-            <div className="flex items-center text-gray-300">
-              <Calendar className="w-5 h-5 mr-3 text-teal-400" />
+            <div className="flex items-center text-muted-foreground">
+              <Calendar className="w-5 h-5 mr-3 text-primary" />
               <div>
-                <div>{event.date}</div>
-                <div className="text-sm text-gray-400">{event.time}</div>
+                <div className="text-foreground">{event.date}</div>
+                <div className="text-sm">{event.time}</div>
               </div>
             </div>
             
-            <div className="flex items-center text-gray-300">
-              <MapPin className="w-5 h-5 mr-3 text-teal-400" />
+            <div className="flex items-center text-muted-foreground">
+              <MapPin className="w-5 h-5 mr-3 text-primary" />
               <div>
-                <div>{event.location}</div>
-                <div className="text-sm text-gray-400">{event.address}</div>
+                <div className="text-foreground">{event.location}</div>
+                <div className="text-sm">{event.address}</div>
               </div>
             </div>
             
-            <div className="flex items-center text-gray-300">
-              <Users className="w-5 h-5 mr-3 text-teal-400" />
-              <span>{event.attendees} / {event.maxAttendees} attending</span>
+            <div className="flex items-center text-muted-foreground">
+              <Users className="w-5 h-5 mr-3 text-primary" />
+              <span className="text-foreground">{event.attendees} / {event.maxAttendees} attending</span>
+            </div>
+
+            <div className="flex items-center text-muted-foreground">
+              <Clock className="w-5 h-5 mr-3 text-primary" />
+              <span className="text-foreground font-semibold text-green-600">{event.price}</span>
             </div>
           </div>
 
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-4">
             {event.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="bg-gray-700 text-gray-300">
+              <Badge key={tag} variant="secondary" className="bg-muted text-muted-foreground">
                 {tag}
               </Badge>
             ))}
@@ -107,29 +117,45 @@ const EventDetails = () => {
         </div>
 
         {/* Host Info */}
-        <Card className="bg-gray-800/50 border-gray-700 mb-6">
+        <Card className="bg-card border-border mb-6">
           <CardContent className="p-4">
-            <h3 className="text-white font-semibold mb-3">Hosted by</h3>
+            <h3 className="text-card-foreground font-semibold mb-3">Hosted by</h3>
             <div className="flex items-center space-x-3">
               <Avatar className="w-12 h-12">
                 <AvatarImage src={event.host.avatar} />
-                <AvatarFallback className="bg-teal-500 text-white">
+                <AvatarFallback className="bg-primary text-primary-foreground">
                   {event.host.name.split(' ').map(n => n[0]).join('')}
                 </AvatarFallback>
               </Avatar>
-              <div>
-                <p className="text-white font-medium">{event.host.name}</p>
-                <p className="text-gray-400 text-sm">{event.host.role}</p>
+              <div className="flex-1">
+                <p className="text-card-foreground font-medium">{event.host.name}</p>
+                <p className="text-muted-foreground text-sm">{event.host.role}</p>
+                <p className="text-muted-foreground text-xs">{event.host.bio}</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Description */}
-        <Card className="bg-gray-800/50 border-gray-700 mb-6">
+        <Card className="bg-card border-border mb-6">
           <CardContent className="p-4">
-            <h3 className="text-white font-semibold mb-3">About this event</h3>
-            <p className="text-gray-300 leading-relaxed">{event.description}</p>
+            <h3 className="text-card-foreground font-semibold mb-3">About this event</h3>
+            <p className="text-muted-foreground leading-relaxed">{event.description}</p>
+          </CardContent>
+        </Card>
+
+        {/* Requirements */}
+        <Card className="bg-card border-border mb-6">
+          <CardContent className="p-4">
+            <h3 className="text-card-foreground font-semibold mb-3">Requirements</h3>
+            <ul className="space-y-2">
+              {event.requirements.map((req, index) => (
+                <li key={index} className="text-muted-foreground text-sm flex items-center">
+                  <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+                  {req}
+                </li>
+              ))}
+            </ul>
           </CardContent>
         </Card>
 
@@ -148,7 +174,7 @@ const EventDetails = () => {
           
           <Button
             variant="outline"
-            className="w-full h-12 border-gray-600 text-gray-300 hover:bg-gray-700/50"
+            className="w-full h-12 border-border text-muted-foreground hover:bg-muted"
           >
             <Link className="w-5 h-5 mr-2" />
             Link Character

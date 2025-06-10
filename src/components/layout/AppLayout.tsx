@@ -6,7 +6,7 @@ import Header from './Header';
 
 const AppLayout = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-slate-900">
+    <div className="min-h-screen bg-background">
       <Header />
       <main className="pb-20 pt-16">
         <Outlet />

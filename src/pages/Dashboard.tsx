@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Calendar, Plus, TrendingUp, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -62,46 +61,46 @@ const Dashboard = () => {
     <div className="px-4 py-6 max-w-md mx-auto">
       {/* Welcome */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white mb-2">Welcome back, Jordan!</h1>
-        <p className="text-gray-400">Discover amazing art and connect with fellow creators</p>
+        <h1 className="text-2xl font-bold text-foreground mb-2">Welcome back, Jordan!</h1>
+        <p className="text-muted-foreground">Discover amazing art and connect with fellow creators</p>
       </div>
 
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-3 mb-6">
-        <Card className="bg-gray-800/50 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-4 text-center">
-            <TrendingUp className="w-6 h-6 text-teal-400 mx-auto mb-2" />
-            <div className="text-lg font-bold text-white">24</div>
-            <div className="text-xs text-gray-400">Artworks</div>
+            <TrendingUp className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-lg font-bold text-card-foreground">24</div>
+            <div className="text-xs text-muted-foreground">Artworks</div>
           </CardContent>
         </Card>
-        <Card className="bg-gray-800/50 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-4 text-center">
-            <Users className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
-            <div className="text-lg font-bold text-white">1.2k</div>
-            <div className="text-xs text-gray-400">Followers</div>
+            <Users className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-lg font-bold text-card-foreground">1.2k</div>
+            <div className="text-xs text-muted-foreground">Followers</div>
           </CardContent>
         </Card>
-        <Card className="bg-gray-800/50 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-4 text-center">
-            <Calendar className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-            <div className="text-lg font-bold text-white">5</div>
-            <div className="text-xs text-gray-400">Events</div>
+            <Calendar className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-lg font-bold text-card-foreground">5</div>
+            <div className="text-xs text-muted-foreground">Events</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Upcoming Events */}
-      <Card className="bg-gray-800/50 border-gray-700 mb-6">
+      <Card className="bg-card border-border mb-6">
         <CardHeader className="pb-3">
-          <CardTitle className="text-white text-lg">Upcoming Events</CardTitle>
+          <CardTitle className="text-card-foreground text-lg">Upcoming Events</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {upcomingEvents.map((event) => (
             <div key={event.id} className="flex items-center justify-between">
               <div>
-                <p className="text-white font-medium text-sm">{event.title}</p>
-                <p className="text-gray-400 text-xs">{event.date} at {event.time}</p>
+                <p className="text-card-foreground font-medium text-sm">{event.title}</p>
+                <p className="text-muted-foreground text-xs">{event.date} at {event.time}</p>
               </div>
               <Badge variant={event.attending ? "default" : "outline"} className="text-xs">
                 {event.attending ? "Attending" : "RSVP"}
@@ -111,7 +110,7 @@ const Dashboard = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="w-full text-teal-400 hover:text-teal-300 hover:bg-gray-700/50"
+            className="w-full text-primary hover:text-primary/90 hover:bg-muted"
           >
             View All Events
           </Button>
@@ -119,9 +118,9 @@ const Dashboard = () => {
       </Card>
 
       {/* Trending Art */}
-      <Card className="bg-gray-800/50 border-gray-700 mb-6">
+      <Card className="bg-card border-border mb-6">
         <CardHeader className="pb-3">
-          <CardTitle className="text-white text-lg">Trending Art</CardTitle>
+          <CardTitle className="text-card-foreground text-lg">Trending Art</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3">
@@ -145,9 +144,9 @@ const Dashboard = () => {
       </Card>
 
       {/* Recent Activity */}
-      <Card className="bg-gray-800/50 border-gray-700 mb-6">
+      <Card className="bg-card border-border mb-6">
         <CardHeader className="pb-3">
-          <CardTitle className="text-white text-lg">Recent Activity</CardTitle>
+          <CardTitle className="text-card-foreground text-lg">Recent Activity</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           {recentActivity.map((activity) => (
@@ -161,11 +160,11 @@ const Dashboard = () => {
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
-                <p className="text-white text-sm">
+                <p className="text-card-foreground text-sm">
                   <span className="font-medium">{activity.user}</span>{' '}
-                  <span className="text-gray-400">{activity.action}</span>
+                  <span className="text-muted-foreground">{activity.action}</span>
                 </p>
-                <p className="text-gray-400 text-xs">{activity.time}</p>
+                <p className="text-muted-foreground text-xs">{activity.time}</p>
               </div>
             </div>
           ))}
@@ -180,7 +179,7 @@ const Dashboard = () => {
         </Button>
         <Button 
           variant="outline" 
-          className="h-16 border-gray-600 text-gray-300 hover:bg-gray-700/50 flex-col"
+          className="h-16 border-border text-muted-foreground hover:bg-muted flex-col"
         >
           <TrendingUp className="w-5 h-5 mb-1" />
           <span className="text-xs">Upload Art</span>

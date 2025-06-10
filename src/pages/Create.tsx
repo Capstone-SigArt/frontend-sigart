@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Camera, Calendar, Upload, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -41,23 +40,23 @@ const Create = () => {
   return (
     <div className="px-4 py-6 max-w-md mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white mb-2">Create Something Amazing</h1>
-        <p className="text-gray-400">Share your creativity with the SigArt community</p>
+        <h1 className="text-2xl font-bold text-foreground mb-2">Create Something Amazing</h1>
+        <p className="text-muted-foreground">Share your creativity with the SigArt community</p>
       </div>
 
       {/* Tab Selector */}
-      <div className="flex bg-gray-800/50 rounded-lg p-1 mb-6">
+      <div className="flex bg-muted rounded-lg p-1 mb-6">
         <Button
           variant={activeTab === 'event' ? 'default' : 'ghost'}
           onClick={() => setActiveTab('event')}
-          className="flex-1 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600"
+          className={`flex-1 ${activeTab === 'event' ? 'bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600' : 'hover:bg-muted/80'}`}
         >
           Events
         </Button>
         <Button
           variant={activeTab === 'art' ? 'default' : 'ghost'}
           onClick={() => setActiveTab('art')}
-          className="flex-1"
+          className={`flex-1 ${activeTab === 'art' ? 'bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600' : 'hover:bg-muted/80'}`}
         >
           Artwork
         </Button>
@@ -68,7 +67,7 @@ const Create = () => {
         {createOptions[activeTab].map((option, index) => (
           <Card
             key={index}
-            className="bg-gray-800/50 border-gray-700 hover:bg-gray-800/70 transition-all duration-300 cursor-pointer animate-fade-in"
+            className="bg-card border-border hover:bg-muted/50 transition-all duration-300 cursor-pointer animate-fade-in"
             style={{ animationDelay: `${index * 100}ms` }}
           >
             <CardContent className="p-6">
@@ -77,10 +76,10 @@ const Create = () => {
                   <option.icon className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-white mb-2">
+                  <h3 className="text-lg font-semibold text-card-foreground mb-2">
                     {option.title}
                   </h3>
-                  <p className="text-gray-400 text-sm mb-4">
+                  <p className="text-muted-foreground text-sm mb-4">
                     {option.description}
                   </p>
                   <Button
@@ -97,18 +96,18 @@ const Create = () => {
 
       {/* Quick Actions */}
       <div className="mt-8">
-        <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h3>
         <div className="grid grid-cols-2 gap-3">
           <Button
             variant="outline"
-            className="h-16 border-gray-600 text-gray-300 hover:bg-gray-700/50 flex-col"
+            className="h-16 border-border text-muted-foreground hover:bg-muted flex-col"
           >
             <Calendar className="w-5 h-5 mb-1" />
             <span className="text-xs">Schedule</span>
           </Button>
           <Button
             variant="outline"
-            className="h-16 border-gray-600 text-gray-300 hover:bg-gray-700/50 flex-col"
+            className="h-16 border-border text-muted-foreground hover:bg-muted flex-col"
           >
             <Camera className="w-5 h-5 mb-1" />
             <span className="text-xs">Quick Photo</span>
