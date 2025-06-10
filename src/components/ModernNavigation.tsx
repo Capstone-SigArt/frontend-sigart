@@ -3,15 +3,14 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import { Palette } from 'lucide-react';
 
 interface ModernNavigationProps {
   title: string;
   subtitle?: string;
-  gradientFrom: string;
-  gradientTo: string;
 }
 
-const ModernNavigation = ({ title, subtitle, gradientFrom, gradientTo }: ModernNavigationProps) => {
+const ModernNavigation = ({ title, subtitle }: ModernNavigationProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -42,11 +41,11 @@ const ModernNavigation = ({ title, subtitle, gradientFrom, gradientTo }: ModernN
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className={`w-14 h-14 bg-gradient-to-r ${gradientFrom} ${gradientTo} rounded-2xl flex items-center justify-center shadow-lg`}>
-                <span className="text-xl font-bold text-white">S</span>
+              <div className="w-14 h-14 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <Palette className="text-xl text-white" />
               </div>
               <div>
-                <h1 className={`text-3xl font-bold bg-gradient-to-r ${gradientFrom} ${gradientTo} bg-clip-text text-transparent`}>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
                   {title}
                 </h1>
                 {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
@@ -67,7 +66,7 @@ const ModernNavigation = ({ title, subtitle, gradientFrom, gradientTo }: ModernN
                 variant={getActiveTab() === tab.name ? "default" : "ghost"}
                 className={`whitespace-nowrap transition-all duration-300 rounded-full px-6 py-2 ${
                   getActiveTab() === tab.name
-                    ? `bg-gradient-to-r ${gradientFrom} ${gradientTo} text-white shadow-lg transform scale-105` 
+                    ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-lg transform scale-105' 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700/50'
                 }`}
                 onClick={() => handleTabClick(tab)}

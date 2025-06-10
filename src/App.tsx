@@ -4,6 +4,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Studio from "./pages/Studio";
 import Schedule from "./pages/Schedule";
@@ -13,6 +15,7 @@ import MyParties from "./pages/MyParties";
 import CommunityArt from "./pages/CommunityArt";
 import UserStudio from "./pages/UserStudio";
 import Resources from "./pages/Resources";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,21 +25,59 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/studio" element={<Studio />} />
-          <Route path="/schedule" element={<Schedule />} />
-          <Route path="/host-party" element={<HostParty />} />
-          <Route path="/my-parties" element={<MyParties />} />
-          <Route path="/community-art" element={<CommunityArt />} />
-          <Route path="/user-studio" element={<UserStudio />} />
-          <Route path="/resources" element={<Resources />} />
-          <Route path="/event/:eventId" element={<EventDetails />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/" element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/studio" element={
+              <ProtectedRoute>
+                <Studio />
+              </ProtectedRoute>
+            } />
+            <Route path="/schedule" element={
+              <ProtectedRoute>
+                <Schedule />
+              </ProtectedRoute>
+            } />
+            <Route path="/host-party" element={
+              <ProtectedRoute>
+                <HostParty />
+              </ProtectedRoute>
+            } />
+            <Route path="/my-parties" element={
+              <ProtectedRoute>
+                <MyParties />
+              </ProtectedRoute>
+            } />
+            <Route path="/community-art" element={
+              <ProtectedRoute>
+                <CommunityArt />
+              </ProtectedRoute>
+            } />
+            <Route path="/user-studio" element={
+              <ProtectedRoute>
+                <UserStudio />
+              </ProtectedRoute>
+            } />
+            <Route path="/resources" element={
+              <ProtectedRoute>
+                <Resources />
+              </ProtectedRoute>
+            } />
+            <Route path="/event/:eventId" element={
+              <ProtectedRoute>
+                <EventDetails />
+              </ProtectedRoute>
+            } />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -1,6 +1,5 @@
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,78 +9,59 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Settings, User, LogOut } from 'lucide-react';
-import CharacterLinkModal from './CharacterLinkModal';
+import { User, Settings, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const ProfileDropdown = () => {
-  const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
-  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
-  const handleLogout = () => {
-    console.log('Logging out...');
-    // Add logout logic here
-  };
+  if (!user) {
+    return null;
+  }
 
-  const handleSettings = () => {
-    console.log('Opening settings...');
-    // Add settings navigation logic here
-  };
-
-  const handleEditStudio = () => {
-    console.log('Opening edit studio...');
-    navigate('/studio');
+  const getInitials = (name: string) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
   return (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-12 w-12 rounded-full p-0">
-            <Avatar className="h-12 w-12">
-              <AvatarFallback className="bg-muted border-2 border-border">
-                <User className="h-6 w-6 text-muted-foreground" />
-              </AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56 bg-white border shadow-lg">
-          <DropdownMenuItem 
-            onClick={handleSettings}
-            className="cursor-pointer hover:bg-gray-50"
-          >
-            <Settings className="mr-2 h-4 w-4" />
-            Settings
-          </DropdownMenuItem>
-          <DropdownMenuItem 
-            onClick={() => setIsCharacterModalOpen(true)}
-            className="cursor-pointer hover:bg-gray-50"
-          >
-            <User className="mr-2 h-4 w-4" />
-            Link Character
-          </DropdownMenuItem>
-          <DropdownMenuItem 
-            onClick={handleEditStudio}
-            className="cursor-pointer hover:bg-gray-50"
-          >
-            <Settings className="mr-2 h-4 w-4" />
-            Edit Studio
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem 
-            onClick={handleLogout}
-            className="cursor-pointer hover:bg-gray-50 text-red-600"
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Log Out
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      <CharacterLinkModal 
-        isOpen={isCharacterModalOpen}
-        onClose={() => setIsCharacterModalOpen(false)}
-      />
-    </>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+          <Avatar className="h-10 w-10 bg-gradient-to-r from-sky-500 to-emerald-500">
+            <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
+              {getInitials(user.username)}
+            </AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/20" align="end">
+        <div className="flex items-center justify-start gap-2 p-2">
+          <div className="flex flex-col space-y-1 leading-none">
+            <p className="font-medium text-sm">{user.username}</p>
+            <p className="w-[200px] truncate text-xs text-muted-foreground">
+              {user.email}
+            </p>
+          </div>
+        </div>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="cursor-pointer">
+          <User className="mr-2 h-4 w-4" />
+          <span>Profile</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="cursor-pointer">
+          <Settings className="mr-2 h-4 w-4" />
+          <span>Settings</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem 
+          className="cursor-pointer text-red-600 dark:text-red-400"
+          onClick={logout}
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

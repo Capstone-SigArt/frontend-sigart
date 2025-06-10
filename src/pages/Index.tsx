@@ -6,10 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search, Calendar, MapPin, Users, Heart, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import ProfileDropdown from '@/components/ProfileDropdown';
+import ModernNavigation from '@/components/ModernNavigation';
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('Browse');
   const [searchFilters, setSearchFilters] = useState({
     title: '',
     tags: '',
@@ -17,144 +16,98 @@ const Index = () => {
   });
   const navigate = useNavigate();
 
-  // Enhanced event data
+  // Enhanced event data with more realistic content
   const events = [
     {
       id: 1,
       title: "Digital Art Showcase",
       image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop",
-      description: "Explore cutting-edge digital artwork",
+      description: "Explore cutting-edge digital artwork from emerging artists",
       tags: ["Digital", "Modern"],
       date: "Jan 15, 2024",
       location: "Online",
-      attendees: 24,
-      liked: false
+      attendees: 124,
+      liked: false,
+      host: "ArtSpace Gallery"
     },
     {
       id: 2,
       title: "Abstract Expression Night",
       image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=300&fit=crop",
-      description: "Contemporary abstract art exhibition",
+      description: "Contemporary abstract art exhibition featuring local talents",
       tags: ["Abstract", "Contemporary"],
       date: "Jan 18, 2024",
       location: "Studio A",
-      attendees: 32,
-      liked: true
+      attendees: 89,
+      liked: true,
+      host: "Creative Collective"
     },
     {
       id: 3,
-      title: "Test Party",
+      title: "Mixed Media Workshop",
       image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=300&fit=crop",
-      description: "Experimental art gathering",
-      tags: ["Experimental", "Mixed Media"],
+      description: "Hands-on workshop exploring experimental art techniques",
+      tags: ["Workshop", "Mixed Media"],
       date: "Jan 20, 2024",
       location: "Gallery Space",
-      attendees: 18,
-      liked: false
+      attendees: 45,
+      liked: false,
+      host: "Art Academy"
     },
     {
       id: 4,
-      title: "Portrait Mastery Workshop",
+      title: "Portrait Mastery Class",
       image: "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=400&h=300&fit=crop",
-      description: "Learn advanced portrait techniques",
-      tags: ["Portrait", "Workshop"],
+      description: "Learn advanced portrait techniques from master artists",
+      tags: ["Portrait", "Education"],
       date: "Jan 22, 2024",
       location: "Art Center",
-      attendees: 15,
-      liked: false
+      attendees: 67,
+      liked: false,
+      host: "Portrait Pro Studio"
     },
     {
       id: 5,
-      title: "Nature & Landscape",
+      title: "Nature & Landscape Plein Air",
       image: "https://images.unsplash.com/photo-1452960962994-acf4fd70b632?w=400&h=300&fit=crop",
-      description: "Outdoor painting expedition",
-      tags: ["Nature", "Landscape"],
+      description: "Outdoor painting expedition in beautiful natural settings",
+      tags: ["Nature", "Plein Air"],
       date: "Jan 25, 2024",
       location: "Riverside Park",
-      attendees: 28,
-      liked: true
+      attendees: 93,
+      liked: true,
+      host: "Outdoor Artists Guild"
     },
     {
       id: 6,
       title: "Street Art Festival",
       image: "https://images.unsplash.com/photo-1500673922987-e212871fec22?w=400&h=300&fit=crop",
-      description: "Urban art celebration",
-      tags: ["Street Art", "Urban"],
+      description: "Urban art celebration with live murals and performances",
+      tags: ["Street Art", "Festival"],
       date: "Jan 28, 2024",
       location: "Downtown",
-      attendees: 45,
-      liked: false
+      attendees: 156,
+      liked: false,
+      host: "Urban Arts Collective"
     }
   ];
-
-  const navigationTabs = [
-    'Browse', 'Schedule', 'Create', 'My Parties', 'Showcase', 'My Studio', 'Resources'
-  ];
-
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
-    if (tab === 'Schedule') {
-      navigate('/schedule');
-    } else if (tab === 'My Studio') {
-      navigate('/studio');
-    } else if (tab === 'Create') {
-      navigate('/host-party');
-    } else if (tab === 'My Parties') {
-      navigate('/my-parties');
-    } else if (tab === 'Showcase') {
-      navigate('/community-art');
-    } else if (tab === 'Resources') {
-      navigate('/resources');
-    }
-  };
 
   const handleEventClick = (eventId: number) => {
     navigate(`/event/${eventId}`);
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-indigo-900">
-      {/* Modern Header with Glassmorphism */}
-      <div className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 border-b border-white/20 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-xl font-bold text-white">S</span>
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  SigArt
-                </h1>
-                <p className="text-sm text-muted-foreground">Discover Amazing Art Events</p>
-              </div>
-            </div>
-            <ProfileDropdown />
-          </div>
-        </div>
-      </div>
+  const toggleLike = (eventId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Like functionality would be implemented here
+    console.log(`Toggled like for event ${eventId}`);
+  };
 
-      {/* Enhanced Navigation Tabs */}
-      <div className="sticky top-[88px] z-40 backdrop-blur-lg bg-white/70 dark:bg-slate-800/70 border-b border-white/20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex space-x-1 overflow-x-auto py-3 scrollbar-hide">
-            {navigationTabs.map((tab) => (
-              <Button
-                key={tab}
-                variant={activeTab === tab ? "default" : "ghost"}
-                className={`whitespace-nowrap transition-all duration-300 rounded-full px-6 py-2 ${
-                  activeTab === tab 
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg transform scale-105' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700/50'
-                }`}
-                onClick={() => handleTabClick(tab)}
-              >
-                {tab}
-              </Button>
-            ))}
-          </div>
-        </div>
-      </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+      <ModernNavigation 
+        title="SigArt" 
+        subtitle="Discover Amazing Art Events"
+      />
 
       {/* Modern Search Section */}
       <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border-b border-white/20">
@@ -181,7 +134,7 @@ const Index = () => {
               onChange={(e) => setSearchFilters(prev => ({ ...prev, host: e.target.value }))}
               className="w-40 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl"
             />
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl px-6 shadow-lg">
+            <Button className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl px-6 shadow-lg">
               Filter
             </Button>
           </div>
@@ -194,7 +147,7 @@ const Index = () => {
           {events.map((event) => (
             <Card 
               key={event.id} 
-              className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
+              className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
               onClick={() => handleEventClick(event.id)}
             >
               <CardContent className="p-0">
@@ -216,10 +169,7 @@ const Index = () => {
                           ? 'bg-red-500/80 text-white' 
                           : 'bg-white/20 text-white hover:bg-white/30'
                       }`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Handle like logic
-                      }}
+                      onClick={(e) => toggleLike(event.id, e)}
                     >
                       <Heart className="w-4 h-4" fill={event.liked ? 'currentColor' : 'none'} />
                     </Button>
@@ -229,7 +179,7 @@ const Index = () => {
                       className="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
                       onClick={(e) => {
                         e.stopPropagation();
-                        // Handle share logic
+                        console.log(`Sharing event ${event.id}`);
                       }}
                     >
                       <Share2 className="w-4 h-4" />
