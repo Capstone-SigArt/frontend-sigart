@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,38 +24,48 @@ import Resources from "./pages/Resources";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+// Create QueryClient with proper configuration
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 10, // 10 minutes
+    },
+  },
+});
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/app" element={<AppLayout />}>
-            <Route path="events" element={<Events />} />
-            <Route path="events/:id" element={<EventDetail />} />
-            <Route path="schedule" element={<Schedule />} />
-            <Route path="create" element={<Create />} />
-            <Route path="create/event" element={<CreateEvent />} />
-            <Route path="create/workshop" element={<CreateWorkshop />} />
-            <Route path="create/artwork" element={<CreateArtwork />} />
-            <Route path="create/gallery" element={<CreateGallery />} />
-            <Route path="my-parties" element={<MyParties />} />
-            <Route path="messages" element={<Messages />} />
-            <Route path="messages/:id" element={<ChatRoom />} />
-            <Route path="studio" element={<Studio />} />
-            <Route path="community" element={<Community />} />
-            <Route path="resources" element={<Resources />} />
-            <Route path="settings" element={<Settings />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App: React.FC = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/app" element={<AppLayout />}>
+              <Route path="events" element={<Events />} />
+              <Route path="events/:id" element={<EventDetail />} />
+              <Route path="schedule" element={<Schedule />} />
+              <Route path="create" element={<Create />} />
+              <Route path="create/event" element={<CreateEvent />} />
+              <Route path="create/workshop" element={<CreateWorkshop />} />
+              <Route path="create/artwork" element={<CreateArtwork />} />
+              <Route path="create/gallery" element={<CreateGallery />} />
+              <Route path="my-parties" element={<MyParties />} />
+              <Route path="messages" element={<Messages />} />
+              <Route path="messages/:id" element={<ChatRoom />} />
+              <Route path="studio" element={<Studio />} />
+              <Route path="community" element={<Community />} />
+              <Route path="resources" element={<Resources />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
