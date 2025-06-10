@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { X, Search, Plus } from 'lucide-react';
 
@@ -40,22 +40,17 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
     setLinkedCharacters(linkedCharacters.filter((_, i) => i !== index));
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-      <Card className="w-full max-w-md mx-4 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl">
-        <CardHeader className="pb-4">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="w-full max-w-md bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl">
+        <DialogHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-lg font-semibold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+            <DialogTitle className="text-lg font-semibold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
               Link your FFXIV Character
-            </CardTitle>
-            <Button variant="ghost" size="sm" onClick={onClose} className="rounded-lg hover:bg-sky-50 dark:hover:bg-sky-900/30">
-              <X className="h-4 w-4" />
-            </Button>
+            </DialogTitle>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        </DialogHeader>
+        <div className="space-y-4">
           <div className="space-y-3">
             <Input
               placeholder="Character Name"
@@ -111,9 +106,9 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
           >
             Link Character
           </Button>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
