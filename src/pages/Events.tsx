@@ -5,57 +5,28 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, MapPin, Calendar, Users } from 'lucide-react';
+import { Search, MapPin, Calendar, Users, Loader2 } from 'lucide-react';
+import { useEvents, useJoinEvent } from '@/hooks/useEvents';
+import { useAuth } from '@/contexts/AuthContext';
+import { format } from 'date-fns';
 
 const eventCategories = [
   'All',
   'Digital Art',
-  'Workshops',
-  'Exhibitions',
+  'Workshop',
+  'Exhibition',
   'Gaming',
   'Fantasy'
-];
-
-const events = [
-  {
-    id: 1,
-    title: 'Digital Art Showcase',
-    date: 'Dec 15, 2024',
-    time: '7:00 PM',
-    location: 'Virtual Gallery',
-    category: 'Digital Art',
-    type: 'Showcase',
-    attending: 142,
-    image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop'
-  },
-  {
-    id: 2,
-    title: 'Character Design Workshop',
-    date: 'Dec 18, 2024',
-    time: '3:00 PM',
-    location: 'Creative Studio',
-    category: 'Workshop',
-    type: 'Character',
-    attending: 89,
-    image: 'https://images.unsplash.com/photo-1452960962994-acf4fd70b632?w=400&h=300&fit=crop'
-  },
-  {
-    id: 3,
-    title: 'Fantasy Art Convention',
-    date: 'Dec 20, 2024',
-    time: '10:00 AM',
-    location: 'Convention Center',
-    category: 'Fantasy',
-    type: 'Convention',
-    attending: 256,
-    image: 'https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=400&h=300&fit=crop'
-  }
 ];
 
 export default function Events() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
+  const { user } = useAuth();
+  
+  const { data: events = [], isLoading } = useEvents();
+  const joinEventMutation = useJoinEvent();
 
   const filteredEvents = events.filter(event => {
     const matchesCategory = selectedCategory === 'All' || event.category === selectedCategory;
@@ -63,11 +34,26 @@ export default function Events() {
     return matchesCategory && matchesSearch;
   });
 
+  const handleJoinEvent = (eventId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    joinEventMutation.mutate({ eventId });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h1 className="text-3xl font-bold">Discover Events</h1>
-        <Button onClick={() => navigate('/create/event')}>
+        <Button onClick={() => navigate('/app/create/event')}>
           Create Event
         </Button>
       </div>
@@ -103,15 +89,21 @@ export default function Events() {
           <Card 
             key={event.id} 
             className="cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate(`/events/${event.id}`)}
+            onClick={() => navigate(`/app/events/${event.id}`)}
           >
             <CardContent className="p-0">
               <div className="relative">
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  className="w-full h-48 object-cover rounded-t-lg"
-                />
+                {event.cover_image ? (
+                  <img
+                    src={event.cover_image}
+                    alt={event.title}
+                    className="w-full h-48 object-cover rounded-t-lg"
+                  />
+                ) : (
+                  <div className="w-full h-48 bg-gradient-to-br from-purple-100 to-blue-100 rounded-t-lg flex items-center justify-center">
+                    <span className="text-muted-foreground">No image</span>
+                  </div>
+                )}
                 <Badge className="absolute top-2 right-2">
                   {event.category}
                 </Badge>
@@ -121,7 +113,7 @@ export default function Events() {
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <div className="flex items-center">
                     <Calendar className="w-4 h-4 mr-2" />
-                    {event.date} at {event.time}
+                    {format(new Date(event.date), 'MMM dd, yyyy')} at {event.time}
                   </div>
                   <div className="flex items-center">
                     <MapPin className="w-4 h-4 mr-2" />
@@ -129,15 +121,36 @@ export default function Events() {
                   </div>
                   <div className="flex items-center">
                     <Users className="w-4 h-4 mr-2" />
-                    {event.attending} attending
+                    {event.attendee_count} attending
                   </div>
                 </div>
-                <Badge variant="secondary">{event.type}</Badge>
+                <div className="flex justify-between items-center">
+                  <Badge variant="secondary">{event.event_type}</Badge>
+                  <Button 
+                    size="sm" 
+                    onClick={(e) => handleJoinEvent(event.id, e)}
+                    disabled={joinEventMutation.isPending}
+                  >
+                    {joinEventMutation.isPending ? 'Joining...' : 'Join Event'}
+                  </Button>
+                </div>
+                {event.organizer && (
+                  <p className="text-xs text-muted-foreground">
+                    By {event.organizer.display_name || event.organizer.username}
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {filteredEvents.length === 0 && (
+        <div className="text-center py-12">
+          <h3 className="text-lg font-medium text-muted-foreground">No events found</h3>
+          <p className="text-muted-foreground">Try adjusting your search or filters</p>
+        </div>
+      )}
     </div>
   );
 }

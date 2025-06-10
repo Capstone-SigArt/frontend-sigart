@@ -9,7 +9,203 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      artwork: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string
+          title: string
+          updated_at: string | null
+          uploader_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url: string
+          title: string
+          updated_at?: string | null
+          uploader_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string
+          title?: string
+          updated_at?: string | null
+          uploader_id?: string
+        }
+        Relationships: []
+      }
+      conversations: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_message_at: string | null
+          participant1_id: string
+          participant2_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          last_message_at?: string | null
+          participant1_id: string
+          participant2_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_message_at?: string | null
+          participant1_id?: string
+          participant2_id?: string
+        }
+        Relationships: []
+      }
+      event_attendees: {
+        Row: {
+          event_id: string
+          id: string
+          joined_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          event_id: string
+          id?: string
+          joined_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          event_id?: string
+          id?: string
+          joined_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_attendees_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          category: string
+          cover_image: string | null
+          created_at: string | null
+          date: string
+          description: string | null
+          event_type: string
+          id: string
+          location: string
+          max_attendees: number | null
+          organizer_id: string
+          time: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string
+          cover_image?: string | null
+          created_at?: string | null
+          date: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          location: string
+          max_attendees?: number | null
+          organizer_id: string
+          time: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          cover_image?: string | null
+          created_at?: string | null
+          date?: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          location?: string
+          max_attendees?: number | null
+          organizer_id?: string
+          time?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          read: boolean | null
+          recipient_id: string
+          sender_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          read?: boolean | null
+          recipient_id: string
+          sender_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          read?: boolean | null
+          recipient_id?: string
+          sender_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          character_name: string | null
+          created_at: string | null
+          display_name: string | null
+          id: string
+          server: string | null
+          updated_at: string | null
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          character_name?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id: string
+          server?: string | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          character_name?: string | null
+          created_at?: string | null
+          display_name?: string | null
+          id?: string
+          server?: string | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
