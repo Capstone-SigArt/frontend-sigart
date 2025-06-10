@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -77,6 +78,10 @@ const Index = () => {
       navigate('/host-party');
     } else if (tab === 'My Parties') {
       navigate('/my-parties');
+    } else if (tab === 'Showcase') {
+      navigate('/community-art');
+    } else if (tab === 'Resources') {
+      navigate('/resources');
     }
   };
 
