@@ -7,10 +7,12 @@ import { Plus, Settings, Users, Calendar, Star, Eye, Heart, MessageCircle } from
 import ModernNavigation from '@/components/ModernNavigation';
 import UploadArtModal from '@/components/UploadArtModal';
 import ArtDetailsModal from '@/components/ArtDetailsModal';
+import CharacterLinkModal from '@/components/CharacterLinkModal';
 
 const Studio = () => {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [showArtModal, setShowArtModal] = useState(false);
+  const [showCharacterModal, setShowCharacterModal] = useState(false);
   const [selectedArt, setSelectedArt] = useState(null);
 
   // Mock user data
@@ -79,6 +81,10 @@ const Studio = () => {
     // Handle the upload logic here
   };
 
+  const handleEditProfile = () => {
+    setShowCharacterModal(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
       <ModernNavigation 
@@ -128,7 +134,11 @@ const Studio = () => {
                   <Plus className="w-4 h-4 mr-2" />
                   Upload New Art
                 </Button>
-                <Button variant="outline" className="w-full rounded-xl border-sky-200 hover:bg-sky-50">
+                <Button 
+                  variant="outline" 
+                  className="w-full rounded-xl border-sky-200 hover:bg-sky-50"
+                  onClick={handleEditProfile}
+                >
                   <Settings className="w-4 h-4 mr-2" />
                   Edit Profile
                 </Button>
@@ -248,6 +258,11 @@ const Studio = () => {
         open={showArtModal}
         onOpenChange={setShowArtModal}
         artData={selectedArt}
+      />
+
+      <CharacterLinkModal
+        isOpen={showCharacterModal}
+        onClose={() => setShowCharacterModal(false)}
       />
     </div>
   );
