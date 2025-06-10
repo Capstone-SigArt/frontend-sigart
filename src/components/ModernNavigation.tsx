@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProfileDropdown from '@/components/ProfileDropdown';
+import ThemeToggle from '@/components/ThemeToggle';
 import { Palette } from 'lucide-react';
 
 interface ModernNavigationProps {
@@ -51,7 +52,10 @@ const ModernNavigation = ({ title, subtitle }: ModernNavigationProps) => {
                 {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
               </div>
             </div>
-            <ProfileDropdown />
+            <div className="flex items-center space-x-3">
+              <ThemeToggle />
+              <ProfileDropdown />
+            </div>
           </div>
         </div>
       </div>
