@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -197,5 +198,3 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 };
 
 export default ArtDetailsModal;
-
-</edits_to_apply>
