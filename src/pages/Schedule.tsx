@@ -26,21 +26,25 @@ const Schedule = () => {
 
   // Mock events data for the calendar
   const events = {
-    1: ['Event Name/Time'],
-    2: ['Event Name/Time', 'Event Name/Time'],
-    3: ['Event Name/Time'],
-    8: ['Event Name/Time', 'Event Name/Time'],
-    9: ['Event Name/Time'],
-    10: ['Event Name/Time'],
-    15: ['Event Name/Time'],
-    16: ['Event Name/Time'],
-    17: ['Event Name/Time', 'Event Name/Time'],
-    22: ['Event Name/Time'],
-    23: ['Event Name/Time', 'Event Name/Time', 'Event Name/Time'],
-    24: ['Event Name/Time'],
-    29: ['Event Name/Time'],
-    30: ['Event Name/Time'],
-    31: ['Event Name/Time']
+    1: [{ id: 'event-1', name: 'Event Name/Time' }],
+    2: [{ id: 'event-2', name: 'Event Name/Time' }, { id: 'event-3', name: 'Event Name/Time' }],
+    3: [{ id: 'event-4', name: 'Event Name/Time' }],
+    8: [{ id: 'event-5', name: 'Event Name/Time' }, { id: 'event-6', name: 'Event Name/Time' }],
+    9: [{ id: 'event-7', name: 'Event Name/Time' }],
+    10: [{ id: 'event-8', name: 'Event Name/Time' }],
+    15: [{ id: 'event-9', name: 'Event Name/Time' }],
+    16: [{ id: 'event-10', name: 'Event Name/Time' }],
+    17: [{ id: 'event-11', name: 'Event Name/Time' }, { id: 'event-12', name: 'Event Name/Time' }],
+    22: [{ id: 'event-13', name: 'Event Name/Time' }],
+    23: [{ id: 'event-14', name: 'Event Name/Time' }, { id: 'event-15', name: 'Event Name/Time' }, { id: 'event-16', name: 'Event Name/Time' }],
+    24: [{ id: 'event-17', name: 'Event Name/Time' }],
+    29: [{ id: 'event-18', name: 'Event Name/Time' }],
+    30: [{ id: 'event-19', name: 'Event Name/Time' }],
+    31: [{ id: 'event-20', name: 'Event Name/Time' }]
+  };
+
+  const handleEventClick = (eventId: string) => {
+    navigate(`/event/${eventId}`);
   };
 
   // Generate calendar days
@@ -168,12 +172,13 @@ const Schedule = () => {
                         {day}
                       </div>
                       <div className="space-y-1">
-                        {events[day]?.map((event, eventIndex) => (
+                        {events[day]?.map((event) => (
                           <div
-                            key={eventIndex}
-                            className="text-xs text-muted-foreground bg-muted/50 px-1 py-0.5 rounded truncate"
+                            key={event.id}
+                            className="text-xs text-muted-foreground bg-muted/50 px-1 py-0.5 rounded truncate cursor-pointer hover:bg-muted transition-colors"
+                            onClick={() => handleEventClick(event.id)}
                           >
-                            {event}
+                            {event.name}
                           </div>
                         ))}
                       </div>
