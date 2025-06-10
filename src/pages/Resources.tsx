@@ -1,154 +1,150 @@
 
 import React from 'react';
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useNavigate } from 'react-router-dom';
-import ProfileDropdown from '@/components/ProfileDropdown';
+import { BookOpen, Palette, Video, Download, ExternalLink } from 'lucide-react';
+import ModernNavigation from '@/components/ModernNavigation';
 
 const Resources = () => {
-  const navigate = useNavigate();
-
-  const navigationTabs = [
-    'Browse', 'Schedule', 'Create', 'My Parties', 'Showcase', 'My Studio', 'Resources'
+  const resourceCategories = [
+    {
+      title: "Drawing Tools & Software",
+      icon: Palette,
+      items: [
+        { name: "Procreate", type: "Mobile App", link: "#" },
+        { name: "Adobe Photoshop", type: "Desktop", link: "#" },
+        { name: "Clip Studio Paint", type: "Desktop/Mobile", link: "#" },
+        { name: "Krita", type: "Free Desktop", link: "#" }
+      ]
+    },
+    {
+      title: "Learning Resources",
+      icon: BookOpen,
+      items: [
+        { name: "Proko Drawing Fundamentals", type: "Video Course", link: "#" },
+        { name: "Drawabox", type: "Free Course", link: "#" },
+        { name: "Ctrl+Paint", type: "Digital Art", link: "#" },
+        { name: "New Masters Academy", type: "Traditional Art", link: "#" }
+      ]
+    },
+    {
+      title: "Video Tutorials",
+      icon: Video,
+      items: [
+        { name: "Aaron Blaise Animation", type: "YouTube", link: "#" },
+        { name: "Marco Bucci Art", type: "YouTube", link: "#" },
+        { name: "Sinix Design", type: "YouTube", link: "#" },
+        { name: "Moderndayjames", type: "YouTube", link: "#" }
+      ]
+    },
+    {
+      title: "Free Resources",
+      icon: Download,
+      items: [
+        { name: "Brush Packs", type: "Download", link: "#" },
+        { name: "Reference Photos", type: "Stock Images", link: "#" },
+        { name: "Color Palettes", type: "Tools", link: "#" },
+        { name: "Texture Libraries", type: "Resources", link: "#" }
+      ]
+    }
   ];
 
-  const handleTabClick = (tab: string) => {
-    if (tab === 'Browse') {
-      navigate('/');
-    } else if (tab === 'Schedule') {
-      navigate('/schedule');
-    } else if (tab === 'My Studio') {
-      navigate('/studio');
-    } else if (tab === 'Create') {
-      navigate('/host-party');
-    } else if (tab === 'My Parties') {
-      navigate('/my-parties');
-    } else if (tab === 'Showcase') {
-      navigate('/community-art');
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center border-2 border-border">
-                <span className="text-sm font-medium text-muted-foreground">Logo</span>
-              </div>
-              <h1 className="text-3xl font-bold text-foreground">SigArt</h1>
-            </div>
-            <ProfileDropdown />
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+      <ModernNavigation 
+        title="Resources" 
+        subtitle="Everything you need for your artistic journey"
+      />
 
-      {/* Navigation Tabs */}
-      <div className="border-b border-border bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex space-x-1 overflow-x-auto py-2">
-            {navigationTabs.map((tab) => (
-              <Button
-                key={tab}
-                variant={tab === 'Resources' ? "default" : "ghost"}
-                className={`whitespace-nowrap transition-all duration-200 ${
-                  tab === 'Resources'
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                }`}
-                onClick={() => handleTabClick(tab)}
-              >
-                {tab}
-              </Button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          {/* Left Side Note */}
-          <div className="w-64">
-            <Card className="bg-card border-border">
-              <CardContent className="p-4">
-                <p className="text-xs text-muted-foreground">
-                  This page will be entirely dedicated to resources for the aspiring artists that learn all they need to know about participating in parties and events, as well as art and drawing in general, frequently utilized art sites, brush packs and other things. This will be the main place in which users can go to find resources, this page itself just has a bunch of info for resources will continue to grow as more information presents itself.
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Side Info Card */}
+          <div className="lg:col-span-1">
+            <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl sticky top-8">
+              <CardContent className="p-6">
+                <h3 className="font-bold text-lg bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-4">
+                  About Resources
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
+                  This comprehensive resource hub is designed to support aspiring artists at every stage of their journey.
+                </p>
+                <p className="text-sm text-slate-600 dark:text-slate-300">
+                  From essential drawing tools to advanced tutorials, find everything you need to enhance your artistic skills and participate in our community events.
                 </p>
               </CardContent>
             </Card>
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 space-y-8">
-            {/* About the site */}
-            <Card className="bg-card border-border">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-bold text-foreground mb-4">About the site</h2>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-                  dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          <div className="lg:col-span-3 space-y-8">
+            {/* What is an Art Party Section */}
+            <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
+              <CardContent className="p-8">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+                  What is an Art Party?
+                </h2>
+                <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
+                  Art parties are collaborative creative events where artists of all skill levels come together to create, learn, and share their passion for art. These events can range from structured workshops and classes to informal gatherings where participants work on personal projects while enjoying the company of fellow artists.
                 </p>
-
-                <h3 className="text-lg font-semibold text-foreground mb-3">What is an Art Party</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-                  dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
+                  Whether you're a beginner looking to learn new techniques or an experienced artist wanting to connect with others, art parties provide a supportive environment for creative growth and community building.
                 </p>
-
-                <h4 className="font-medium text-foreground mb-2">Links for further explanation</h4>
-                <ul className="list-disc list-inside text-sm text-blue-600 space-y-1">
-                  <li><a href="#" className="hover:underline">Link</a></li>
-                  <li><a href="#" className="hover:underline">Link</a></li>
-                  <li><a href="#" className="hover:underline">Link</a></li>
-                </ul>
+                <div className="bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/50 dark:to-emerald-900/50 rounded-xl p-6">
+                  <h4 className="font-semibold text-slate-700 dark:text-slate-300 mb-3">Benefits of Art Parties:</h4>
+                  <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                    <li className="flex items-center space-x-2">
+                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full"></span>
+                      <span>Learn new techniques from experienced artists</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full"></span>
+                      <span>Build connections with fellow artists</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full"></span>
+                      <span>Get inspired by different art styles and approaches</span>
+                    </li>
+                    <li className="flex items-center space-x-2">
+                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full"></span>
+                      <span>Receive constructive feedback on your work</span>
+                    </li>
+                  </ul>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Drawing tools */}
-            <Card className="bg-card border-border">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-bold text-foreground mb-4">Drawing tools</h2>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-                  dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                </p>
-
-                <h4 className="font-medium text-foreground mb-2">Links for further explanation</h4>
-                <ul className="list-disc list-inside text-sm text-blue-600 space-y-1">
-                  <li><a href="#" className="hover:underline">Link</a></li>
-                  <li><a href="#" className="hover:underline">Link</a></li>
-                  <li><a href="#" className="hover:underline">Link</a></li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            {/* Drawing Tutorials */}
-            <Card className="bg-card border-border">
-              <CardContent className="p-6">
-                <h2 className="text-xl font-bold text-foreground mb-4">Drawing Tutorials</h2>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                  exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-                  dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                </p>
-
-                <h4 className="font-medium text-foreground mb-2">Links for further explanation</h4>
-                <ul className="list-disc list-inside text-sm text-blue-600 space-y-1">
-                  <li><a href="#" className="hover:underline">Link</a></li>
-                  <li><a href="#" className="hover:underline">Link</a></li>
-                  <li><a href="#" className="hover:underline">Link</a></li>
-                </ul>
-              </CardContent>
-            </Card>
+            {/* Resource Categories */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {resourceCategories.map((category, index) => (
+                <Card key={index} className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="w-12 h-12 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                        <category.icon className="w-6 h-6 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-700 dark:text-slate-300">
+                        {category.title}
+                      </h3>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      {category.items.map((item, itemIndex) => (
+                        <div key={itemIndex} className="flex items-center justify-between p-3 bg-white/40 dark:bg-slate-700/40 rounded-lg hover:bg-white/60 dark:hover:bg-slate-700/60 transition-colors cursor-pointer group">
+                          <div>
+                            <div className="font-medium text-slate-700 dark:text-slate-300">
+                              {item.name}
+                            </div>
+                            <div className="text-xs text-slate-500 dark:text-slate-400">
+                              {item.type}
+                            </div>
+                          </div>
+                          <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-sky-500 transition-colors" />
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>

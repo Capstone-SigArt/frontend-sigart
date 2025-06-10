@@ -1,46 +1,33 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import ProfileDropdown from '@/components/ProfileDropdown';
+import ModernNavigation from '@/components/ModernNavigation';
 
 const Schedule = () => {
-  const [activeTab, setActiveTab] = useState('Schedule');
   const [currentMonth, setCurrentMonth] = useState('May');
   const [currentYear] = useState(2024);
   const navigate = useNavigate();
 
-  const navigationTabs = [
-    'Browse', 'Schedule', 'Create', 'My Parties', 'Showcase', 'My Studio', 'Resources'
-  ];
-
-  const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
-    if (tab === 'Browse') {
-      navigate('/');
-    } else if (tab === 'My Studio') {
-      navigate('/studio');
-    }
-  };
-
   // Mock events data for the calendar
   const events = {
-    1: [{ id: 'event-1', name: 'Event Name/Time' }],
-    2: [{ id: 'event-2', name: 'Event Name/Time' }, { id: 'event-3', name: 'Event Name/Time' }],
-    3: [{ id: 'event-4', name: 'Event Name/Time' }],
-    8: [{ id: 'event-5', name: 'Event Name/Time' }, { id: 'event-6', name: 'Event Name/Time' }],
-    9: [{ id: 'event-7', name: 'Event Name/Time' }],
-    10: [{ id: 'event-8', name: 'Event Name/Time' }],
-    15: [{ id: 'event-9', name: 'Event Name/Time' }],
-    16: [{ id: 'event-10', name: 'Event Name/Time' }],
-    17: [{ id: 'event-11', name: 'Event Name/Time' }, { id: 'event-12', name: 'Event Name/Time' }],
-    22: [{ id: 'event-13', name: 'Event Name/Time' }],
-    23: [{ id: 'event-14', name: 'Event Name/Time' }, { id: 'event-15', name: 'Event Name/Time' }, { id: 'event-16', name: 'Event Name/Time' }],
-    24: [{ id: 'event-17', name: 'Event Name/Time' }],
-    29: [{ id: 'event-18', name: 'Event Name/Time' }],
-    30: [{ id: 'event-19', name: 'Event Name/Time' }],
-    31: [{ id: 'event-20', name: 'Event Name/Time' }]
+    1: [{ id: 'event-1', name: 'Digital Art Workshop' }],
+    2: [{ id: 'event-2', name: 'Portrait Class' }, { id: 'event-3', name: 'Abstract Night' }],
+    3: [{ id: 'event-4', name: 'Plein Air Session' }],
+    8: [{ id: 'event-5', name: 'Mixed Media' }, { id: 'event-6', name: 'Street Art Tour' }],
+    9: [{ id: 'event-7', name: 'Watercolor Class' }],
+    10: [{ id: 'event-8', name: 'Community Show' }],
+    15: [{ id: 'event-9', name: 'Digital Workshop' }],
+    16: [{ id: 'event-10', name: 'Art Fair Prep' }],
+    17: [{ id: 'event-11', name: 'Portrait Session' }, { id: 'event-12', name: 'Group Critique' }],
+    22: [{ id: 'event-13', name: 'Gallery Opening' }],
+    23: [{ id: 'event-14', name: 'Art Jam' }, { id: 'event-15', name: 'Workshop' }, { id: 'event-16', name: 'Exhibition' }],
+    24: [{ id: 'event-17', name: 'Studio Visit' }],
+    29: [{ id: 'event-18', name: 'Art Market' }],
+    30: [{ id: 'event-19', name: 'Open Studio' }],
+    31: [{ id: 'event-20', name: 'Final Show' }]
   };
 
   const handleEventClick = (eventId: string) => {
@@ -78,83 +65,48 @@ const Schedule = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-muted rounded-full flex items-center justify-center border-2 border-border">
-                <span className="text-sm font-medium text-muted-foreground">Logo</span>
-              </div>
-              <h1 className="text-3xl font-bold text-foreground">SigArt</h1>
-            </div>
-            
-            {/* Profile Dropdown */}
-            <ProfileDropdown />
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation Tabs */}
-      <div className="border-b border-border bg-muted/30">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex space-x-1 overflow-x-auto py-2">
-            {navigationTabs.map((tab) => (
-              <Button
-                key={tab}
-                variant={activeTab === tab ? "default" : "ghost"}
-                className={`whitespace-nowrap transition-all duration-200 ${
-                  activeTab === tab 
-                    ? 'bg-primary text-primary-foreground' 
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/50'
-                }`}
-                onClick={() => handleTabClick(tab)}
-              >
-                {tab}
-              </Button>
-            ))}
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+      <ModernNavigation 
+        title="Schedule" 
+        subtitle="View and manage your art events"
+      />
 
       {/* Calendar Content */}
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <Card className="bg-card border-border">
-          <CardContent className="p-6">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
+          <CardContent className="p-8">
             {/* Month Navigation */}
-            <div className="flex items-center justify-center mb-6">
+            <div className="flex items-center justify-center mb-8">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handlePrevMonth}
-                className="mr-4"
+                className="mr-6 bg-white/40 hover:bg-white/60 rounded-full"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft className="h-5 w-5" />
               </Button>
               
-              <h2 className="text-2xl font-bold text-foreground min-w-[120px] text-center">
-                {currentMonth}
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent min-w-[150px] text-center">
+                {currentMonth} {currentYear}
               </h2>
               
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handleNextMonth}
-                className="ml-4"
+                className="ml-6 bg-white/40 hover:bg-white/60 rounded-full"
               >
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-5 w-5" />
               </Button>
             </div>
 
             {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-1">
+            <div className="grid grid-cols-7 gap-2 rounded-xl overflow-hidden">
               {/* Week Day Headers */}
               {weekDays.map((day) => (
                 <div
                   key={day}
-                  className="h-12 flex items-center justify-center font-medium text-muted-foreground border border-border bg-muted/50"
+                  className="h-14 flex items-center justify-center font-semibold text-slate-700 dark:text-slate-300 bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-800 dark:to-emerald-800"
                 >
                   {day}
                 </div>
@@ -164,18 +116,18 @@ const Schedule = () => {
               {calendarDays.map((day, index) => (
                 <div
                   key={index}
-                  className="h-24 border border-border bg-background p-1 overflow-hidden"
+                  className="h-28 bg-white/60 dark:bg-slate-700/60 border border-white/30 p-2 overflow-hidden hover:bg-white/80 transition-colors"
                 >
                   {day && (
                     <>
-                      <div className="text-xs font-medium text-foreground mb-1">
+                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                         {day}
                       </div>
                       <div className="space-y-1">
                         {events[day]?.map((event) => (
                           <div
                             key={event.id}
-                            className="text-xs text-muted-foreground bg-muted/50 px-1 py-0.5 rounded truncate cursor-pointer hover:bg-muted transition-colors"
+                            className="text-xs text-white bg-gradient-to-r from-sky-500 to-emerald-500 px-2 py-1 rounded-md truncate cursor-pointer hover:from-sky-600 hover:to-emerald-600 transition-all shadow-sm"
                             onClick={() => handleEventClick(event.id)}
                           >
                             {event.name}
