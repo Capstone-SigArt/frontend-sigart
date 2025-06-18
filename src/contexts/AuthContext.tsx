@@ -1,18 +1,15 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  avatar?: string;
-}
+import { authService } from '@/services/api/auth';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 
 interface AuthContextType {
   user: User | null;
+  session: Session | null;
   login: (email: string, password: string) => Promise<boolean>;
   register: (email: string, password: string, username: string) => Promise<boolean>;
-  logout: () => void;
+  loginWithGoogle: () => Promise<void>;
+  logout: () => Promise<void>;
   loading: boolean;
 }
 
@@ -26,58 +23,107 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Demo users for testing
-  const demoUsers = [
-    { id: '1', email: 'demo@example.com', password: 'demo123', username: 'Demo User' },
-    { id: '2', email: 'artist@example.com', password: 'artist123', username: 'Creative Artist' },
-    { id: '3', email: 'admin@example.com', password: 'admin123', username: 'Admin User' }
-  ];
-
   useEffect(() => {
-    // Check for existing session
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session);
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('Auth state changed:', { event: _event, session });
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    const foundUser = demoUsers.find(u => u.email === email && u.password === password);
-    if (foundUser) {
-      const user = { id: foundUser.id, email: foundUser.email, username: foundUser.username };
-      setUser(user);
-      localStorage.setItem('user', JSON.stringify(user));
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
       return true;
+    } catch (error) {
+      console.error('Login error:', error);
+      return false;
     }
-    return false;
   };
 
   const register = async (email: string, password: string, username: string): Promise<boolean> => {
-    // Check if user already exists
-    const existingUser = demoUsers.find(u => u.email === email);
-    if (existingUser) {
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username,
+          },
+        },
+      });
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Registration error:', error);
       return false;
     }
-    
-    // Create new user
-    const newUser = { id: Date.now().toString(), email, username };
-    setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
-    return true;
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const loginWithGoogle = async () => {
+    try {
+      console.log('Starting Google login...');
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            prompt: 'select_account',
+          },
+        },
+      });
+      console.log('Google login response:', { data, error });
+      if (error) throw error;
+    } catch (error) {
+      console.error('Google login error:', error);
+      throw error;
+    }
   };
 
+  const logout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  const value = {
+    user,
+    session,
+    login,
+    register,
+    loginWithGoogle,
+    logout,
+    loading,
+  };
+  console.log("AuthContext loading:", loading, "user:", user, "session:", session);
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +7,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Palette } from 'lucide-react';
 import CharacterLinkModal from '@/components/CharacterLinkModal';
+import { supabase } from '@/lib/supabase';
+import { Route, Navigate } from 'react-router-dom';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,16 +17,14 @@ const Auth = () => {
   const [username, setUsername] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const [linkCharacter, setLinkCharacter] = useState(false);
   const [showCharacterModal, setShowCharacterModal] = useState(false);
-  const { login, register } = useAuth();
+  const { login, register, loginWithGoogle, loading } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    setLoading(true);
 
     try {
       let success = false;
@@ -49,21 +48,25 @@ const Auth = () => {
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log('Google login clicked');
-    // TODO: Implement Google OAuth
-    setError('Google login will be implemented with Supabase integration');
+  const handleGoogleLogin = async () => {
+    try {
+      setError('');
+      await loginWithGoogle();
+    } catch (error) {
+      setError('Failed to login with Google. Please try again.');
+      console.error('Google login error:', error);
+    }
   };
 
   const handleCharacterModalClose = () => {
     setShowCharacterModal(false);
     navigate('/');
   };
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <>

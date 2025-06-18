@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import {
@@ -23,7 +22,8 @@ const ProfileDropdown = () => {
     return null;
   }
 
-  const getInitials = (name: string) => {
+  const getInitials = (name?: string) => {
+    if (!name) return '';
     return name.split(' ').map(n => n[0]).join('').toUpperCase();
   };
 
@@ -47,7 +47,7 @@ const ProfileDropdown = () => {
           <Button variant="ghost" className="relative h-12 w-12 rounded-full hover:bg-white/20 dark:hover:bg-slate-700/20">
             <Avatar className="h-12 w-12 bg-gradient-to-r from-sky-500 to-emerald-500 border-2 border-white/30">
               <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
-                {getInitials(user.username)}
+                {getInitials(user.email || '')}
               </AvatarFallback>
             </Avatar>
           </Button>
@@ -56,11 +56,11 @@ const ProfileDropdown = () => {
           <div className="flex items-center justify-start gap-3 p-3 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl mb-2">
             <Avatar className="h-10 w-10 bg-gradient-to-r from-sky-500 to-emerald-500">
               <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-sm font-bold">
-                {getInitials(user.username)}
+                {getInitials(user.email || '')}
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col space-y-1 leading-none">
-              <p className="font-semibold text-sm text-slate-700 dark:text-slate-300">{user.username}</p>
+              <p className="font-semibold text-sm text-slate-700 dark:text-slate-300">{user.email}</p>
               <p className="w-[180px] truncate text-xs text-slate-500 dark:text-slate-400">
                 {user.email}
               </p>
