@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { X, Search, Plus } from 'lucide-react';
-
+import axios from 'axios';
 interface CharacterLinkModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -14,14 +14,31 @@ interface CharacterLinkModalProps {
 const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
   const [characterName, setCharacterName] = useState('');
   const [datacenter, setDatacenter] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
   const [linkedCharacters, setLinkedCharacters] = useState([
     { name: 'Character 1', datacenter: 'Aether', server: 'Gilgamesh' },
     { name: 'Character 2', datacenter: 'Crystal', server: 'Balmung' },
     { name: 'Character 3', datacenter: 'Primal', server: 'Leviathan' }
   ]);
 
-  const handleSearch = () => {
-    console.log('Searching for character:', characterName, 'on', datacenter);
+  const handleSearch = async() => {
+    try {
+      console.log('Searching for character:', characterName, 'on', datacenter);
+      const response = await axios.get('http://localhost:3000/api/characters', {
+        params: {
+          name: characterName
+        }
+      });
+
+      const characters = response.data;
+      console.log('Search results:', characters);
+      setSearchResults(characters);
+
+    } catch (error) {
+      console.error('Error fetching character data:', error);
+      setSearchResults([]);
+    }
+
   };
 
   const handleLinkCharacter = () => {
@@ -81,6 +98,34 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
               <Search className="w-4 h-4 mr-2" />
               Search
             </Button>
+            {searchResults.length > 0 && (
+                <div className="mt-4 max-h-40 overflow-y-auto border border-slate-300 rounded p-2 bg-white/90 dark:bg-slate-700/80">
+                  <h4 className="text-sm font-semibold mb-2">Search Results</h4>
+                  {searchResults.map((char, index) => (
+                      <div
+                          key={index}
+                          className="p-2 hover:bg-sky-200 dark:hover:bg-sky-700 cursor-pointer rounded flex items-center justify-between"
+                          onClick={() => {
+                            setCharacterName(char.Name);
+                            setDatacenter(datacenter);
+                            //setSearchResults([]);
+                          }}
+                      >
+                        <div>
+                          <div className="font-medium">{char.Name}</div>
+                          <div className="text-xs text-muted-foreground">ID: {char.ID}</div>
+                          <div className="text-xs text-muted-foreground">World: {char.World}</div>
+                        </div>
+                        <img
+                            src={char.Avatar || char.avatar}
+                            alt={`${char.Name} avatar`}
+                            className="w-12 h-12 rounded-full object-cover ml-4"
+                        />
+                      </div>
+
+                  ))}
+                </div>
+            )}
           </div>
 
           <div className="space-y-3 max-h-60 overflow-y-auto">
