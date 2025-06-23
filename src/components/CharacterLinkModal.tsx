@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { X, Search, Plus } from 'lucide-react';
 import axios from 'axios';
+import { supabase } from '@/lib/supabase';
 interface CharacterLinkModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -14,12 +15,37 @@ interface CharacterLinkModalProps {
 const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
   const [characterName, setCharacterName] = useState('');
   const [datacenter, setDatacenter] = useState('');
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
-  const [linkedCharacters, setLinkedCharacters] = useState([
-    { name: 'Character 1', datacenter: 'Aether', server: 'Gilgamesh' },
+/*  const [linkedCharacters, setLinkedCharacters] = useState([
+    /!*{ name: 'Character 1', datacenter: 'Aether', server: 'Gilgamesh' },
     { name: 'Character 2', datacenter: 'Crystal', server: 'Balmung' },
-    { name: 'Character 3', datacenter: 'Primal', server: 'Leviathan' }
-  ]);
+    { name: 'Character 3', datacenter: 'Primal', server: 'Leviathan' }*!/
+  ]);*/
+  const[linkedCharacters, setLinkedCharacters] = useState([]);
+
+  useEffect(() => {
+    const fetchLinkedCharacters = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        try {
+          console.log("This is the get route for user id " + user.id);
+          const response = await axios.get(`http://localhost:3000/linkCharacters/${user.id}`);
+          setLinkedCharacters(response.data);
+        } catch (err) {
+          console.error('Failed to fetch linked characters:', err);
+        }
+      }
+    };
+
+    if (isOpen) {
+      fetchLinkedCharacters();
+    }
+  }, [isOpen]);
+
 
   const handleSearch = async() => {
     try {
@@ -29,7 +55,6 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
           name: characterName
         }
       });
-
       const characters = response.data;
       console.log('Search results:', characters);
       setSearchResults(characters);
@@ -41,15 +66,42 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
 
   };
 
-  const handleLinkCharacter = () => {
+  const handleLinkCharacter = async() => {
+    if(!selectedCharacter)
+    {
+      alert("Please select a character first");
+      return;
+    }
     if (characterName && datacenter) {
       setLinkedCharacters([...linkedCharacters, { 
         name: characterName, 
         datacenter: datacenter, 
-        server: 'Server' 
+        server: 'Server'
+
       }]);
+      try{
+      const {
+        data: {user},
+      } = await supabase.auth.getUser();
+      console.log(user.id);
+        console.log({
+          character_id: String(selectedCharacter.ID),
+          name: selectedCharacter.Name,
+          avatar: selectedCharacter.Avatar,
+          user_id: user.id,
+        });
+        const response = await axios.post('http://localhost:3000/linkCharacters', {
+          character_id: selectedCharacter.ID,
+          name: selectedCharacter.Name,
+          avatar: selectedCharacter.Avatar,
+          user_id: user.id
+        });
+      } catch (err) {
+        console.error("Failed to link character")
+      }
       setCharacterName('');
       setDatacenter('');
+      setSelectedCharacter(null);
     }
   };
 
@@ -106,8 +158,10 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
                           key={index}
                           className="p-2 hover:bg-sky-200 dark:hover:bg-sky-700 cursor-pointer rounded flex items-center justify-between"
                           onClick={() => {
+                            setSelectedCharacter(char)
                             setCharacterName(char.Name);
                             setDatacenter(datacenter);
+                            //console.log("This is the selected id" + selectedCharacter.ID);
                             //setSearchResults([]);
                           }}
                       >
@@ -132,13 +186,18 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
             {linkedCharacters.map((character, index) => (
               <div key={index} className="flex items-center justify-between p-3 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border border-sky-200 dark:border-sky-600">
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full flex items-center justify-center">
+                  <img
+                      src={character.avatar}
+                      alt={`${character.name} avatar`}
+                      className="w-10 h-10 rounded-full object-cover"
+                  />
+                  {/*<div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full flex items-center justify-center">
                     <Plus className="text-white text-sm" />
-                  </div>
+                  </div>*/}
                   <div>
                     <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{character.name}</span>
                     <Badge variant="secondary" className="ml-2 text-xs bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300">
-                      {character.datacenter}
+                      {character.character_id}
                     </Badge>
                   </div>
                 </div>
