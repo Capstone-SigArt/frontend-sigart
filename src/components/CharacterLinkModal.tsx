@@ -105,8 +105,19 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
     }
   };
 
-  const removeCharacter = (index: number) => {
+  /*const removeCharacter = (index: number) => {
     setLinkedCharacters(linkedCharacters.filter((_, i) => i !== index));
+  };*/
+  const removeCharacter = async (characterId: string, userId: string) => {
+    try {
+      await axios.delete(`http://localhost:3000/linkCharacters/${characterId}/${userId}`);
+      setLinkedCharacters(prev =>
+          prev.filter(char => char.character_id !== characterId)
+      );
+    } catch (err) {
+      console.error("Failed to delete character:", err);
+      alert("Failed to remove character.");
+    }
   };
 
   const handleOpenChange = (open: boolean) => {
@@ -208,7 +219,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    removeCharacter(index);
+                    removeCharacter(character.character_id, character.user_id);
                   }}
                   className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg"
                 >
