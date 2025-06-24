@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,15 +7,24 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import ModernNavigation from '@/components/ModernNavigation';
 import { useNavigate } from 'react-router-dom';
+import {supabase} from "@/lib/supabase.ts";
+// todo need to add a method for saving the tags for a party, similar to the artworkTags table, there needs to be a method of pulling all tags assigned to a party for alter display
 
+//todo need to comeback and implement cover image uploading once cloudflare has been updated to save images.
 const HostParty = () => {
   const [formData, setFormData] = useState({
     title: '',
     theme: '',
     tags: '',
-    dateTime: '',
+    startTime: '',
+    endTime:'',
     location: '',
-    description: ''
+    description: '',
+    cover_image: '',
+    created_at: new Date().toISOString(),
+    date: '',
+    host_id: '',
+
   });
   const [previewGenerated, setPreviewGenerated] = useState(false);
   const navigate = useNavigate();
@@ -28,8 +37,57 @@ const HostParty = () => {
     setPreviewGenerated(true);
   };
 
-  const handleCreateParty = () => {
-    console.log('Creating party with data:', formData);
+  const handleCreateParty = async () => {
+    //console.log('Creating party with data:', formData);
+    try {
+      const payload = {
+        host_id: formData.host_id,
+        title: formData.title,
+        description: formData.description,
+        cover_image: formData.cover_image || '', // optional
+        created_at: formData.created_at,
+        scheduled_at: formData.startTime, // or a different date/time field
+        date: formData.startTime.split('T')[0], // extract date from start datetime
+        start_time: formData.startTime.split('T')[1] || '',
+        end_time: formData.endTime.split('T')[1] || '',
+        theme: formData.theme,
+        address: formData.location,
+      };
+      console.log("Payload to be sent:");
+      console.log("host_id:", formData.host_id);
+      console.log("title:", formData.title);
+      console.log("theme:", formData.theme);
+      console.log("tags:", formData.tags);
+      console.log("description:", formData.description);
+      console.log("start_time:", formData.startTime.split('T')[1] || '');
+      console.log("end_time:", formData.endTime.split('T')[1] || '');
+      console.log("date:", formData.startTime.split('T')[0]);
+      console.log("cover_image:", formData.cover_image || '');
+      console.log("address:", formData.location);
+      console.log("scheduled_at:", formData.startTime);
+      console.log("created_at:", formData.created_at);
+
+
+      const response = await fetch('http://localhost:3000/parties', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Error creating party:', error.message);
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Party created:', data);
+      navigate('/my-parties');
+    } catch (error) {
+      console.error('Failed to create party:', error);
+    }
     navigate('/my-parties');
   };
 
@@ -38,12 +96,61 @@ const HostParty = () => {
       title: '',
       theme: '',
       tags: '',
-      dateTime: '',
+      startTime: '',
+      endTime:'',
       location: '',
-      description: ''
+      description: '',
+      cover_image: '',
+      created_at: new Date().toISOString(),
+      date: '',
+      host_id: '',
     });
     setPreviewGenerated(false);
   };
+
+  const testCreateTags = async () => {
+    try {
+      const tags = formData.tags
+          .split(',')
+          .map(t => t.trim())
+          .filter(t => t);
+
+      if (tags.length === 0) {
+        console.log('No tags to test');
+        return;
+      }
+
+      for (const tag of tags) {
+        const response = await fetch('http://localhost:3000/tags', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: tag }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.warn(`Tag "${tag}" create failed:`, errorData.message);
+        } else {
+          const data = await response.json();
+          console.log(`Tag "${tag}" created or already exists:`, data);
+        }
+      }
+    } catch (error) {
+      console.error('Error testing tag create:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setFormData(prev => ({ ...prev, host_id: user?.id || '' }));
+    };
+    fetchUser();
+  }, []);
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
@@ -83,18 +190,41 @@ const HostParty = () => {
                   onChange={(e) => handleInputChange('tags', e.target.value)}
                   className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
                 />
-                
-                <Input
-                  type="datetime-local"
-                  placeholder="Date/Time"
-                  value={formData.dateTime}
-                  onChange={(e) => handleInputChange('dateTime', e.target.value)}
-                  className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
-                />
-                
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={testCreateTags}
+                >
+                  Test Create First Tag
+                </Button>
+                <div className="relative">
+                  <Input
+                      type="datetime-local"
+                      placeholder="Date/Time"
+                      value={formData.startTime}
+                      onChange={(e) => handleInputChange('startTime', e.target.value)}
+                      className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20" // add right padding
+                  />
+                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
+                    start-time
+                  </span>
+                </div>
+                <div className="relative">
+                  <Input
+                      type="datetime-local"
+                      placeholder="Date/Time"
+                      value={formData.endTime}
+                      onChange={(e) => handleInputChange('endTime', e.target.value)}
+                      className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20" // add right padding
+                  />
+                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
+                    end-time
+                  </span>
+                </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="bg-white/40 border-white/30">Server</Button>
-                  <Button variant="outline" size="sm" className="bg-white/40 border-white/30">Datacenter</Button>
+{/*                  <Button variant="outline" size="sm" className="bg-white/40 border-white/30">Server</Button>
+                  <Button variant="outline" size="sm" className="bg-white/40 border-white/30">Datacenter</Button>*/}
                   <Input
                     placeholder="Location/Address"
                     value={formData.location}
@@ -105,7 +235,7 @@ const HostParty = () => {
                 
                 <div className="flex gap-2">
                   <Button variant="outline" className="flex-1 bg-white/40 border-white/30 rounded-xl">
-                    Upload Flyer/Cover Image
+                    Upload Flyer/Cover Image (Optional)
                   </Button>
                   <Button variant="secondary" className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-xl">
                     Choose File
@@ -163,7 +293,13 @@ const HostParty = () => {
                 <CardContent className="p-0">
                   <div className="relative">
                     <div className="bg-gradient-to-r from-sky-200 to-emerald-200 h-48 flex items-center justify-center">
-                      <span className="text-lg font-medium text-slate-600">Event Image</span>
+                      {/*test for image*/}
+                      <img
+                          src="https://pbs.twimg.com/media/F2TPSgZbUAAZs3x?format=jpg&name=4096x4096" //this is a random image I am using just for testing what the images would look like
+                          alt="Event Preview"
+                          className="object-cover w-full h-full"
+                      />
+                      {/*<span className="text-lg font-medium text-slate-600">Event Image</span>*/}
                     </div>
                     <div className="p-6">
                       <h4 className="font-bold text-xl mb-2">
@@ -179,6 +315,21 @@ const HostParty = () => {
                         <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white">
                           Art Event
                         </Badge>
+                        {/* Tag badges (on a separate row, wrapped if needed) */}
+                        <div className="flex flex-wrap gap-2">
+                          {formData.tags
+                              .split(',')
+                              .map(tag => tag.trim())
+                              .filter(tag => tag !== '')
+                              .map((tag, index) => (
+                                  <Badge
+                                      key={index}
+                                      className="bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-white px-4 py-1 rounded-md"
+                                  >
+                                    {tag}
+                                  </Badge>
+                              ))}
+                        </div>
                       </div>
                     </div>
                   </div>
