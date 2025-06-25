@@ -108,6 +108,35 @@ const HostParty = () => {
     setPreviewGenerated(false);
   };
 
+  const handleImageUpload = async(e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if(!file) return;
+
+    try {
+      const res = await fetch(
+          `http://localhost:3000/upload/generate-upload-url?fileName=${encodeURIComponent(file.name)}&fileType=${encodeURIComponent(file.type)}`
+      );
+      const {uploadURL} = await res.json();
+
+      const uploadRes = await fetch(uploadURL, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': file.type,
+        },
+        body: file,
+      });
+
+      if(!uploadRes.ok) throw new Error("Upload failed");
+      //this is not to be used for production and will be setup with a custom domain later, this has rate limits and is only for testing purposes
+      const publicUrl = `https://pub-d09558734dc641f2b6f0331097b0c0e0.r2.dev/${encodeURIComponent(file.name)}`;
+      setFormData(prev => ({ ...prev, cover_image: publicUrl }));
+      console.log("Image uploaded and cover_image set:", publicUrl);
+    } catch (err) {
+      console.error("Image upload error:", err);
+      alert("Image upload failed");
+    }
+  };
+
   const testCreateTags = async () => {
     try {
       const tags = formData.tags
@@ -232,14 +261,24 @@ const HostParty = () => {
                     className="flex-1 bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
                   />
                 </div>
-                
-                <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1 bg-white/40 border-white/30 rounded-xl">
+
+                <div className="flex flex-col gap-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Upload Flyer/Cover Image (Optional)
-                  </Button>
-                  <Button variant="secondary" className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white rounded-xl">
-                    Choose File
-                  </Button>
+                  </label>
+                  <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
+                  />
+                  {formData.cover_image && (
+                      <img
+                          src={formData.cover_image}
+                          alt="Cover Preview"
+                          className="mt-2 rounded-xl border w-full max-w-sm object-cover"
+                      />
+                  )}
                 </div>
                 
                 <Textarea
@@ -295,7 +334,10 @@ const HostParty = () => {
                     <div className="bg-gradient-to-r from-sky-200 to-emerald-200 h-48 flex items-center justify-center">
                       {/*test for image*/}
                       <img
-                          src="https://pbs.twimg.com/media/F2TPSgZbUAAZs3x?format=jpg&name=4096x4096" //this is a random image I am using just for testing what the images would look like
+                          /*src="https://pbs.twimg.com/media/F2TPSgZbUAAZs3x?format=jpg&name=4096x4096" //this is a random image I am using just for testing what the images would look like
+                          alt="Event Preview"
+                          className="object-cover w-full h-full"*/
+                          src={formData.cover_image || "https://via.placeholder.com/600x300?text=Event+Flyer"}
                           alt="Event Preview"
                           className="object-cover w-full h-full"
                       />
