@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,99 +7,51 @@ import { Search, Calendar, MapPin, Users, Heart, Share2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ModernNavigation from '@/components/ModernNavigation';
 
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+
 const Index = () => {
   const [searchFilters, setSearchFilters] = useState({
     title: '',
     tags: '',
     host: ''
   });
+  const [events, setEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Enhanced event data with more realistic content
-  const events = [
-    {
-      id: 1,
-      title: "Digital Art Showcase",
-      image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop",
-      description: "Explore cutting-edge digital artwork from emerging artists",
-      tags: ["Digital", "Modern"],
-      date: "Jan 15, 2024",
-      location: "Online",
-      attendees: 124,
-      liked: false,
-      host: "ArtSpace Gallery"
-    },
-    {
-      id: 2,
-      title: "Abstract Expression Night",
-      image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=400&h=300&fit=crop",
-      description: "Contemporary abstract art exhibition featuring local talents",
-      tags: ["Abstract", "Contemporary"],
-      date: "Jan 18, 2024",
-      location: "Studio A",
-      attendees: 89,
-      liked: true,
-      host: "Creative Collective"
-    },
-    {
-      id: 3,
-      title: "Mixed Media Workshop",
-      image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=300&fit=crop",
-      description: "Hands-on workshop exploring experimental art techniques",
-      tags: ["Workshop", "Mixed Media"],
-      date: "Jan 20, 2024",
-      location: "Gallery Space",
-      attendees: 45,
-      liked: false,
-      host: "Art Academy"
-    },
-    {
-      id: 4,
-      title: "Portrait Mastery Class",
-      image: "https://images.unsplash.com/photo-1470813740244-df37b8c1edcb?w=400&h=300&fit=crop",
-      description: "Learn advanced portrait techniques from master artists",
-      tags: ["Portrait", "Education"],
-      date: "Jan 22, 2024",
-      location: "Art Center",
-      attendees: 67,
-      liked: false,
-      host: "Portrait Pro Studio"
-    },
-    {
-      id: 5,
-      title: "Nature & Landscape Plein Air",
-      image: "https://images.unsplash.com/photo-1452960962994-acf4fd70b632?w=400&h=300&fit=crop",
-      description: "Outdoor painting expedition in beautiful natural settings",
-      tags: ["Nature", "Plein Air"],
-      date: "Jan 25, 2024",
-      location: "Riverside Park",
-      attendees: 93,
-      liked: true,
-      host: "Outdoor Artists Guild"
-    },
-    {
-      id: 6,
-      title: "Street Art Festival",
-      image: "https://images.unsplash.com/photo-1500673922987-e212871fec22?w=400&h=300&fit=crop",
-      description: "Urban art celebration with live murals and performances",
-      tags: ["Street Art", "Festival"],
-      date: "Jan 28, 2024",
-      location: "Downtown",
-      attendees: 156,
-      liked: false,
-      host: "Urban Arts Collective"
-    }
-  ];
+  useEffect(() => {
+    const fetchParties = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${API_BASE_URL}/parties`);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        setEvents(data);
+        setError(null);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load events');
+        setEvents([]);
+      }
+      setLoading(false);
+    };
+    fetchParties();
+  }, []);
+  
 
-  const handleEventClick = (eventId: number) => {
-    navigate(`/event/${eventId}`);
-  };
-
-  const toggleLike = (eventId: number, e: React.MouseEvent) => {
+  const toggleLike = (eventId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     // Like functionality would be implemented here
     console.log(`Toggled like for event ${eventId}`);
   };
+
+  const handleEventClick = (eventId: string) => {
+    navigate(`/event/${eventId}`);
+  };
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading events...</div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
@@ -152,7 +104,7 @@ const Index = () => {
               <CardContent className="p-0">
                 <div className="relative overflow-hidden">
                   <img 
-                    src={event.image} 
+                    src={event.cover_image || "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop"} 
                     alt={event.title}
                     className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -164,13 +116,13 @@ const Index = () => {
                       size="icon"
                       variant="ghost"
                       className={`w-8 h-8 rounded-full backdrop-blur-sm ${
-                        event.liked 
+                        false // event.liked (not implemented)
                           ? 'bg-red-500/80 text-white' 
                           : 'bg-white/20 text-white hover:bg-white/30'
                       }`}
                       onClick={(e) => toggleLike(event.id, e)}
                     >
-                      <Heart className="w-4 h-4" fill={event.liked ? 'currentColor' : 'none'} />
+                      <Heart className="w-4 h-4" fill={false ? 'currentColor' : 'none'} />
                     </Button>
                     <Button
                       size="icon"
@@ -199,22 +151,22 @@ const Index = () => {
                       <div className="flex items-center space-x-4 text-white/80 text-sm">
                         <div className="flex items-center space-x-1">
                           <Calendar className="w-4 h-4" />
-                          <span>{event.date}</span>
+                          <span>{event.date ? new Date(event.date).toLocaleDateString() : event.scheduled_at ? new Date(event.scheduled_at).toLocaleDateString() : ''}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <MapPin className="w-4 h-4" />
-                          <span>{event.location}</span>
+                          <span>{event.location || 'TBA'}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Users className="w-4 h-4" />
-                          <span>{event.attendees}</span>
+                          <span>{event.attendees || 0}</span>
                         </div>
                       </div>
                     </div>
                     
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2">
-                      {event.tags.map((tag, index) => (
+                      {(event.tags || []).map((tag: string, index: number) => (
                         <Badge 
                           key={index}
                           className="bg-white/20 text-white border-white/30 backdrop-blur-sm hover:bg-white/30 transition-colors"
