@@ -11,9 +11,10 @@ interface UploadArtModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUpload: (artData: any) => void;
+  eventId: string;
 }
 
-const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) => {
+const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModalProps) => {
   const [title, setTitle] = useState('');
   const [toolsUsed, setToolsUsed] = useState('');
   const [tags, setTags] = useState('');
@@ -22,6 +23,20 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [referenceImage, setReferenceImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+
+  const uploadFileToR2 = async (file: File): Promise<string> => {
+    const res = await fetch(`http://localhost:3000/upload/generate-upload-url?fileName=${encodeURIComponent(file.name)}&fileType=${encodeURIComponent(file.type)}`);
+    const { uploadURL } = await res.json();
+
+    const uploadRes = await fetch(uploadURL, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type },
+      body: file
+    });
+
+    if (!uploadRes.ok) throw new Error('Failed to upload to R2');
+    return `https://pub-d09558734dc641f2b6f0331097b0c0e0.r2.dev/${encodeURIComponent(file.name)}`;
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,28 +57,56 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
     }
   };
 
-  const handleUpload = () => {
-    const artData = {
-      title,
-      toolsUsed,
-      tags,
-      notesDescription,
-      taggedCharacterNames,
-      image: selectedImage,
-      referenceImage
-    };
-    onUpload(artData);
-    // Reset form
-    setTitle('');
-    setToolsUsed('');
-    setTags('');
-    setNotesDescription('');
-    setTaggedCharacterNames('');
-    setSelectedImage(null);
-    setReferenceImage(null);
-    setImagePreview(null);
-    onOpenChange(false);
+  const handleUpload = async () => {
+    try {
+      const {
+        data: { user }
+      } = await import("@/lib/supabase").then(m => m.supabase.auth.getUser());
+
+      if (!user || !selectedImage) {
+        alert("Missing image or user not logged in.");
+        return;
+      }
+
+      const imageUrl = await uploadFileToR2(selectedImage);
+      const referenceUrl = referenceImage ? await uploadFileToR2(referenceImage) : null;
+
+      const payload = {
+        uploader_id: user.id,
+        party_id: eventId,
+        image_url: imageUrl,
+        reference_url: referenceUrl,
+        notes: notesDescription,
+        tools_used: toolsUsed,
+        created_at: new Date().toISOString()
+      };
+
+      const res = await fetch("http://localhost:3000/artwork", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error("Failed to upload art metadata");
+
+      onUpload(payload); // trigger re-render in parent
+      onOpenChange(false); // close modal
+
+      // Clear form
+      setTitle('');
+      setToolsUsed('');
+      setTags('');
+      setNotesDescription('');
+      setTaggedCharacterNames('');
+      setSelectedImage(null);
+      setReferenceImage(null);
+      setImagePreview(null);
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed. Please try again.");
+    }
   };
+
 
   const handleCancel = () => {
     // Reset form

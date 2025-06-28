@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ModernNavigation from '@/components/ModernNavigation';
 import UploadArtModal from '@/components/UploadArtModal';
 import ArtDetailsModal from '@/components/ArtDetailsModal';
+import { Textarea } from "@/components/ui/textarea";
+import dayjs from 'dayjs';
+import {supabase} from "@/lib/supabase.ts";
 
 const EventDetails = () => {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -16,8 +19,96 @@ const EventDetails = () => {
   const [selectedArt, setSelectedArt] = useState(null);
   const navigate = useNavigate();
   const { eventId } = useParams();
+  const [eventData, setEventData] = useState(null);
+  const [hostData, setHostData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error , setError] = useState(null);
+  const [hasJoined, setHasJoined] = useState(false);
+  const [artworks, setArtworks] = useState([]);
 
-  // Mock event data
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/artwork?party_id=${eventId}`);
+        if (!response.ok) throw new Error("Failed to fetch artworks");
+        const data = await response.json();
+        setArtworks(data);
+      } catch (err) {
+        console.error("Error fetching artworks:", err);
+      }
+    };
+
+    if (eventId) fetchArtworks();
+  }, [eventId]);
+
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/partyDetails/${eventId}`);
+        if(!response.ok) throw new Error('failed to fetch party');
+        const data = await response.json();
+        setEventData(data);
+        setError(null);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load event');
+      } finally {
+        setLoading(false);
+      }
+    };
+    if(eventId) fetchEvent();
+  }, [eventId])
+
+  useEffect(() => {
+    const fetchHost = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/profile/${eventData.host_id}`);
+        if(!response.ok) throw new Error('failed to fetch host data');
+        const data = await response.json();
+        setHostData(data);
+        setError(null);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load Host data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (eventData?.host_id) fetchHost();
+  }, [eventData]);
+
+  // console.log(hostData);
+  // console.log(hostData.username)
+
+  useEffect(() => {
+    const checkMembership = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        const userId = user?.id;
+        if (!userId || !eventId) return;
+
+        const response = await fetch(
+            `http://localhost:3000/partyMember/${userId}/${eventId}`
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setHasJoined(!!data);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    checkMembership(); // no need to check userId outside
+  }, [eventId]);
+
+
+  console.log("Event ID from URL:", eventId);
+  console.log(eventData);
+/*  Mock event data
   const eventData = {
     title: "Test Party at [game server][location]",
     hostName: "Host Name",
@@ -25,7 +116,7 @@ const EventDetails = () => {
     description: "Description",
     theme: "Theme",
     tags: ["Tag 1", "Tag 2", "Tag 3"]
-  };
+  };*/
 
   // Mock attendees data
   const attendees = [
@@ -37,6 +128,9 @@ const EventDetails = () => {
 
   const handleUploadArt = (artData: any) => {
     console.log('Art uploaded:', artData);
+
+    setUploadModalOpen(false);
+    window.location.reload();
     // Handle art upload logic here
   };
 
@@ -58,6 +152,50 @@ const EventDetails = () => {
     setArtDetailsModalOpen(true);
   };
 
+  const handleJoinLeave = async() => {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const userId = user.id
+      if(!userId || !eventId) return;
+
+      if (!hasJoined) {
+        const response = await fetch('http://localhost:3000/partyMember', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: userId,
+            party_id: eventId,
+            role: 'member',
+            joined_at: new Date().toISOString()
+          })
+        });
+        if (!response.ok) throw new Error('Failed to join event');
+        setHasJoined(true);
+      } else {
+        const response = await fetch(`http://localhost:3000/partyMember`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: userId,
+            party_id: eventId
+          })
+        });
+        if (!response.ok) throw new Error('Failed to leave event');
+        setHasJoined(false);
+      }
+    } catch (error) {
+      console.error(error);
+      alert(`Could not ${hasJoined ? 'leave' : 'join'} the event`);
+    }
+  };
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading event...</div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
+  if (!eventData) return null; // just in case
+  if(!hostData) return null;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
       <ModernNavigation 
@@ -76,44 +214,43 @@ const EventDetails = () => {
               </h2>
               
               {/* Banner/Flyer Image Placeholder */}
-              <div className="w-full h-48 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 border-2 border-dashed border-sky-300 dark:border-sky-600 rounded-2xl flex items-center justify-center mb-8">
-                <div className="text-center">
-                  <div className="text-xl font-medium text-sky-600 dark:text-sky-400 mb-2">
-                    Banner/Flyer Image for party
-                  </div>
-                  <div className="text-sm text-slate-500 dark:text-slate-400">
-                    Event promotional image will appear here
-                  </div>
-                </div>
+              {/* Actual Banner Image */}
+              <div className="w-full h-48 mb-8 overflow-hidden rounded-2xl border-2 border-sky-300 dark:border-sky-600">
+                <img
+                    src={eventData.cover_image}
+                    alt="Event Banner"
+                    className="w-full h-full object-cover"
+                />
               </div>
+
 
               {/* Event Details Form */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div className="space-y-2">
                   <Label htmlFor="hostName" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Host Name</Label>
-                  <Input 
-                    id="hostName" 
-                    value={eventData.hostName} 
-                    readOnly 
+                  <Input
+                    id="hostName"
+                    value={hostData.username}
+                    readOnly
                     className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="dateTime" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Date/Time</Label>
                   <Input 
-                    id="dateTime" 
-                    value={eventData.dateTime} 
+                    id="dateTime"
+                    value={`${eventData.date} at ${eventData.start_time}`}
                     readOnly 
                     className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="description" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Description</Label>
-                  <Input 
-                    id="description" 
-                    value={eventData.description} 
-                    readOnly 
-                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  <Input
+                      id="description"
+                      value={eventData.description}
+                      readOnly
+                      className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   />
                 </div>
                 <div className="space-y-2">
@@ -130,19 +267,24 @@ const EventDetails = () => {
               {/* Tags and Action Buttons */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
                 <div className="flex flex-wrap gap-3">
-                  {eventData.tags.map((tag, index) => (
+                  {/*{eventData.tags.map((tag, index) => (
                     <span 
                       key={index}
                       className="px-4 py-2 bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 text-sky-700 dark:text-sky-300 rounded-full text-sm font-medium border border-sky-200 dark:border-sky-600"
                     >
                       {tag}
                     </span>
-                  ))}
+                  ))}*/}
                 </div>
-                <Button 
-                  className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl shadow-lg px-6"
+                <Button
+                    onClick={handleJoinLeave}
+                    className={`${
+                        hasJoined
+                            ? 'bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600'
+                            : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600'
+                    } text-white rounded-xl shadow-lg px-6`}
                 >
-                  Join/Leave
+                  {hasJoined ? 'Leave Event' : 'Join Event'}
                 </Button>
               </div>
             </div>
@@ -169,31 +311,42 @@ const EventDetails = () => {
               {/* Gallery Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Top Row - Attendees with avatars */}
-                {attendees.map((attendee) => (
-                  <Card 
-                    key={attendee.id} 
-                    className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
-                    onClick={() => handleArtClick(attendee)}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex flex-col items-center space-y-4">
-                        <Avatar className="w-20 h-20 border-4 border-sky-200 dark:border-sky-600">
-                          <AvatarImage src={attendee.avatar} />
-                          <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-lg font-bold">
-                            {attendee.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="text-center">
-                          <p className="font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                            {attendee.name}
-                          </p>
+                {artworks.map((art) => (
+                    <Card
+                        key={art.id}
+                        className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
+                        onClick={() => {
+                          setSelectedArt({
+                            title: art.notes || 'Untitled',
+                            artist: art.uploader_id,
+                            uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
+                            toolsUsed: art.tools_used,
+                            tags: [],
+                            additionalNotes: art.notes,
+                            likes: 0,
+                            taggedCharacters: [],
+                            imageUrl: art.image_url,
+                            referenceImageUrl: art.reference_url
+                          });
+                          setArtDetailsModalOpen(true);
+                        }}
+                    >
+                      <CardContent className="p-0">
+                        <img
+                            src={art.image_url}
+                            alt="Uploaded artwork"
+                            className="w-full h-48 object-cover rounded-t-2xl"
+                        />
+                        <div className="p-4">
+                          <h4 className="text-md font-semibold text-slate-700 dark:text-slate-200 truncate">
+                            {art.notes || "Untitled"}
+                          </h4>
                           <p className="text-xs text-slate-500 dark:text-slate-400">
-                            {attendee.info}
+                            Uploaded on {dayjs(art.created_at).format("MMM D, YYYY")}
                           </p>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
                 ))}
 
                 {/* Bottom Row - Empty slots */}
@@ -224,6 +377,7 @@ const EventDetails = () => {
         open={uploadModalOpen}
         onOpenChange={setUploadModalOpen}
         onUpload={handleUploadArt}
+        eventId={eventId}
       />
       
       <ArtDetailsModal
