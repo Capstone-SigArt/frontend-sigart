@@ -8,9 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import ModernNavigation from '@/components/ModernNavigation';
 import { useNavigate } from 'react-router-dom';
 import {supabase} from "@/lib/supabase.ts";
-// todo need to add a method for saving the tags for a party, similar to the artworkTags table, there needs to be a method of pulling all tags assigned to a party for alter display
 
-//todo need to comeback and implement cover image uploading once cloudflare has been updated to save images.
 const HostParty = () => {
   const [formData, setFormData] = useState({
     title: '',
@@ -35,6 +33,59 @@ const HostParty = () => {
 
   const handleGeneratePreview = () => {
     setPreviewGenerated(true);
+  };
+
+  const associateTagsWithParty = async (partyId: string) => {
+    const tags = formData.tags.split(',').map(tag=>tag.trim()).filter(tag=>tag);
+
+    for (const tag of tags) {
+      try {
+        const tagRes = await fetch(`http://localhost:3000/tags/${encodeURIComponent(tag)}`);
+        const tagData = await tagRes.json()
+        console.log('Tag data fetched:', tagData);
+
+        if(!tagData.id) {
+          console.warn(`No tag ID found for "${tag}"`);
+          continue;
+        }
+
+        const linkRes = await fetch('http://localhost:3000/tags/partyTags', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ party_id: partyId, tag_id: tagData.id })
+        });
+
+        const linkResult = await linkRes.json();
+        console.log(`Tag "${tag}" linked to party:`, linkResult);
+      } catch (err) {
+        console.error(`Failed to link tag "${tag}" to party`, err);
+      }
+    }
+  };
+
+  const associateHostWithParty = async (partyId: string) => {
+    try{
+    const response = await fetch('http://localhost:3000/partyMember', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        user_id: formData.host_id,
+        party_id: partyId,
+        role: 'host',
+        joined_at: new Date().toISOString()
+      })
+    });
+
+    if(!response.ok) {
+      const err = await response.json();
+      console.error("Failed to associate host with party:", err.message);
+    } else {
+      const data = await response.json();
+      console.log("Host successfully associated with party:", data);
+    }
+    } catch (error) {
+      console.error("Error associating host with party:", error);
+    }
   };
 
   const handleCreateParty = async () => {
@@ -82,13 +133,22 @@ const HostParty = () => {
         return;
       }
 
+      await testCreateTags();
+
       const data = await response.json();
       console.log('Party created:', data);
+      console.log(data.id)
+
+
+      //associate host
+      await associateHostWithParty(data.id)
+      //associate partyTags
+      await associateTagsWithParty(data.id);
+
       navigate('/my-parties');
     } catch (error) {
       console.error('Failed to create party:', error);
     }
-    navigate('/my-parties');
   };
 
   const handleCancel = () => {
@@ -219,14 +279,14 @@ const HostParty = () => {
                   onChange={(e) => handleInputChange('tags', e.target.value)}
                   className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
                 />
-                <Button
+                {/*<Button
                     variant="outline"
                     size="sm"
                     className="mt-2"
                     onClick={testCreateTags}
                 >
                   Test Create First Tag
-                </Button>
+                </Button>*/}
                 <div className="relative">
                   <Input
                       type="datetime-local"
