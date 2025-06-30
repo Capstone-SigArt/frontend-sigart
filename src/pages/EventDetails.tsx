@@ -317,6 +317,7 @@ const EventDetails = () => {
                         className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
                         onClick={() => {
                           setSelectedArt({
+                            id:art.id,
                             title: art.notes || 'Untitled',
                             artist: art.uploader_id,
                             uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
