@@ -67,6 +67,34 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
     return `https://pub-d09558734dc641f2b6f0331097b0c0e0.r2.dev/${encodeURIComponent(file.name)}`;
   };
 
+  const associateTagsWithArtwork = async (artworkId: string) => {
+    const tagList = tags.split(',').map(tag=>tag.trim()).filter(tag=>tag);
+
+    for (const tag of tagList) {
+      try {
+        const tagRes = await fetch(`http://localhost:3000/tags/${encodeURIComponent(tag)}`);
+        const tagData = await tagRes.json()
+        console.log('Tag data fetched:', tagData);
+
+        if(!tagData.id) {
+          console.warn(`No tag ID found for "${tag}"`);
+          continue;
+        }
+
+        const linkRes = await fetch('http://localhost:3000/tags/artworkTags', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ artwork_id: artworkId, tag_id: tagData.id })
+        });
+
+        const linkResult = await linkRes.json();
+        console.log(`Tag "${tag}" linked to artwork:`, linkResult);
+      } catch (err) {
+        console.error(`Failed to link tag "${tag}" to artwork`, err);
+      }
+    }
+  };
+
   const CharacterSelectList = ({ characters, selectedIds, onToggle }) => {
     return (
         <ScrollArea className="max-h-60 space-y-2 pr-2" style={{maxHeight:'10rem',overflowY:'auto'}}>
@@ -166,6 +194,37 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
           })
         });
       }
+
+      const tagList = tags
+          .split(',')
+          .map(t => t.trim())
+          .filter(t => t);
+
+      if (tagList.length === 0) {
+        console.log('No tags to test');
+        return;
+      }
+
+      for (const tag of tagList) {
+        const response = await fetch('http://localhost:3000/tags', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: tag }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.warn(`Tag "${tag}" create failed:`, errorData.message);
+        } else {
+          const data = await response.json();
+          console.log(`Tag "${tag}" created or already exists:`, data);
+        }
+      }
+
+      await associateTagsWithArtwork(savedArtwork.id)
+
       onUpload(payload); // trigger re-render in parent
       onOpenChange(false); // close modal
 

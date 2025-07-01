@@ -26,6 +26,7 @@ interface ArtDetailsModalProps {
 const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) => {
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [linkedCharacters,setLinkedCharacters] = useState([]);
+  const [linkedTags,setLinkedTags] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
 
 
@@ -41,6 +42,12 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           .catch(err => {
             console.error('Failed to fetch linked characters:', err);
             setLinkedCharacters([]);
+          });
+      fetchArtworkLinkedTags(artData.id)
+          .then(setLinkedTags)
+          .catch(err => {
+            console.error('Failed to fetch linked tags:', err);
+            setLinkedTags([]);
           });
     }
   }, [open, artData?.id]);
@@ -65,6 +72,21 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
       return [];
     }
   };
+
+  const fetchArtworkLinkedTags = async(artworkId: string) => {
+    try{
+    const res = await fetch(`http://localhost:3000/tags/artworkTags/${artworkId}`);
+      if(!res.ok) {
+        console.error('Failed to fetch linked tags');
+        return []
+      }
+      const data = await res.json();
+      return data; //array of tags
+    } catch (err) {
+      console.error("Error fetching linked tags:", err);
+      return [];
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -159,7 +181,11 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
                   </div>
                   <div>
                     <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Tags:</span>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">{artData.tags.join(' ')}</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">
+                      {linkedTags.length > 0
+                          ? linkedTags.map(tag => tag.name).join(', ')
+                          : 'No tags'}
+                    </div>
                   </div>
                 </div>
                 
