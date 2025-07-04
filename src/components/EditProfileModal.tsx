@@ -1,0 +1,300 @@
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User, Loader2, Upload, Lock } from 'lucide-react';
+import { profileService } from '@/services/api/profile';
+import { useAuth } from '@/contexts/AuthContext';
+import { useQueryClient } from '@tanstack/react-query';
+import { parseSpecialties, formatSpecialties } from '@/lib/specialties';
+import ChangePasswordModal from './ChangePasswordModal';
+
+interface EditProfileModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  profile: any;
+}
+
+const EditProfileModal = ({ open, onOpenChange, profile }: EditProfileModalProps) => {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    username: '',
+    full_name: '',
+    about: '',
+    facebook: '',
+    twitter: '',
+    instagram: '',
+    avatar_url: '',
+    specialties: ''
+  });
+
+  // Initialize form data when profile changes
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        username: profile.username || '',
+        full_name: profile.full_name || '',
+        about: profile.about || '',
+        facebook: profile.facebook || '',
+        twitter: profile.twitter || '',
+        instagram: profile.instagram || '',
+        avatar_url: profile.avatar_url || '',
+        specialties: profile.specialties || ''
+      });
+    }
+  }, [profile]);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSave = async () => {
+    if (!user?.id) return;
+    
+    setIsLoading(true);
+    try {
+      // Only send non-empty values or null for empty strings
+      const updates = Object.entries(formData).reduce((acc, [key, value]) => {
+        acc[key] = value.trim() === '' ? null : value.trim();
+        return acc;
+      }, {} as any);
+
+      await profileService.updateProfile(user.id, updates);
+      
+      // Invalidate and refetch profile data
+      queryClient.invalidateQueries({ queryKey: ['profile', user.id] });
+      
+      onOpenChange(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCancel = () => {
+    // Reset form to original values
+    if (profile) {
+      setFormData({
+        username: profile.username || '',
+        full_name: profile.full_name || '',
+        about: profile.about || '',
+        facebook: profile.facebook || '',
+        twitter: profile.twitter || '',
+        instagram: profile.instagram || '',
+        avatar_url: profile.avatar_url || '',
+        specialties: profile.specialties || ''
+      });
+    }
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl max-h-[90vh] bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+            Edit Profile
+          </DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground text-center">
+            Update your profile information to personalize your artist studio.
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="space-y-6 pb-4">
+          {/* Profile Picture Section */}
+          <div className="flex flex-col items-center space-y-4">
+            <Avatar className="w-24 h-24 bg-gradient-to-r from-sky-500 to-emerald-500">
+              {formData.avatar_url ? (
+                <AvatarImage src={formData.avatar_url} alt="Profile" />
+              ) : (
+                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-2xl">
+                  <User className="h-12 w-12" />
+                </AvatarFallback>
+              )}
+            </Avatar>
+            <div className="text-center">
+              <Label htmlFor="avatar_url" className="text-slate-700 dark:text-slate-300 font-medium">
+                Avatar URL
+              </Label>
+              <Input
+                id="avatar_url"
+                value={formData.avatar_url}
+                onChange={(e) => handleInputChange('avatar_url', e.target.value)}
+                placeholder="https://example.com/avatar.jpg"
+                className="mt-2 bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+              />
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                Enter a URL to your profile image
+              </p>
+            </div>
+          </div>
+
+          {/* Form Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="username" className="text-slate-700 dark:text-slate-300 font-medium">
+                Username
+              </Label>
+              <Input
+                id="username"
+                value={formData.username}
+                onChange={(e) => handleInputChange('username', e.target.value)}
+                className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                placeholder="Enter your username"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="full_name" className="text-slate-700 dark:text-slate-300 font-medium">
+                Full Name
+              </Label>
+              <Input
+                id="full_name"
+                value={formData.full_name}
+                onChange={(e) => handleInputChange('full_name', e.target.value)}
+                className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                placeholder="Enter your full name"
+              />
+            </div>
+          </div>
+
+          <div>
+            <Label htmlFor="about" className="text-slate-700 dark:text-slate-300 font-medium">
+              About
+            </Label>
+            <Textarea
+              id="about"
+              value={formData.about}
+              onChange={(e) => handleInputChange('about', e.target.value)}
+              className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm min-h-[100px]"
+              placeholder="Tell us about yourself and your art..."
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="specialties" className="text-slate-700 dark:text-slate-300 font-medium">
+              Specialties
+            </Label>
+            <Input
+              id="specialties"
+              value={formData.specialties}
+              onChange={(e) => handleInputChange('specialties', e.target.value)}
+              className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+              placeholder="e.g., Digital Art, Painting, Photography (separate with commas)"
+            />
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Separate multiple specialties with commas
+            </p>
+          </div>
+
+          {/* Social Media Links */}
+          <div>
+            <Label className="text-slate-700 dark:text-slate-300 font-medium mb-3 block">
+              Social Media Links
+            </Label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="facebook" className="text-sm text-slate-600 dark:text-slate-400">
+                  Facebook
+                </Label>
+                <Input
+                  id="facebook"
+                  value={formData.facebook}
+                  onChange={(e) => handleInputChange('facebook', e.target.value)}
+                  className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  placeholder="Facebook URL"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="twitter" className="text-sm text-slate-600 dark:text-slate-400">
+                  Twitter/X
+                </Label>
+                <Input
+                  id="twitter"
+                  value={formData.twitter}
+                  onChange={(e) => handleInputChange('twitter', e.target.value)}
+                  className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  placeholder="Twitter URL"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="instagram" className="text-sm text-slate-600 dark:text-slate-400">
+                  Instagram
+                </Label>
+                <Input
+                  id="instagram"
+                  value={formData.instagram}
+                  onChange={(e) => handleInputChange('instagram', e.target.value)}
+                  className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  placeholder="Instagram URL"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex justify-between items-center pt-4">
+            {/* Change Password Button */}
+            <Button
+              variant="outline"
+              onClick={() => setIsPasswordModalOpen(true)}
+              disabled={isLoading}
+              className="border-orange-300 text-orange-600 hover:bg-orange-50 dark:border-orange-600 dark:text-orange-400 dark:hover:bg-orange-900/30"
+            >
+              <Lock className="w-4 h-4 mr-2" />
+              Change Password
+            </Button>
+
+            {/* Save/Cancel Buttons */}
+            <div className="flex space-x-3">
+              <Button
+                variant="outline"
+                onClick={handleCancel}
+                disabled={isLoading}
+                className="border-sky-300 text-sky-600 hover:bg-sky-50 dark:border-sky-600 dark:text-sky-400 dark:hover:bg-sky-900/30"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSave}
+                disabled={isLoading}
+                className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  'Save Changes'
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Change Password Modal */}
+        <ChangePasswordModal 
+          open={isPasswordModalOpen}
+          onOpenChange={setIsPasswordModalOpen}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default EditProfileModal;
