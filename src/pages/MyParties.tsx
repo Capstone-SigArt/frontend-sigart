@@ -10,6 +10,7 @@ const MyParties = () => {
   const navigate = useNavigate();
   const [hostedParties, setHostedParties] = useState([]);
   const [memberParties,setMemberParties] = useState([]);
+  const [attendees,setAttendees] = useState(0)
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'host' | 'member'>('all');
 
@@ -39,22 +40,34 @@ const MyParties = () => {
           return tags.map(t => t.name);
         };
 
-        const hostedWithTags = await Promise.all(
+        const hostedWithDetails = await Promise.all(
             hosted.map(async (p) => {
-              const tags = await fetchTagsForParty(p.id);
-              return { ...p, isHosted: true, tags };
+              const [tagsRes, countRes] = await Promise.all([
+                fetchTagsForParty(p.id),
+                fetch(`http://localhost:3000/myParties/count/${p.id}`)
+              ]);
+              const tags = tagsRes;
+              const { count } = await countRes.json();
+              return { ...p, isHosted: true, tags, attendees: count };
             })
         );
 
-        const memberWithTags = await Promise.all(
+
+        const memberWithDetails = await Promise.all(
             member.map(async (p) => {
-              const tags = await fetchTagsForParty(p.id);
-              return { ...p, isHosted: false, tags };
+              const [tagsRes, countRes] = await Promise.all([
+                fetchTagsForParty(p.id),
+                fetch(`http://localhost:3000/myParties/count/${p.id}`)
+              ]);
+              const tags = tagsRes;
+              const { count } = await countRes.json();
+              return { ...p, isHosted: false, tags, attendees: count };
             })
         );
 
-        setHostedParties(hostedWithTags);
-        setMemberParties(memberWithTags);
+
+        setHostedParties(hostedWithDetails);
+        setMemberParties(memberWithDetails);
       } catch (err) {
         console.error("Failed to load parties:", err);
       } finally {
