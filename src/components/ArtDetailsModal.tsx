@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -9,6 +9,7 @@ interface ArtDetailsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   artData?: {
+    id: string;
     title: string;
     artist: string;
     uploadDate: string;
@@ -24,13 +25,68 @@ interface ArtDetailsModalProps {
 
 const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) => {
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+  const [linkedCharacters,setLinkedCharacters] = useState([]);
+  const [linkedTags,setLinkedTags] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
+
+
+  useEffect(() => {
+    console.log("Modal open:", open, "artData.id:", artData?.id);
+    if (open && artData?.id) {
+      fetch(`http://localhost:3000/artworkCharacters/${artData.id}`)
+          .then(res => res.json())
+          .then(data => {
+            console.log("Fetched linked characters:", data);
+            setLinkedCharacters(data);
+          })
+          .catch(err => {
+            console.error('Failed to fetch linked characters:', err);
+            setLinkedCharacters([]);
+          });
+      fetchArtworkLinkedTags(artData.id)
+          .then(setLinkedTags)
+          .catch(err => {
+            console.error('Failed to fetch linked tags:', err);
+            setLinkedTags([]);
+          });
+    }
+  }, [open, artData?.id]);
 
   if (!artData) return null;
 
   const handleLike = () => {
     setIsLiked(!isLiked);
   };
+
+  const fetchArtworkLinkedCharacters = async (artworkId: string) => {
+    try {
+      const res = await fetch(`http://localhost:3000/artworkCharacters/${artworkId}`);
+      if (!res.ok) {
+        console.error("Failed to fetch linked characters");
+        return [];
+      }
+      const data = await res.json();
+      return data; // array of characters
+    } catch (err) {
+      console.error("Error fetching linked characters:", err);
+      return [];
+    }
+  };
+
+  const fetchArtworkLinkedTags = async(artworkId: string) => {
+    try{
+    const res = await fetch(`http://localhost:3000/tags/artworkTags/${artworkId}`);
+      if(!res.ok) {
+        console.error('Failed to fetch linked tags');
+        return []
+      }
+      const data = await res.json();
+      return data; //array of tags
+    } catch (err) {
+      console.error("Error fetching linked tags:", err);
+      return [];
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -125,7 +181,11 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
                   </div>
                   <div>
                     <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Tags:</span>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">{artData.tags.join(' ')}</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400">
+                      {linkedTags.length > 0
+                          ? linkedTags.map(tag => tag.name).join(', ')
+                          : 'No tags'}
+                    </div>
                   </div>
                 </div>
                 
@@ -169,15 +229,22 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
               <div>
                 <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Tagged Characters</div>
                 <div className="space-y-3">
-                  {artData.taggedCharacters.map((character, index) => (
-                    <div key={index} className="flex items-center gap-3 p-2 bg-white/60 dark:bg-slate-700/60 rounded-xl">
-                      <Avatar className="w-8 h-8 border border-sky-300">
-                        <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-xs font-bold">
-                          {character.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <span className="text-sm text-slate-600 dark:text-slate-400">{character}</span>
-                    </div>
+                  {linkedCharacters.length === 0 && (
+                      <div className="text-sm text-slate-500 dark:text-slate-400">No linked characters</div>
+                  )}
+                  {linkedCharacters.map((character) => (
+                      <div key={character.id} className="flex items-center gap-3 p-2 bg-white/60 dark:bg-slate-700/60 rounded-xl">
+                        <Avatar className="w-8 h-8 border border-sky-300">
+                          {character.avatar ? (
+                              <AvatarImage src={character.avatar} alt={character.name} />
+                          ) : (
+                              <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-xs font-bold">
+                                {character.name.charAt(0)}
+                              </AvatarFallback>
+                          )}
+                        </Avatar>
+                        <span className="text-sm text-slate-600 dark:text-slate-400">{character.name}</span>
+                      </div>
                   ))}
                 </div>
               </div>

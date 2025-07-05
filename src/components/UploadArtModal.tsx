@@ -1,19 +1,31 @@
 
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Upload } from 'lucide-react';
+import { Checkbox } from "@/components/ui/checkbox";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface UploadArtModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUpload: (artData: any) => void;
+  eventId: string;
 }
 
-const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) => {
+interface PartyCharacter {
+  id: string;            // primary key of the character record
+  character_id: string;  // actual FFXIV character ID
+  name: string;
+  avatar: string;
+  user_id: string;       // foreign key linking to the user
+}
+
+
+const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModalProps) => {
   const [title, setTitle] = useState('');
   const [toolsUsed, setToolsUsed] = useState('');
   const [tags, setTags] = useState('');
@@ -22,6 +34,102 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [referenceImage, setReferenceImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [partyMembers, setPartyMembers] = useState<PartyCharacter[]>([]);
+  const [selectedCharacterIds, setSelectedCharacterIds] = useState<string[]>([]);
+
+
+  useEffect(() => {
+    const fetchPartyMembers = async () => {
+      const res = await fetch(`http://localhost:3000/partyCharacters/${eventId}`);
+      if(!res.ok) {
+        console.error('Failed to fetch partyCharacters');
+        return;
+      }
+      const data = await res.json();
+      setPartyMembers(data); // contains avatar, name, character_id, etc.
+    };
+
+    if (open) fetchPartyMembers();
+  }, [open, eventId]);
+
+
+  const uploadFileToR2 = async (file: File): Promise<string> => {
+    const res = await fetch(`http://localhost:3000/upload/generate-upload-url?fileName=${encodeURIComponent(file.name)}&fileType=${encodeURIComponent(file.type)}`);
+    const { uploadURL } = await res.json();
+
+    const uploadRes = await fetch(uploadURL, {
+      method: 'PUT',
+      headers: { 'Content-Type': file.type },
+      body: file
+    });
+
+    if (!uploadRes.ok) throw new Error('Failed to upload to R2');
+    return `https://pub-d09558734dc641f2b6f0331097b0c0e0.r2.dev/${encodeURIComponent(file.name)}`;
+  };
+
+  const associateTagsWithArtwork = async (artworkId: string) => {
+    const tagList = tags.split(',').map(tag=>tag.trim()).filter(tag=>tag);
+
+    for (const tag of tagList) {
+      try {
+        const tagRes = await fetch(`http://localhost:3000/tags/${encodeURIComponent(tag)}`);
+        const tagData = await tagRes.json()
+        console.log('Tag data fetched:', tagData);
+
+        if(!tagData.id) {
+          console.warn(`No tag ID found for "${tag}"`);
+          continue;
+        }
+
+        const linkRes = await fetch('http://localhost:3000/tags/artworkTags', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ artwork_id: artworkId, tag_id: tagData.id })
+        });
+
+        const linkResult = await linkRes.json();
+        console.log(`Tag "${tag}" linked to artwork:`, linkResult);
+      } catch (err) {
+        console.error(`Failed to link tag "${tag}" to artwork`, err);
+      }
+    }
+  };
+
+  const CharacterSelectList = ({ characters, selectedIds, onToggle }) => {
+    return (
+        <ScrollArea className="max-h-60 space-y-2 pr-2" style={{maxHeight:'10rem',overflowY:'auto'}}>
+          {characters.map((char) => {
+            const isChecked = selectedIds.includes(char.id);
+            return (
+                <div
+                    key={char.id}
+                    className="flex items-center justify-between p-3 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border border-sky-200 dark:border-sky-600 hover:bg-sky-100/50 dark:hover:bg-sky-800/30 transition"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                        checked={isChecked}
+                        onCheckedChange={() => onToggle(char.id)}
+                    />
+                    <img
+                        src={char.avatar}
+                        alt={char.name}
+                        className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div>
+                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                        {char.name}
+                      </div>
+                      <div className="text-xs text-slate-500 dark:text-slate-400">
+                        ID: {char.character_id}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            );
+          })}
+        </ScrollArea>
+    );
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -42,28 +150,100 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
     }
   };
 
-  const handleUpload = () => {
-    const artData = {
-      title,
-      toolsUsed,
-      tags,
-      notesDescription,
-      taggedCharacterNames,
-      image: selectedImage,
-      referenceImage
-    };
-    onUpload(artData);
-    // Reset form
-    setTitle('');
-    setToolsUsed('');
-    setTags('');
-    setNotesDescription('');
-    setTaggedCharacterNames('');
-    setSelectedImage(null);
-    setReferenceImage(null);
-    setImagePreview(null);
-    onOpenChange(false);
+  const handleUpload = async () => {
+    try {
+      const {
+        data: { user }
+      } = await import("@/lib/supabase").then(m => m.supabase.auth.getUser());
+
+      if (!user || !selectedImage) {
+        alert("Missing image or user not logged in.");
+        return;
+      }
+
+      const imageUrl = await uploadFileToR2(selectedImage);
+      const referenceUrl = referenceImage ? await uploadFileToR2(referenceImage) : null;
+
+      const payload = {
+        uploader_id: user.id,
+        party_id: eventId,
+        image_url: imageUrl,
+        reference_url: referenceUrl,
+        notes: notesDescription,
+        tools_used: toolsUsed,
+        created_at: new Date().toISOString()
+      };
+
+      const res = await fetch("http://localhost:3000/artwork", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) throw new Error("Failed to upload art metadata");
+
+      const savedArtwork = await res.json();
+
+      if (selectedCharacterIds.length > 0) {
+        await fetch("http://localhost:3000/artworkCharacters", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            artwork_id: savedArtwork.id,
+            character_ids: selectedCharacterIds
+          })
+        });
+      }
+
+      const tagList = tags
+          .split(',')
+          .map(t => t.trim())
+          .filter(t => t);
+
+      if (tagList.length === 0) {
+        console.log('No tags to test');
+        return;
+      }
+
+      for (const tag of tagList) {
+        const response = await fetch('http://localhost:3000/tags', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name: tag }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.warn(`Tag "${tag}" create failed:`, errorData.message);
+        } else {
+          const data = await response.json();
+          console.log(`Tag "${tag}" created or already exists:`, data);
+        }
+      }
+
+      await associateTagsWithArtwork(savedArtwork.id)
+
+      onUpload(payload); // trigger re-render in parent
+      onOpenChange(false); // close modal
+
+      // Clear form
+      setTitle('');
+      setToolsUsed('');
+      setTags('');
+      setNotesDescription('');
+      setTaggedCharacterNames('');
+      setSelectedImage(null);
+      setReferenceImage(null);
+      setImagePreview(null);
+      setSelectedCharacterIds([]);
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed. Please try again.");
+    }
   };
+
 
   const handleCancel = () => {
     // Reset form
@@ -175,12 +355,24 @@ const UploadArtModal = ({ open, onOpenChange, onUpload }: UploadArtModalProps) =
 
             <div>
               <Label htmlFor="taggedCharacterNames" className="text-slate-700 dark:text-slate-300 font-medium">Tagged Character names</Label>
-              <Input
+              {/*<Input
                 id="taggedCharacterNames"
                 value={taggedCharacterNames}
                 onChange={(e) => setTaggedCharacterNames(e.target.value)}
                 className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+              />*/}
+              <CharacterSelectList
+                  characters={partyMembers}
+                  selectedIds={selectedCharacterIds}
+                  onToggle={(id) => {
+                    setSelectedCharacterIds((prev) =>
+                        prev.includes(id)
+                            ? prev.filter((c) => c !== id)
+                            : [...prev, id]
+                    );
+                  }}
               />
+
             </div>
 
             <div>

@@ -10,40 +10,40 @@ const Resources = () => {
       title: "Drawing Tools & Software",
       icon: Palette,
       items: [
-        { name: "Procreate", type: "Mobile App", link: "#" },
-        { name: "Adobe Photoshop", type: "Desktop", link: "#" },
-        { name: "Clip Studio Paint", type: "Desktop/Mobile", link: "#" },
-        { name: "Krita", type: "Free Desktop", link: "#" }
+        { name: "Procreate", type: "Mobile App", link: "https://procreate.com/" },
+        { name: "Adobe Photoshop", type: "Desktop", link: "https://www.adobe.com/products/photoshop.html" },
+        { name: "Clip Studio Paint", type: "Desktop", link: "https://www.clipstudio.net/en/" },
+        { name: "Paint Tool Sai", type: "Desktop outdated but loved", link: "https://www.systemax.jp/en/sai/" }
       ]
     },
     {
       title: "Learning Resources",
       icon: BookOpen,
       items: [
-        { name: "Proko Drawing Fundamentals", type: "Video Course", link: "#" },
-        { name: "Drawabox", type: "Free Course", link: "#" },
-        { name: "Ctrl+Paint", type: "Digital Art", link: "#" },
-        { name: "New Masters Academy", type: "Traditional Art", link: "#" }
+        { name: "Learning Drawing from Scratch", type: "Video Course", link: "https://www.youtube.com/watch?v=1jjmOF1hQqI&list=PL0V_JTTg_6baV8tBE4Qm1O8Vhxy59GTah" },
+        { name: "Start HERE with Digital Art", type: "Youtube/Digital Art", link: "https://www.youtube.com/watch?v=noNbuBqvxQE" },
+        { name: "Installing and using Procreate", type: "Digital Art", link: "https://www.youtube.com/watch?v=oo8_NODWjbw" },
+        { name: "Importing brushes in Procreate", type: "Brush Packs", link: "https://www.youtube.com/watch?v=1TISRfOEizg" }
       ]
     },
     {
       title: "Video Tutorials",
       icon: Video,
       items: [
-        { name: "Aaron Blaise Animation", type: "YouTube", link: "#" },
-        { name: "Marco Bucci Art", type: "YouTube", link: "#" },
-        { name: "Sinix Design", type: "YouTube", link: "#" },
-        { name: "Moderndayjames", type: "YouTube", link: "#" }
+        { name: "How to paint like Akihiko Yoshida", type: "YouTube", link: "https://www.youtube.com/watch?v=IKMBUxYIeSg" },
+        { name: "How to color and render skin", type: "YouTube", link: "https://www.youtube.com/watch?v=Am7WVUoCFKw" },
+        { name: "Color Theory for beginners", type: "YouTube", link: "https://www.youtube.com/watch?v=IQoO33m7u-M" },
+        { name: "tips for RENDERING Digital Art(coloring and shading tutorial)", type: "YouTube", link: "https://www.youtube.com/watch?v=OvSgbLVTmZI" }
       ]
     },
     {
-      title: "Free Resources",
+      title: "Resources",
       icon: Download,
       items: [
-        { name: "Brush Packs", type: "Download", link: "#" },
-        { name: "Reference Photos", type: "Stock Images", link: "#" },
-        { name: "Color Palettes", type: "Tools", link: "#" },
-        { name: "Texture Libraries", type: "Resources", link: "#" }
+        { name: "Purchasable Brush Packs", type: "Download", link: "https://gumroad.com/discover?query=brush+packs" },
+        { name: "Color Palettes", type: "Tools", link: "https://coolors.co/" },
+        { name: "Glam Inspiration", type: "FFXIV Resources", link: "https://ffxiv.eorzeacollection.com/glamours" },
+        { name: "FFXIV Official Discord", type: "Discord", link: "https://discord.com/invite/ffxiv" }
       ]
     }
   ];
@@ -128,17 +128,25 @@ const Resources = () => {
                     
                     <div className="space-y-3">
                       {category.items.map((item, itemIndex) => (
-                        <div key={itemIndex} className="flex items-center justify-between p-3 bg-white/40 dark:bg-slate-700/40 rounded-lg hover:bg-white/60 dark:hover:bg-slate-700/60 transition-colors cursor-pointer group">
-                          <div>
-                            <div className="font-medium text-slate-700 dark:text-slate-300">
-                              {item.name}
+                          <a
+                              key={itemIndex}
+                              href={item.link}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block"
+                          >
+                            <div className="flex items-center justify-between p-3 bg-white/40 dark:bg-slate-700/40 rounded-lg hover:bg-white/60 dark:hover:bg-slate-700/60 transition-colors cursor-pointer group">
+                              <div>
+                                <div className="font-medium text-slate-700 dark:text-slate-300">
+                                  {item.name}
+                                </div>
+                                <div className="text-xs text-slate-500 dark:text-slate-400">
+                                  {item.type}
+                                </div>
+                              </div>
+                              <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-sky-500 transition-colors" />
                             </div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400">
-                              {item.type}
-                            </div>
-                          </div>
-                          <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-sky-500 transition-colors" />
-                        </div>
+                          </a>
                       ))}
                     </div>
                   </CardContent>

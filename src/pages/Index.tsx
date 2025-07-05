@@ -108,7 +108,9 @@ const Index = () => {
                     alt={event.title}
                     className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div
+                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none transition-colors duration-300 group-hover:bg-gray-700 group-hover:bg-opacity-90"
+                  />
                   
                   {/* Event Actions */}
                   <div className="absolute top-4 right-4 flex space-x-2">
