@@ -134,7 +134,7 @@ const EventDetails = () => {
     // Handle art upload logic here
   };
 
-  const handleArtClick = (attendee: any) => {
+  /*const handleArtClick = (attendee: any) => {
     // Mock art data for the details modal
     const mockArtData = {
       title: "Art Title",
@@ -150,7 +150,7 @@ const EventDetails = () => {
     };
     setSelectedArt(mockArtData);
     setArtDetailsModalOpen(true);
-  };
+  };*/
 
   const handleJoinLeave = async() => {
     try {

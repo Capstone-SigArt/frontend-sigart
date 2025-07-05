@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,15 +6,82 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Heart, Share2, Eye, Download, Filter } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ModernNavigation from '@/components/ModernNavigation';
+import ArtDetailsModal from '@/components/ArtDetailsModal';
+import dayjs from "dayjs";
+
 
 const CommunityArt = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const navigate = useNavigate();
+  const [artworks, setArtworks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedArtwork, setSelectedArtwork] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const categories = ['All', 'Digital', 'Traditional', 'Photography', 'Mixed Media', 'Sculptures'];
 
-  const artworks = [
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/artwork/allArt');
+        if (!response.ok) throw new Error('Failed to fetch artworks');
+
+        const data = await response.json();
+
+        const artworksWithExtras = await Promise.all(
+            data.map(async (artwork) => {
+              const tags = await fetchArtworkLinkedTags(artwork.id);
+              const username = await fetchUsernameById(artwork.uploader_id);
+              return {
+                ...artwork,
+                tags,
+                username,
+              };
+            })
+        );
+
+        setArtworks(artworksWithExtras);
+      } catch (err) {
+        console.error(err);
+        setError('Could not load artworks');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArtworks();
+  }, []);
+
+  const fetchArtworkLinkedTags = async(artworkId: string) => {
+    try{
+      const res = await fetch(`http://localhost:3000/tags/artworkTags/${artworkId}`);
+      if(!res.ok) {
+        console.error('Failed to fetch linked tags');
+        return []
+      }
+      const data = await res.json();
+      return data; //array of tags
+    } catch (err) {
+      console.error("Error fetching linked tags:", err);
+      return [];
+    }
+  }
+
+  const fetchUsernameById = async (userId: string) => {
+    try {
+      const res = await fetch(`http://localhost:3000/profile/${userId}`);
+      if (!res.ok) throw new Error('Failed to fetch profile');
+      const data = await res.json();
+      return data.username || userId;
+    } catch (err) {
+      console.error('Error fetching username:', err);
+      return userId; // fallback
+    }
+  };
+
+  /*const artworks = [
     {
       id: 1,
       title: "Cyber Dreams",
@@ -87,13 +154,13 @@ const CommunityArt = () => {
       tags: ["Abstract", "Motion", "Experimental"],
       liked: true
     }
-  ];
+  ];*/
 
   const filteredArtworks = artworks.filter(artwork => {
-    const matchesSearch = artwork.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         artwork.artist.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || artwork.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesSearch = artwork.notes.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         artwork.uploader_id.toLowerCase().includes(searchQuery.toLowerCase());
+    /*const matchesCategory = selectedCategory === 'All' || artwork.category === selectedCategory;*/
+    return matchesSearch /*&& matchesCategory;*/
   });
 
   const toggleLike = (artworkId: number, e: React.MouseEvent) => {
@@ -101,8 +168,23 @@ const CommunityArt = () => {
     console.log(`Toggled like for artwork ${artworkId}`);
   };
 
-  const handleArtworkClick = (artworkId: number) => {
-    navigate(`/community-party/${artworkId}`);
+  const handleArtworkClick = (art) => {
+    setSelectedArtwork({
+      id: art.id,
+      title: art.notes || 'Untitled',
+      artist: art.username || art.uploader_id,
+      uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
+      toolsUsed: art.tools_used || '',
+      tags: [],
+      additionalNotes: art.notes || '',
+      likes: art.likes || 0,
+      taggedCharacters: [], // populate if you have this data
+      imageUrl: art.image_url && (art.image_url.startsWith('http') ? art.image_url : `http://localhost:3000${art.image_url}`),
+      referenceImageUrl: art.reference_url
+          ? (art.reference_url.startsWith('http') ? art.reference_url : `http://localhost:3000${art.reference_url}`)
+          : undefined,
+    });
+    setIsModalOpen(true);
   };
 
   return (
@@ -158,13 +240,13 @@ const CommunityArt = () => {
             <Card 
               key={artwork.id} 
               className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
-              onClick={() => handleArtworkClick(artwork.id)}
+              onClick={() => handleArtworkClick(artwork)}
             >
               <CardContent className="p-0">
                 <div className="relative overflow-hidden">
                   <img 
-                    src={artwork.image} 
-                    alt={artwork.title}
+                    src={artwork.image_url}
+                    alt={artwork.notes}
                     className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -209,23 +291,24 @@ const CommunityArt = () => {
 
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4">
-                    <Badge className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white backdrop-blur-sm">
+                    {/*<Badge className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white backdrop-blur-sm">
                       {artwork.category}
-                    </Badge>
+
+                    </Badge>*/}
                   </div>
 
                   {/* Hover Info Overlay */}
                   <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <p className="text-white/90 text-sm mb-2 drop-shadow-lg">
-                      {artwork.description}
+                      {artwork.notes}
                     </p>
                     <div className="flex flex-wrap gap-1">
                       {artwork.tags.map((tag, index) => (
                         <Badge 
                           key={index}
-                          className="bg-white/20 text-white border-white/30 backdrop-blur-sm text-xs"
+                          className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white backdrop-blur-sm"
                         >
-                          {tag}
+                          {tag.name}
                         </Badge>
                       ))}
                     </div>
@@ -236,7 +319,7 @@ const CommunityArt = () => {
                 <div className="p-4">
                   <h3 className="font-bold text-lg mb-1">{artwork.title}</h3>
                   <p className="text-slate-600 dark:text-slate-300 text-sm mb-3">
-                    by {artwork.artist}
+                    by {artwork.username || artwork.uploader_id}
                   </p>
                   
                   {/* Stats */}
@@ -257,6 +340,8 @@ const CommunityArt = () => {
             </Card>
           ))}
         </div>
+
+
         
         {/* Load More Button */}
         <div className="text-center mt-12">
@@ -268,6 +353,11 @@ const CommunityArt = () => {
           </Button>
         </div>
       </div>
+      <ArtDetailsModal
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          artData={selectedArtwork}
+      />
     </div>
   );
 };
