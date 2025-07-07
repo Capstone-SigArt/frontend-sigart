@@ -27,7 +27,19 @@ const Index = () => {
         const response = await fetch(`${API_BASE_URL}/parties`);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
-        setEvents(data);
+        const dataWithAttendees = await Promise.all(
+            data.map(async (event) => {
+              try {
+                const countRes = await fetch(`http://localhost:3000/myParties/count/${event.id}`);
+                const { count } = await countRes.json();
+                return { ...event, attendees: count };
+              } catch {
+                return { ...event, attendees: 0 };
+              }
+            })
+        );
+
+        setEvents(dataWithAttendees);
         setError(null);
       } catch (err) {
         console.error(err);
@@ -157,7 +169,7 @@ const Index = () => {
                         </div>
                         <div className="flex items-center space-x-1">
                           <MapPin className="w-4 h-4" />
-                          <span>{event.location || 'TBA'}</span>
+                          <span>{event.address || 'TBA'}</span>
                         </div>
                         <div className="flex items-center space-x-1">
                           <Users className="w-4 h-4" />

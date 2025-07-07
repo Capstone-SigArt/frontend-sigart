@@ -134,6 +134,18 @@ const EventDetails = () => {
     // Handle art upload logic here
   };
 
+  const fetchUsernameById = async (userId: string) => {
+    try {
+      const res = await fetch(`http://localhost:3000/profile/${userId}`);
+      if (!res.ok) throw new Error('Failed to fetch profile');
+      const data = await res.json();
+      return data.username || userId;
+    } catch (err) {
+      console.error('Error fetching username:', err);
+      return userId; // fallback
+    }
+  };
+
   /*const handleArtClick = (attendee: any) => {
     // Mock art data for the details modal
     const mockArtData = {
@@ -315,11 +327,12 @@ const EventDetails = () => {
                     <Card
                         key={art.id}
                         className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
-                        onClick={() => {
+                        onClick={async () => {
+                          const username = await fetchUsernameById(art.uploader_id)
                           setSelectedArt({
                             id:art.id,
                             title: art.notes || 'Untitled',
-                            artist: art.uploader_id,
+                            artist: username,
                             uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
                             toolsUsed: art.tools_used,
                             tags: [],
