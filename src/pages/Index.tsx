@@ -16,6 +16,7 @@ const Index = () => {
     host: ''
   });
   const [events, setEvents] = useState<any[]>([]);
+  const [allEvents, setAllEvents] = useState<any[]>([]); // Store all fetched events
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -39,17 +40,37 @@ const Index = () => {
             })
         );
 
-        setEvents(dataWithAttendees);
+        setAllEvents(dataWithAttendees); // Save all events
+        setEvents(dataWithAttendees); // Initially show all
         setError(null);
       } catch (err) {
         console.error(err);
         setError('Failed to load events');
         setEvents([]);
+        setAllEvents([]);
       }
       setLoading(false);
     };
     fetchParties();
   }, []);
+
+  // Filtering logic
+  const filterEvents = () => {
+    const { title, tags, host } = searchFilters;
+    const filtered = allEvents.filter(event => {
+      const matchesTitle = title.trim() === '' || (event.title && event.title.toLowerCase().includes(title.toLowerCase()));
+      const matchesTags = tags.trim() === '' || (event.tags && event.tags.join(' ').toLowerCase().includes(tags.toLowerCase()));
+      const matchesHost = host.trim() === '' || (event.host && event.host.toLowerCase().includes(host.toLowerCase()));
+      return matchesTitle && matchesTags && matchesHost;
+    });
+    setEvents(filtered);
+  };
+
+  // Filter on input change
+  useEffect(() => {
+    filterEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchFilters, allEvents]);
   
 
   const toggleLike = (eventId: string, e: React.MouseEvent) => {
@@ -61,9 +82,6 @@ const Index = () => {
   const handleEventClick = (eventId: string) => {
     navigate(`/event/${eventId}`);
   };
-
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading events...</div>;
-  if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
@@ -97,24 +115,44 @@ const Index = () => {
               onChange={(e) => setSearchFilters(prev => ({ ...prev, host: e.target.value }))}
               className="w-40 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl"
             />
-            <Button className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl px-6 shadow-lg">
+            <Button className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl px-6 shadow-lg"
+              onClick={filterEvents}
+              type="button"
+            >
               Filter
             </Button>
           </div>
         </div>
       </div>
-
+      
       {/* Enhanced Event Grid */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event) => (
-            <Card 
-              key={event.id} 
-              className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
-              onClick={() => handleEventClick(event.id)}
-            >
-              <CardContent className="p-0">
-                <div className="relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 py-8 min-h-[400px]">
+        {error && (
+          <div className="text-center text-red-500 font-medium mb-6">
+            {error}
+          </div>
+        )}
+
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <span className="text-slate-500 dark:text-slate-300 text-lg">Loading events...</span>
+          </div>
+        ) : events.length === 0 ? (
+          <div className="text-center text-slate-600 dark:text-slate-300 py-20">
+            No events found.
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {events.map((event) => (
+                <Card 
+                  key={event.id} 
+                  className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
+                  onClick={() => handleEventClick(event.id)}
+                >
+                  <CardContent className="p-0">
+                    {
+                  <div className="relative overflow-hidden">
                   <img 
                     src={event.cover_image || "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop"} 
                     alt={event.title}
@@ -191,20 +229,23 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        
-        {/* Load More Button */}
-        <div className="text-center mt-12">
-          <Button 
-            variant="outline"
-            className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 rounded-xl px-8 py-3 hover:shadow-lg transition-all duration-300"
-          >
-            Load More Events
-          </Button>
-        </div>
+}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Load More Button */}
+            <div className="text-center mt-12">
+              <Button 
+                variant="outline"
+                className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 rounded-xl px-8 py-3 hover:shadow-lg transition-all duration-300"
+              >
+                Load More Events
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
