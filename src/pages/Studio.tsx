@@ -209,7 +209,8 @@ const Studio = () => {
                       <div
                         key={artwork.id}
                         className="group cursor-pointer"
-                        onClick={() => handleArtClick(artwork)}
+                        //TODO decide if we want these artworks to be clickable, if so fix their clicking, doesn't open properly
+                        /*onClick={() => handleArtClick(artwork)}*/
                       >
                         <Card className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 group-hover:scale-105">
                           <div className="aspect-square bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 rounded-t-2xl flex items-center justify-center overflow-hidden">

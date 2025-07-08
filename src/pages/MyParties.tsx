@@ -10,7 +10,7 @@ const MyParties = () => {
   const navigate = useNavigate();
   const [hostedParties, setHostedParties] = useState([]);
   const [memberParties,setMemberParties] = useState([]);
-  const [attendees,setAttendees] = useState(0)
+  const [attendees,setAttendees] = useState(0);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'host' | 'member'>('all');
 

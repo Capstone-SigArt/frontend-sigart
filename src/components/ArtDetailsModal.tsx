@@ -28,34 +28,84 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
   const [linkedCharacters,setLinkedCharacters] = useState([]);
   const [linkedTags,setLinkedTags] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState<number>(artData?.likes || 0);
+
 
 
   useEffect(() => {
-    console.log("Modal open:", open, "artData.id:", artData?.id);
-    if (open && artData?.id) {
-      fetch(`http://localhost:3000/artworkCharacters/${artData.id}`)
-          .then(res => res.json())
-          .then(data => {
-            console.log("Fetched linked characters:", data);
-            setLinkedCharacters(data);
-          })
-          .catch(err => {
-            console.error('Failed to fetch linked characters:', err);
-            setLinkedCharacters([]);
-          });
-      fetchArtworkLinkedTags(artData.id)
-          .then(setLinkedTags)
-          .catch(err => {
-            console.error('Failed to fetch linked tags:', err);
-            setLinkedTags([]);
-          });
-    }
+    const fetchAll = async () => {
+      if (!open || !artData?.id) return;
+
+      // Fetch current user
+      const {
+        data: { user }
+      } = await import("@/lib/supabase").then(m => m.supabase.auth.getUser());
+      if (!user) return;
+
+      const [charactersRes, tags, likesRes, likedStatusRes] = await Promise.all([
+        fetch(`http://localhost:3000/artworkCharacters/${artData.id}`).then(res => res.json()),
+        fetchArtworkLinkedTags(artData.id),
+        fetchArtworkLikes(artData.id),
+        fetch(`http://localhost:3000/likes/userLiked?user_id=${user.id}&artwork_id=${artData.id}`).then(res => res.json())
+      ]);
+
+      setLinkedCharacters(charactersRes);
+      setLinkedTags(tags);
+      setLikesCount(likesRes.count ?? 0);
+      setIsLiked(likedStatusRes.liked ?? false);
+    };
+
+    fetchAll();
   }, [open, artData?.id]);
 
   if (!artData) return null;
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
+  const handleLike = async () => {
+    if (!artData?.id) return;
+
+    try {
+      const {
+        data: { user }
+      } = await import("@/lib/supabase").then(m => m.supabase.auth.getUser());
+      if (!isLiked) {
+        // Send POST request to create a like
+        const response = await fetch('http://localhost:3000/likes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: user.id,
+            artwork_id: artData.id,
+            created_at: new Date().toISOString(),
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to like artwork');
+        }
+
+        setIsLiked(true);
+        setLikesCount((prev) => prev + 1);
+      } else {
+        const response = await fetch('http://localhost:3000/likes', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: user.id,
+            artwork_id: artData.id,
+          }),
+        });
+
+        if (!response.ok) throw new Error('Failed to unlike artwork');
+
+        setIsLiked(false);
+        setLikesCount((prev) => Math.max(prev - 1, 0));
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Something went wrong. Please try again.');
+    }
   };
 
   const fetchArtworkLinkedCharacters = async (artworkId: string) => {
@@ -85,6 +135,21 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
     } catch (err) {
       console.error("Error fetching linked tags:", err);
       return [];
+    }
+  }
+
+  const fetchArtworkLikes = async(artworkId: string) => {
+    try {
+      const res = await fetch(`http://localhost:3000/likes?artwork_id=${artworkId}`)
+      if(!res.ok) {
+        console.error('Failed to fetch likes');
+        return 0;
+      }
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error fetching likes:", err);
+      return 0;
     }
   }
 
@@ -208,7 +273,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
                   <div className="flex items-center gap-3 flex-1">
                     <div>
                       <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Likes:</span>
-                      <div className="text-sm text-slate-600 dark:text-slate-400">{artData.likes}</div>
+                      <div className="text-sm text-slate-600 dark:text-slate-400">{likesCount}</div>
                     </div>
                     <Button
                       variant="outline"
