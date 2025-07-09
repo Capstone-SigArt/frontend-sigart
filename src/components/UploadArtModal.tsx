@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Upload } from 'lucide-react';
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 interface UploadArtModalProps {
   open: boolean;
@@ -40,7 +41,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
 
   useEffect(() => {
     const fetchPartyMembers = async () => {
-      const res = await fetch(`http://localhost:3000/partyCharacters/${eventId}`);
+      const res = await fetch(`${API_BASE_URL}/partyCharacters/${eventId}`);
       if(!res.ok) {
         console.error('Failed to fetch partyCharacters');
         return;
@@ -54,7 +55,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
 
 
   const uploadFileToR2 = async (file: File): Promise<string> => {
-    const res = await fetch(`http://localhost:3000/upload/generate-upload-url?fileName=${encodeURIComponent(file.name)}&fileType=${encodeURIComponent(file.type)}`);
+    const res = await fetch(`${API_BASE_URL}/upload/generate-upload-url?fileName=${encodeURIComponent(file.name)}&fileType=${encodeURIComponent(file.type)}`);
     const { uploadURL } = await res.json();
 
     const uploadRes = await fetch(uploadURL, {
@@ -72,7 +73,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
 
     for (const tag of tagList) {
       try {
-        const tagRes = await fetch(`http://localhost:3000/tags/${encodeURIComponent(tag)}`);
+        const tagRes = await fetch(`${API_BASE_URL}/tags/${encodeURIComponent(tag)}`);
         const tagData = await tagRes.json()
         console.log('Tag data fetched:', tagData);
 
@@ -81,7 +82,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
           continue;
         }
 
-        const linkRes = await fetch('http://localhost:3000/tags/artworkTags', {
+        const linkRes = await fetch(`${API_BASE_URL}/tags/artworkTags`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ artwork_id: artworkId, tag_id: tagData.id })
@@ -174,7 +175,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
         created_at: new Date().toISOString()
       };
 
-      const res = await fetch("http://localhost:3000/artwork", {
+      const res = await fetch(`${API_BASE_URL}/artwork`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -185,7 +186,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
       const savedArtwork = await res.json();
 
       if (selectedCharacterIds.length > 0) {
-        await fetch("http://localhost:3000/artworkCharacters", {
+        await fetch(`${API_BASE_URL}/artworkCharacters`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -206,7 +207,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
       }
 
       for (const tag of tagList) {
-        const response = await fetch('http://localhost:3000/tags', {
+        const response = await fetch(`${API_BASE_URL}/tags`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

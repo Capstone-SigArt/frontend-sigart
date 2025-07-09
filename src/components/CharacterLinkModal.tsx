@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { X, Search, Plus } from 'lucide-react';
 import axios from 'axios';
 import { supabase } from '@/lib/supabase';
+
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 interface CharacterLinkModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -33,7 +35,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
       if (user) {
         try {
           console.log("This is the get route for user id " + user.id);
-          const response = await axios.get(`http://localhost:3000/linkCharacters/${user.id}`);
+          const response = await axios.get(`${API_BASE_URL}/linkCharacters/${user.id}`);
           setLinkedCharacters(response.data);
         } catch (err) {
           console.error('Failed to fetch linked characters:', err);
@@ -50,7 +52,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
   const handleSearch = async() => {
     try {
       console.log('Searching for character:', characterName, 'on', datacenter);
-      const response = await axios.get('http://localhost:3000/api/characters', {
+      const response = await axios.get('${API_BASE_URL}/api/characters', {
         params: {
           name: characterName
         }
@@ -90,7 +92,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
           avatar: selectedCharacter.Avatar,
           user_id: user.id,
         });
-        const response = await axios.post('http://localhost:3000/linkCharacters', {
+        const response = await axios.post('${API_BASE_URL}/linkCharacters', {
           character_id: selectedCharacter.ID,
           name: selectedCharacter.Name,
           avatar: selectedCharacter.Avatar,
@@ -110,7 +112,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
   };*/
   const removeCharacter = async (characterId: string, userId: string) => {
     try {
-      await axios.delete(`http://localhost:3000/linkCharacters/${characterId}/${userId}`);
+      await axios.delete(`${API_BASE_URL}/linkCharacters/${characterId}/${userId}`);
       setLinkedCharacters(prev =>
           prev.filter(char => char.character_id !== characterId)
       );

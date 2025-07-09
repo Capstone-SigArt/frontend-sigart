@@ -121,13 +121,13 @@ const Studio = () => {
                     <div className="text-xs text-slate-600 dark:text-slate-300">Following</div>
                   </div>
                 </div>
-                <Button 
+                {/*<Button
                   onClick={() => setShowUploadModal(true)}
                   className="w-full bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Upload New Art
-                </Button>
+                </Button>*/}
                 <Button 
                   variant="outline" 
                   className="w-full rounded-xl border-sky-200 hover:bg-sky-50 dark:border-sky-600 dark:text-sky-400 dark:hover:bg-sky-900/30"
@@ -258,11 +258,11 @@ const Studio = () => {
       </div>
 
       {/* Modals */}
-      <UploadArtModal
+      {/*<UploadArtModal
         open={showUploadModal}
         onOpenChange={setShowUploadModal}
         onUpload={handleUpload}
-      />
+      />*/}
       
       <ArtDetailsModal
         open={showArtModal}

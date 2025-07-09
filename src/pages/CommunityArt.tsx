@@ -9,6 +9,7 @@ import ModernNavigation from '@/components/ModernNavigation';
 import ArtDetailsModal from '@/components/ArtDetailsModal';
 import dayjs from "dayjs";
 
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 
 const CommunityArt = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -25,7 +26,7 @@ const CommunityArt = () => {
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
-        const response = await fetch('http://localhost:3000/artwork/allArt');
+        const response = await fetch(`${API_BASE_URL}/artwork/allArt`);
         if (!response.ok) throw new Error('Failed to fetch artworks');
 
         const data = await response.json();
@@ -56,7 +57,7 @@ const CommunityArt = () => {
 
   const fetchArtworkLinkedTags = async(artworkId: string) => {
     try{
-      const res = await fetch(`http://localhost:3000/tags/artworkTags/${artworkId}`);
+      const res = await fetch(`${API_BASE_URL}/tags/artworkTags/${artworkId}`);
       if(!res.ok) {
         console.error('Failed to fetch linked tags');
         return []
@@ -71,7 +72,7 @@ const CommunityArt = () => {
 
   const fetchUsernameById = async (userId: string) => {
     try {
-      const res = await fetch(`http://localhost:3000/profile/${userId}`);
+      const res = await fetch(`${API_BASE_URL}/profile/${userId}`);
       if (!res.ok) throw new Error('Failed to fetch profile');
       const data = await res.json();
       return data.username || userId;
@@ -179,9 +180,9 @@ const CommunityArt = () => {
       additionalNotes: art.notes || '',
       likes: art.likes || 0,
       taggedCharacters: [], // populate if you have this data
-      imageUrl: art.image_url && (art.image_url.startsWith('http') ? art.image_url : `http://localhost:3000${art.image_url}`),
+      imageUrl: art.image_url && (art.image_url.startsWith('http') ? art.image_url : `${API_BASE_URL}${art.image_url}`),
       referenceImageUrl: art.reference_url
-          ? (art.reference_url.startsWith('http') ? art.reference_url : `http://localhost:3000${art.reference_url}`)
+          ? (art.reference_url.startsWith('http') ? art.reference_url : `${API_BASE_URL}${art.reference_url}`)
           : undefined,
     });
     setIsModalOpen(true);

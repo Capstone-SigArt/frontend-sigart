@@ -31,7 +31,7 @@ const Index = () => {
         const dataWithAttendees = await Promise.all(
             data.map(async (event) => {
               try {
-                const countRes = await fetch(`http://localhost:3000/myParties/count/${event.id}`);
+                const countRes = await fetch(`${API_BASE_URL}/myParties/count/${event.id}`);
                 const { count } = await countRes.json();
                 return { ...event, attendees: count };
               } catch {
