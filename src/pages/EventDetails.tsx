@@ -13,6 +13,8 @@ import { Textarea } from "@/components/ui/textarea";
 import dayjs from 'dayjs';
 import {supabase} from "@/lib/supabase.ts";
 
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
+
 const EventDetails = () => {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [artDetailsModalOpen, setArtDetailsModalOpen] = useState(false);
@@ -29,7 +31,7 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/artwork?party_id=${eventId}`);
+        const response = await fetch(`${API_BASE_URL}/artwork?party_id=${eventId}`);
         if (!response.ok) throw new Error("Failed to fetch artworks");
         const data = await response.json();
         setArtworks(data);
@@ -44,7 +46,7 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/partyDetails/${eventId}`);
+        const response = await fetch(`${API_BASE_URL}/partyDetails/${eventId}`);
         if(!response.ok) throw new Error('failed to fetch party');
         const data = await response.json();
         setEventData(data);
@@ -62,7 +64,7 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchHost = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/profile/${eventData.host_id}`);
+        const response = await fetch(`${API_BASE_URL}/profile/${eventData.host_id}`);
         if(!response.ok) throw new Error('failed to fetch host data');
         const data = await response.json();
         setHostData(data);
@@ -90,7 +92,7 @@ const EventDetails = () => {
         if (!userId || !eventId) return;
 
         const response = await fetch(
-            `http://localhost:3000/partyMember/${userId}/${eventId}`
+            `${API_BASE_URL}/partyMember/${userId}/${eventId}`
         );
 
         if (response.ok) {
@@ -136,7 +138,7 @@ const EventDetails = () => {
 
   const fetchUsernameById = async (userId: string) => {
     try {
-      const res = await fetch(`http://localhost:3000/profile/${userId}`);
+      const res = await fetch(`${API_BASE_URL}/profile/${userId}`);
       if (!res.ok) throw new Error('Failed to fetch profile');
       const data = await res.json();
       return data.username || userId;
@@ -173,7 +175,7 @@ const EventDetails = () => {
       if(!userId || !eventId) return;
 
       if (!hasJoined) {
-        const response = await fetch('http://localhost:3000/partyMember', {
+        const response = await fetch(`${API_BASE_URL}/partyMember`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -186,7 +188,7 @@ const EventDetails = () => {
         if (!response.ok) throw new Error('Failed to join event');
         setHasJoined(true);
       } else {
-        const response = await fetch(`http://localhost:3000/partyMember`, {
+        const response = await fetch(`${API_BASE_URL}/partyMember`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

@@ -9,6 +9,8 @@ import ModernNavigation from '@/components/ModernNavigation';
 import { useNavigate } from 'react-router-dom';
 import {supabase} from "@/lib/supabase.ts";
 
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
+
 const HostParty = () => {
   const [formData, setFormData] = useState({
     title: '',
@@ -40,7 +42,7 @@ const HostParty = () => {
 
     for (const tag of tags) {
       try {
-        const tagRes = await fetch(`http://localhost:3000/tags/${encodeURIComponent(tag)}`);
+        const tagRes = await fetch(`${API_BASE_URL}/tags/${encodeURIComponent(tag)}`);
         const tagData = await tagRes.json()
         console.log('Tag data fetched:', tagData);
 
@@ -49,7 +51,7 @@ const HostParty = () => {
           continue;
         }
 
-        const linkRes = await fetch('http://localhost:3000/tags/partyTags', {
+        const linkRes = await fetch(`${API_BASE_URL}/tags/partyTags`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ party_id: partyId, tag_id: tagData.id })
@@ -65,7 +67,7 @@ const HostParty = () => {
 
   const associateHostWithParty = async (partyId: string) => {
     try{
-    const response = await fetch('http://localhost:3000/partyMember', {
+    const response = await fetch(`${API_BASE_URL}/partyMember`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -119,7 +121,7 @@ const HostParty = () => {
       console.log("created_at:", formData.created_at);
 
 
-      const response = await fetch('http://localhost:3000/parties', {
+      const response = await fetch(`${API_BASE_URL}/parties`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -174,7 +176,7 @@ const HostParty = () => {
 
     try {
       const res = await fetch(
-          `http://localhost:3000/upload/generate-upload-url?fileName=${encodeURIComponent(file.name)}&fileType=${encodeURIComponent(file.type)}`
+          `${API_BASE_URL}/upload/generate-upload-url?fileName=${encodeURIComponent(file.name)}&fileType=${encodeURIComponent(file.type)}`
       );
       const {uploadURL} = await res.json();
 
@@ -210,7 +212,7 @@ const HostParty = () => {
       }
 
       for (const tag of tags) {
-        const response = await fetch('http://localhost:3000/tags', {
+        const response = await fetch(`${API_BASE_URL}/tags`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

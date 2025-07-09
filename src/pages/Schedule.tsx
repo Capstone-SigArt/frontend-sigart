@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ModernNavigation from '@/components/ModernNavigation';
 import { useAuth } from '@/contexts/AuthContext';
-
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 const monthNames = [
   "January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -27,7 +27,7 @@ const Schedule = () => {
   useEffect(() => {
     const fetchAllEvents = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/parties`);
+        const response = await fetch(`${API_BASE_URL}/parties`);
         const data = await response.json();
         setAllEvents(data);
         console.log("Fetched events:", data);

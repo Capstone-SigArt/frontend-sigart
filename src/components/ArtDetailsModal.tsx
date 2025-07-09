@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Edit, Bookmark, Heart } from 'lucide-react';
 
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
+
 interface ArtDetailsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -43,10 +45,10 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
       if (!user) return;
 
       const [charactersRes, tags, likesRes, likedStatusRes] = await Promise.all([
-        fetch(`http://localhost:3000/artworkCharacters/${artData.id}`).then(res => res.json()),
+        fetch(`${API_BASE_URL}/artworkCharacters/${artData.id}`).then(res => res.json()),
         fetchArtworkLinkedTags(artData.id),
         fetchArtworkLikes(artData.id),
-        fetch(`http://localhost:3000/likes/userLiked?user_id=${user.id}&artwork_id=${artData.id}`).then(res => res.json())
+        fetch(`${API_BASE_URL}/likes/userLiked?user_id=${user.id}&artwork_id=${artData.id}`).then(res => res.json())
       ]);
 
       setLinkedCharacters(charactersRes);
@@ -69,7 +71,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
       } = await import("@/lib/supabase").then(m => m.supabase.auth.getUser());
       if (!isLiked) {
         // Send POST request to create a like
-        const response = await fetch('http://localhost:3000/likes', {
+        const response = await fetch('${API_BASE_URL}/likes', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -88,7 +90,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
         setIsLiked(true);
         setLikesCount((prev) => prev + 1);
       } else {
-        const response = await fetch('http://localhost:3000/likes', {
+        const response = await fetch('${API_BASE_URL}/likes', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -110,7 +112,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 
   const fetchArtworkLinkedCharacters = async (artworkId: string) => {
     try {
-      const res = await fetch(`http://localhost:3000/artworkCharacters/${artworkId}`);
+      const res = await fetch(`${API_BASE_URL}/artworkCharacters/${artworkId}`);
       if (!res.ok) {
         console.error("Failed to fetch linked characters");
         return [];
@@ -125,7 +127,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 
   const fetchArtworkLinkedTags = async(artworkId: string) => {
     try{
-    const res = await fetch(`http://localhost:3000/tags/artworkTags/${artworkId}`);
+    const res = await fetch(`${API_BASE_URL}/tags/artworkTags/${artworkId}`);
       if(!res.ok) {
         console.error('Failed to fetch linked tags');
         return []
@@ -140,7 +142,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 
   const fetchArtworkLikes = async(artworkId: string) => {
     try {
-      const res = await fetch(`http://localhost:3000/likes?artwork_id=${artworkId}`)
+      const res = await fetch(`${API_BASE_URL}/likes?artwork_id=${artworkId}`)
       if(!res.ok) {
         console.error('Failed to fetch likes');
         return 0;

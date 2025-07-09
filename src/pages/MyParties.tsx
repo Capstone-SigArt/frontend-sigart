@@ -5,7 +5,7 @@ import { Edit, Bookmark, Calendar, MapPin, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ModernNavigation from '@/components/ModernNavigation';
 import {supabase} from "@/lib/supabase.ts";
-
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 const MyParties = () => {
   const navigate = useNavigate();
   const [hostedParties, setHostedParties] = useState([]);
@@ -25,8 +25,8 @@ const MyParties = () => {
         if (!userId) return;
 
         const [hostRes, memberRes] = await Promise.all([
-          fetch(`http://localhost:3000/myParties/${userId}?role=host`),
-          fetch(`http://localhost:3000/myParties/${userId}?role=member`)
+          fetch(`${API_BASE_URL}/myParties/${userId}?role=host`),
+          fetch(`${API_BASE_URL}/myParties/${userId}?role=member`)
         ]);
 
         const [hosted, member] = await Promise.all([
@@ -35,7 +35,7 @@ const MyParties = () => {
         ]);
 
         const fetchTagsForParty = async (partyId) => {
-          const res = await fetch(`http://localhost:3000/tags/partyTags?party_id=${partyId}`);
+          const res = await fetch(`${API_BASE_URL}/tags/partyTags?party_id=${partyId}`);
           const tags = await res.json();
           return tags.map(t => t.name);
         };
@@ -44,7 +44,7 @@ const MyParties = () => {
             hosted.map(async (p) => {
               const [tagsRes, countRes] = await Promise.all([
                 fetchTagsForParty(p.id),
-                fetch(`http://localhost:3000/myParties/count/${p.id}`)
+                fetch(`${API_BASE_URL}/myParties/count/${p.id}`)
               ]);
               const tags = tagsRes;
               const { count } = await countRes.json();
@@ -57,7 +57,7 @@ const MyParties = () => {
             member.map(async (p) => {
               const [tagsRes, countRes] = await Promise.all([
                 fetchTagsForParty(p.id),
-                fetch(`http://localhost:3000/myParties/count/${p.id}`)
+                fetch(`${API_BASE_URL}/myParties/count/${p.id}`)
               ]);
               const tags = tagsRes;
               const { count } = await countRes.json();
