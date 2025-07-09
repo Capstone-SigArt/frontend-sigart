@@ -52,7 +52,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
   const handleSearch = async() => {
     try {
       console.log('Searching for character:', characterName, 'on', datacenter);
-      const response = await axios.get('${API_BASE_URL}/api/characters', {
+      const response = await axios.get(`${API_BASE_URL}/api/characters`, {
         params: {
           name: characterName
         }
@@ -92,7 +92,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
           avatar: selectedCharacter.Avatar,
           user_id: user.id,
         });
-        const response = await axios.post('${API_BASE_URL}/linkCharacters', {
+        const response = await axios.post(`${API_BASE_URL}/linkCharacters`, {
           character_id: selectedCharacter.ID,
           name: selectedCharacter.Name,
           avatar: selectedCharacter.Avatar,
