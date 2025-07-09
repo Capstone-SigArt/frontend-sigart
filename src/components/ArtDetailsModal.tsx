@@ -71,7 +71,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
       } = await import("@/lib/supabase").then(m => m.supabase.auth.getUser());
       if (!isLiked) {
         // Send POST request to create a like
-        const response = await fetch('${API_BASE_URL}/likes', {
+        const response = await fetch(`${API_BASE_URL}/likes`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
         setIsLiked(true);
         setLikesCount((prev) => prev + 1);
       } else {
-        const response = await fetch('${API_BASE_URL}/likes', {
+        const response = await fetch(`${API_BASE_URL}/likes`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
