@@ -259,10 +259,10 @@ const EventDetails = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Description</Label>
+                  <Label htmlFor="address" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Address</Label>
                   <Input
-                      id="description"
-                      value={eventData.description}
+                      id="address"
+                      value={eventData.address}
                       readOnly
                       className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   />
@@ -278,28 +278,31 @@ const EventDetails = () => {
                 </div>
               </div>
 
-              {/* Tags and Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-                <div className="flex flex-wrap gap-3">
-                  {/*{eventData.tags.map((tag, index) => (
-                    <span 
-                      key={index}
-                      className="px-4 py-2 bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 text-sky-700 dark:text-sky-300 rounded-full text-sm font-medium border border-sky-200 dark:border-sky-600"
-                    >
-                      {tag}
-                    </span>
-                  ))}*/}
+              {/* Description + Join/Leave Button */}
+              <div className="flex items-end gap-6 mb-8">
+                <div className="flex-1 space-y-2">
+                  <Label htmlFor="description" className="text-sm font-semibold text-slate-700 dark:text-slate-300 text-center block">
+                    Event Description
+                  </Label>
+                  <Textarea
+                      id="description"
+                      value={eventData.description}
+                      readOnly
+                      className="w-full min-h-[100px] bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm resize-none"
+                  />
                 </div>
-                <Button
-                    onClick={handleJoinLeave}
-                    className={`${
-                        hasJoined
-                            ? 'bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600'
-                            : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600'
-                    } text-white rounded-xl shadow-lg px-6`}
-                >
-                  {hasJoined ? 'Leave Event' : 'Join Event'}
-                </Button>
+                <div className="w-auto">
+                  <Button
+                      onClick={handleJoinLeave}
+                      className={`${
+                          hasJoined
+                              ? 'bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600'
+                              : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600'
+                      } text-white rounded-xl shadow-lg px-6 py-3`}
+                  >
+                    {hasJoined ? 'Leave Event' : 'Join Event'}
+                  </Button>
+                </div>
               </div>
             </div>
 

@@ -25,12 +25,33 @@ interface ArtDetailsModalProps {
   };
 }
 
+const ImageZoomModal = ({ imageUrl, onClose }: { imageUrl: string; onClose: () => void }) => {
+  return (
+      <Dialog open={!!imageUrl} onOpenChange={() => onClose()}>
+        <DialogContent
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-4xl max-h-[90vh] p-0 bg-black/90 rounded-xl flex items-center justify-center cursor-zoom-out z-[10000]"
+        >
+          <img
+              src={imageUrl}
+              alt="Zoomed"
+              className="max-w-full max-h-[85vh] object-contain rounded-xl"
+              /*onClick={onClose} */
+          />
+        </DialogContent>
+      </Dialog>
+  );
+};
+
 const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) => {
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [linkedCharacters,setLinkedCharacters] = useState([]);
   const [linkedTags,setLinkedTags] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState<number>(artData?.likes || 0);
+  const [zoomImageUrl, setZoomImageUrl] = useState<string | null>(null);
+  const openZoom = (url: string) => setZoomImageUrl(url);
+  const closeZoom = () => setZoomImageUrl(null);
 
 
 
@@ -156,6 +177,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
   }
 
   return (
+      <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999]">
         <DialogHeader>
@@ -170,7 +192,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
         <div className="space-y-4">
           {/* Image Display */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20">
+            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20" onClick = {()=>openZoom(artData.imageUrl)}>
               <img 
                 src={artData.imageUrl} 
                 alt={artData.title}
@@ -178,7 +200,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
               />
             </div>
             {artData.referenceImageUrl && (
-              <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20">
+              <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20"  onClick = {()=>openZoom(artData.referenceImageUrl)}>
                 <img 
                   src={artData.referenceImageUrl} 
                   alt="Reference"
@@ -328,6 +350,8 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
         </div>
       </DialogContent>
     </Dialog>
+  {zoomImageUrl && <ImageZoomModal imageUrl={zoomImageUrl} onClose={closeZoom} />}
+      </>
   );
 };
 

@@ -74,7 +74,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
       alert("Please select a character first");
       return;
     }
-    if (characterName && datacenter) {
+    if (characterName) {
       setLinkedCharacters([...linkedCharacters, { 
         name: characterName, 
         datacenter: datacenter, 
@@ -149,12 +149,12 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
               onChange={(e) => setCharacterName(e.target.value)}
               className="w-full bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
             />
-            <Input
+            {/*<Input
               placeholder="Datacenter/Server"
               value={datacenter}
               onChange={(e) => setDatacenter(e.target.value)}
               className="w-full bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
-            />
+            />*/}
             <Button 
               onClick={handleSearch}
               type="button"
@@ -173,7 +173,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
                           onClick={() => {
                             setSelectedCharacter(char)
                             setCharacterName(char.Name);
-                            setDatacenter(datacenter);
+                            //setDatacenter(datacenter);
                             //console.log("This is the selected id" + selectedCharacter.ID);
                             //setSearchResults([]);
                           }}
@@ -234,7 +234,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
           <Button 
             onClick={handleLinkCharacter}
             type="button"
-            disabled={!characterName || !datacenter}
+            disabled={!characterName}
             className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Link Character
