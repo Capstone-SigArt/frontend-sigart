@@ -168,4 +168,84 @@ export const useEnsureProfile = () => {
   }, [user?.id, user?.email]);
 
   return { isChecking };
-}; 
+};
+
+export const useProfileById = (userId?: string) => {
+  const {
+    data: profile,
+    isLoading,
+    error,
+    refetch
+  } = useQuery({
+    queryKey: ['profile', userId],
+    queryFn: () => userId ? profileService.getProfile(userId) : null,
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  return {
+    profile,
+    isLoading,
+    error,
+    refetch,
+    userId
+  };
+};
+
+export const useUserStatsById = (userId?: string) => {
+  const {
+    data: artworkCount,
+    isLoading: isLoadingArtwork
+  } = useQuery({
+    queryKey: ['artworkCount', userId],
+    queryFn: () => userId ? profileService.getArtworkCount(userId) : 0,
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  return {
+    artworkCount: artworkCount || 0,
+    isLoadingArtwork,
+    likes: 0,
+    followers: 0,
+    following: 0
+  };
+};
+
+export const useUserArtworksById = (userId?: string, limit: number = 6) => {
+  const {
+    data: artworks,
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['userArtworks', userId, limit],
+    queryFn: () => userId ? profileService.getUserArtworks(userId, limit) : [],
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  return {
+    artworks: artworks || [],
+    isLoading,
+    error
+  };
+};
+
+export const useUserEventsById = (userId?: string, limit: number = 5) => {
+  const {
+    data: events,
+    isLoading,
+    error
+  } = useQuery({
+    queryKey: ['userEvents', userId, limit],
+    queryFn: () => userId ? profileService.getUserParties(userId, limit) : [],
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  return {
+    events: events || [],
+    isLoading,
+    error
+  };
+};

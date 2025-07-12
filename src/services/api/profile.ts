@@ -45,6 +45,8 @@ export const profileService = {
         .eq('id', userId)
         .single();
 
+      console.log('getProfile result:', { data, error, userId });
+
       if (error) {
         console.error('Error fetching profile:', error);
         return null;

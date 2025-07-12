@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Edit, Bookmark, Heart } from 'lucide-react';
-
+import {useNavigate} from 'react-router-dom';
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 
 interface ArtDetailsModalProps {
@@ -45,6 +45,7 @@ const ImageZoomModal = ({ imageUrl, onClose }: { imageUrl: string; onClose: () =
 };
 
 const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) => {
+  const navigate = useNavigate();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [linkedCharacters,setLinkedCharacters] = useState([]);
   const [linkedTags,setLinkedTags] = useState([]);
@@ -218,7 +219,12 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           </div>
 
           {/* Artist Info */}
-          <div className="flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-2xl">
+          <div
+              onClick={() => navigate(`/user-studio/${artData.uploader_id}`)}
+              className="flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-2xl cursor-pointer hover:brightness-95 transition"
+              role="button"
+              tabIndex={0}
+          >
             <div className="flex items-center gap-3">
               <Avatar className="w-12 h-12 border-2 border-sky-300">
                 {uploaderProfile?.avatar_url ? (
