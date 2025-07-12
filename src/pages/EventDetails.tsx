@@ -210,6 +210,9 @@ const EventDetails = () => {
   if (!eventData) return null; // just in case
   if(!hostData) return null;
 
+  const bannerUrl = eventData.cover_image?.trim()
+      ? eventData.cover_image.trim()
+      : "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop";
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
       <ModernNavigation 
@@ -231,7 +234,7 @@ const EventDetails = () => {
               {/* Actual Banner Image */}
               <div className="w-full h-48 mb-8 overflow-hidden rounded-2xl border-2 border-sky-300 dark:border-sky-600">
                 <img
-                    src={eventData.cover_image}
+                    src={bannerUrl}
                     alt="Event Banner"
                     className="w-full h-full object-cover"
                 />
