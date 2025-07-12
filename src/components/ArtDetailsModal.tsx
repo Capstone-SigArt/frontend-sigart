@@ -14,6 +14,7 @@ interface ArtDetailsModalProps {
     id: string;
     title: string;
     artist: string;
+    uploader_id: string;
     uploadDate: string;
     toolsUsed: string;
     tags: string[];
@@ -47,6 +48,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [linkedCharacters,setLinkedCharacters] = useState([]);
   const [linkedTags,setLinkedTags] = useState([]);
+  const [uploaderProfile, setUploaderProfile] = useState<any | null>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState<number>(artData?.likes || 0);
   const [zoomImageUrl, setZoomImageUrl] = useState<string | null>(null);
@@ -65,17 +67,19 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
       } = await import("@/lib/supabase").then(m => m.supabase.auth.getUser());
       if (!user) return;
 
-      const [charactersRes, tags, likesRes, likedStatusRes] = await Promise.all([
+      const [charactersRes, tags, likesRes, likedStatusRes,profileRes] = await Promise.all([
         fetch(`${API_BASE_URL}/artworkCharacters/${artData.id}`).then(res => res.json()),
         fetchArtworkLinkedTags(artData.id),
         fetchArtworkLikes(artData.id),
-        fetch(`${API_BASE_URL}/likes/userLiked?user_id=${user.id}&artwork_id=${artData.id}`).then(res => res.json())
+        fetch(`${API_BASE_URL}/likes/userLiked?user_id=${user.id}&artwork_id=${artData.id}`).then(res => res.json()),
+        fetch(`${API_BASE_URL}/profile/${artData.uploader_id}`).then((res) => res.json()),
       ]);
 
       setLinkedCharacters(charactersRes);
       setLinkedTags(tags);
       setLikesCount(likesRes.count ?? 0);
       setIsLiked(likedStatusRes.liked ?? false);
+      setUploaderProfile(profileRes);
     };
 
     fetchAll();
@@ -217,9 +221,13 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           <div className="flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-2xl">
             <div className="flex items-center gap-3">
               <Avatar className="w-12 h-12 border-2 border-sky-300">
-                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
-                  AS
-                </AvatarFallback>
+                {uploaderProfile?.avatar_url ? (
+                    <AvatarImage src={uploaderProfile.avatar_url} alt={artData.artist} />
+                ) : (
+                    <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
+                      {artData.artist.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                )}
               </Avatar>
               <div className="text-center">
                 <div className="text-sm text-slate-600 dark:text-slate-400">Artist</div>

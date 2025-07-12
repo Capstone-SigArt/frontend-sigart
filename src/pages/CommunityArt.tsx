@@ -173,7 +173,8 @@ const CommunityArt = () => {
     setSelectedArtwork({
       id: art.id,
       title: art.notes || 'Untitled',
-      artist: art.username || art.uploader_id,
+      artist: art.username,
+      uploader_id: art.uploader_id,
       uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
       toolsUsed: art.tools_used || '',
       tags: [],

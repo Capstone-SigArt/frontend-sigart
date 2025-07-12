@@ -338,6 +338,7 @@ const EventDetails = () => {
                             id:art.id,
                             title: art.notes || 'Untitled',
                             artist: username,
+                            uploader_id: art.uploader_id,
                             uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
                             toolsUsed: art.tools_used,
                             tags: [],
