@@ -249,3 +249,26 @@ export const useUserEventsById = (userId?: string, limit: number = 5) => {
     error
   };
 };
+
+export function useUserLikesById(userId) {
+  const [likesCount, setLikesCount] = useState(0);
+  const [isLoadingLikes, setIsLoadingLikes] = useState(true);
+
+  useEffect(() => {
+    if (!userId) return;
+
+    setIsLoadingLikes(true);
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/likes/userLikes/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          setLikesCount(data.totalLikes ?? 0);
+          setIsLoadingLikes(false);
+        })
+        .catch(() => {
+          setLikesCount(0);
+          setIsLoadingLikes(false);
+        });
+  }, [userId]);
+
+  return { likesCount, isLoadingLikes };
+}

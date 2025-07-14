@@ -339,7 +339,7 @@ const EventDetails = () => {
                           const username = await fetchUsernameById(art.uploader_id)
                           setSelectedArt({
                             id:art.id,
-                            title: art.notes || 'Untitled',
+                            title: art.title || 'Untitled',
                             artist: username,
                             uploader_id: art.uploader_id,
                             uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
@@ -362,7 +362,7 @@ const EventDetails = () => {
                         />
                         <div className="p-4">
                           <h4 className="text-md font-semibold text-slate-700 dark:text-slate-200 truncate">
-                            {art.notes || "Untitled"}
+                            {art.title || "Untitled"}
                           </h4>
                           <p className="text-xs text-slate-500 dark:text-slate-400">
                             Uploaded on {dayjs(art.created_at).format("MMM D, YYYY")}

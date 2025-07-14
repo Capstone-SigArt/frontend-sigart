@@ -12,7 +12,7 @@ import {
   useUserArtworks,
   useUserEvents,
   useEnsureProfile,
-  useProfileById, useUserStatsById, useUserArtworksById, useUserEventsById
+  useProfileById, useUserStatsById, useUserArtworksById, useUserEventsById, useUserLikesById
 } from '@/hooks/useProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { parseSpecialties, getDefaultSpecialties } from '@/lib/specialties';
@@ -29,6 +29,7 @@ const UserStudio = () => {
   console.log('Profile data:', profile);
   const { artworkCount, isLoadingArtwork } = useUserStatsById(effectiveUserId);
   const { artworks, isLoading: isLoadingArtworks } = useUserArtworksById(effectiveUserId);
+  const {likesCount, isLoadingLikes} = useUserLikesById(effectiveUserId)
   const { events, isLoading: isLoadingEvents } = useUserEventsById(effectiveUserId);
   const { isChecking } = useEnsureProfile();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -151,7 +152,9 @@ const UserStudio = () => {
                       <div className="text-sm text-slate-500 dark:text-slate-400">Artworks</div>
                     </div>
                     <div className="text-center p-3 bg-white/40 dark:bg-slate-700/40 rounded-xl">
-                      <div className="text-2xl font-bold text-emerald-600">0</div>
+                      <div className="text-2xl font-bold text-emerald-600">
+                        {isLoadingLikes ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : likesCount}
+                      </div>
                       <div className="text-sm text-slate-500 dark:text-slate-400">Likes</div>
                     </div>
                     <div className="text-center p-3 bg-white/40 dark:bg-slate-700/40 rounded-xl">
@@ -248,12 +251,13 @@ const UserStudio = () => {
                         <div className="flex items-center space-x-4 text-sm">
                           <div className="flex items-center space-x-1">
                             <Heart className="w-4 h-4" />
-                              <span>0</span>
+                              <span>{artwork.likes_count ?? 0}</span>
                           </div>
-                          <div className="flex items-center space-x-1">
+                          {/*no view tracking for now so I commented it out*/}
+                          {/*<div className="flex items-center space-x-1">
                             <Eye className="w-4 h-4" />
                               <span>0</span>
-                          </div>
+                          </div>*/}
                         </div>
                       </div>
                     </div>

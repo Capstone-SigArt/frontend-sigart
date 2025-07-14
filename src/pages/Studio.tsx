@@ -17,6 +17,7 @@ const Studio = () => {
   const { profile, isLoading: isLoadingProfile } = useProfile();
   const { artworkCount, isLoadingArtwork } = useUserStats();
   const { artworks, isLoading: isLoadingArtworks } = useUserArtworks();
+  const totalLikes = artworks.reduce((sum, art) => sum + (art.likes_count ?? 0), 0);
   const { events, isLoading: isLoadingEvents } = useUserEvents();
   const { isChecking } = useEnsureProfile();
   
@@ -109,7 +110,7 @@ const Studio = () => {
                     <div className="text-xs text-slate-600 dark:text-slate-300">Artworks</div>
                   </div>
                   <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
-                    <div className="text-lg font-bold text-emerald-600">0</div>
+                    <div className="text-lg font-bold text-emerald-600"> {isLoadingArtworks ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : totalLikes}</div>
                     <div className="text-xs text-slate-600 dark:text-slate-300">Likes</div>
                   </div>
                   <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
@@ -228,21 +229,22 @@ const Studio = () => {
                               <div className="flex items-center space-x-3">
                                 <div className="flex items-center space-x-1">
                                   <Heart className="w-4 h-4" />
-                                  <span>0</span>
+                                  <span>{artwork.likes_count??0}</span>
                                 </div>
-                                <div className="flex items-center space-x-1">
+                                {/*no viewing or commenting functionality thus commented out */}
+                                {/*<div className="flex items-center space-x-1">
                                   <Eye className="w-4 h-4" />
                                   <span>0</span>
-                                </div>
-                                <div className="flex items-center space-x-1">
+                                </div>*/}
+                                {/*<div className="flex items-center space-x-1">
                                   <MessageCircle className="w-4 h-4" />
                                   <span>0</span>
-                                </div>
+                                </div>*/}
                               </div>
                             </div>
-                            {artwork.description && (
+                            {artwork.notes && (
                               <p className="text-sm text-slate-500 dark:text-slate-400 truncate">
-                                {artwork.description}
+                                {artwork.notes}
                               </p>
                             )}
                           </CardContent>

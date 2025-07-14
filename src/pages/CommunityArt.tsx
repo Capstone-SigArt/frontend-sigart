@@ -26,7 +26,9 @@ const CommunityArt = () => {
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/artwork/allArt`);
+        // const response = await fetch(`${API_BASE_URL}/artwork/allArt`);
+        const response = await fetch(`${API_BASE_URL}/artwork/allWithLikes`);
+
         if (!response.ok) throw new Error('Failed to fetch artworks');
 
         const data = await response.json();
@@ -172,7 +174,7 @@ const CommunityArt = () => {
   const handleArtworkClick = (art) => {
     setSelectedArtwork({
       id: art.id,
-      title: art.notes || 'Untitled',
+      title: art.title || 'Untitled',
       artist: art.username,
       uploader_id: art.uploader_id,
       uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
