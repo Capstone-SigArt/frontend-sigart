@@ -31,7 +31,7 @@ const HostParty = () => {
 
   const handleInputChange = (field: string, value: string) => {
     if (field === 'startTime' && value) {
-      // Auto-set endTime to 2 hours after startTime if endTime is empty
+      // Auto-set endTime to 2 hours after startTime
       const startDateTime = new Date(value);
       const endDateTime = new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000); // Add 2 hours
       const endTimeString = endDateTime.toISOString().slice(0, 16); // Format as datetime-local
@@ -39,7 +39,8 @@ const HostParty = () => {
       setFormData(prev => ({ 
         ...prev, 
         [field]: value,
-        endTime: prev.endTime || endTimeString // Only auto-set if endTime is empty
+        // Always update endTime to ensure it's after startTime
+        endTime: prev.endTime && new Date(prev.endTime) > new Date(value) ? prev.endTime : endTimeString
       }));
     } else {
       setFormData(prev => ({ ...prev, [field]: value }));
@@ -114,7 +115,14 @@ const HostParty = () => {
     const endDateTime = new Date(formData.endTime);
     
     if (endDateTime <= startDateTime) {
-      alert('End time must be after start time');
+      alert('End time must be after start time. Please ensure the event has a proper duration.');
+      return;
+    }
+    
+    // Additional check: prevent events with less than 30 minutes duration
+    const durationMinutes = (endDateTime.getTime() - startDateTime.getTime()) / (1000 * 60);
+    if (durationMinutes < 30) {
+      alert('Event duration must be at least 30 minutes. Please adjust your end time.');
       return;
     }
     
@@ -363,7 +371,14 @@ const HostParty = () => {
                   </div>
                                      {formData.startTime && formData.endTime && (
                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                       Duration: {Math.round((new Date(formData.endTime).getTime() - new Date(formData.startTime).getTime()) / (1000 * 60 * 60) * 10) / 10} hours
+                       Duration: {(() => {
+                         const start = new Date(formData.startTime);
+                         const end = new Date(formData.endTime);
+                         const diffMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+                         const hours = Math.floor(diffMinutes / 60);
+                         const minutes = Math.round(diffMinutes % 60);
+                         return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+                       })()}
                      </p>
                    )}
                 </div>
