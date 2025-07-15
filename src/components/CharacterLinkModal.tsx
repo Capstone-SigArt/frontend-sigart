@@ -169,13 +169,13 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
                   {searchResults.map((char, index) => (
                       <div
                           key={index}
-                          className="p-2 hover:bg-sky-200 dark:hover:bg-sky-700 cursor-pointer rounded flex items-center justify-between"
+                          className={`p-2 cursor-pointer rounded flex items-center justify-between
+    ${selectedCharacter?.ID === char.ID
+                              ? 'bg-sky-300 dark:bg-sky-600'
+                              : 'hover:bg-sky-200 dark:hover:bg-sky-700'}`}
                           onClick={() => {
-                            setSelectedCharacter(char)
+                            setSelectedCharacter(char);
                             setCharacterName(char.Name);
-                            //setDatacenter(datacenter);
-                            //console.log("This is the selected id" + selectedCharacter.ID);
-                            //setSearchResults([]);
                           }}
                       >
                         <div>

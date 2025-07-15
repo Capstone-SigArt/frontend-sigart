@@ -18,6 +18,8 @@ const CommunityArt = () => {
   const [artworks, setArtworks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [availableTags,setAvailableTags] = useState([]);
+  const [selectedTag, setSelectedTag] = useState(null);
   const [selectedArtwork, setSelectedArtwork] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -53,8 +55,19 @@ const CommunityArt = () => {
         setLoading(false);
       }
     };
+    const fetchTags = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/tags/artworkTags/allArtworkTags`);
+        if (!res.ok) throw new Error('Failed to fetch tags');
+        const data = await res.json();
+        setAvailableTags(data);
+      } catch (err) {
+        console.error('Error fetching tags:', err);
+      }
+    };
 
     fetchArtworks();
+    fetchTags();
   }, []);
 
   const fetchArtworkLinkedTags = async(artworkId: string) => {
@@ -83,6 +96,7 @@ const CommunityArt = () => {
       return userId; // fallback
     }
   };
+
 
   /*const artworks = [
     {
@@ -160,10 +174,20 @@ const CommunityArt = () => {
   ];*/
 
   const filteredArtworks = artworks.filter(artwork => {
-    const matchesSearch = artwork.notes.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         artwork.uploader_id.toLowerCase().includes(searchQuery.toLowerCase());
-    /*const matchesCategory = selectedCategory === 'All' || artwork.category === selectedCategory;*/
-    return matchesSearch /*&& matchesCategory;*/
+    const notes = artwork.notes || "";
+    const title = artwork.title || "";
+    const artist = artwork.username || "";
+
+    const matchesSearch =
+        notes.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        artist.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesTag = selectedTag
+        ? artwork.tags.some((tag) => tag.id === selectedTag.id)
+        : true;
+
+    return matchesSearch && matchesTag;
   });
 
   const toggleLike = (artworkId: number, e: React.MouseEvent) => {
@@ -218,22 +242,23 @@ const CommunityArt = () => {
           </div>
 
           {/* Category Filter */}
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
-                className={`whitespace-nowrap rounded-full px-4 py-2 transition-all duration-300 ${
-                  selectedCategory === category
-                    ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-lg'
-                    : 'bg-white/40 border-white/30 hover:bg-white/60'
-                }`}
-              >
-                {category}
-              </Button>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar mt-4 whitespace-nowrap pb-4">
+            {availableTags.map((tag) => (
+                <Button
+                    key={tag.id}
+                    variant={selectedTag?.id === tag.id ? "default" : "outline"}
+                    onClick={() => setSelectedTag(selectedTag?.id === tag.id ? null : tag)}
+                    className={`whitespace-nowrap rounded-full px-4 py-2 transition-all duration-300 ${
+                        selectedTag?.id === tag.id
+                            ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-lg'
+                            : 'bg-white/40 border-white/30 hover:bg-white/60'
+                    }`}
+                >
+                  {tag.name}
+                </Button>
             ))}
           </div>
+
         </div>
       </div>
 
