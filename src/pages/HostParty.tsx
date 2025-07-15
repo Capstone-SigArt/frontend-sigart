@@ -30,7 +30,20 @@ const HostParty = () => {
   const navigate = useNavigate();
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    if (field === 'startTime' && value) {
+      // Auto-set endTime to 2 hours after startTime if endTime is empty
+      const startDateTime = new Date(value);
+      const endDateTime = new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000); // Add 2 hours
+      const endTimeString = endDateTime.toISOString().slice(0, 16); // Format as datetime-local
+      
+      setFormData(prev => ({ 
+        ...prev, 
+        [field]: value,
+        endTime: prev.endTime || endTimeString // Only auto-set if endTime is empty
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [field]: value }));
+    }
   };
 
   const handleGeneratePreview = () => {
@@ -91,7 +104,25 @@ const HostParty = () => {
   };
 
   const handleCreateParty = async () => {
-    //console.log('Creating party with data:', formData);
+    // Validation
+    if (!formData.startTime || !formData.endTime) {
+      alert('Please set both start and end times');
+      return;
+    }
+    
+    const startDateTime = new Date(formData.startTime);
+    const endDateTime = new Date(formData.endTime);
+    
+    if (endDateTime <= startDateTime) {
+      alert('End time must be after start time');
+      return;
+    }
+    
+    if (!formData.title || !formData.description) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
     try {
       const payload = {
         host_id: formData.host_id,
@@ -261,12 +292,18 @@ const HostParty = () => {
               </h2>
               
               <div className="space-y-4">
-                <Input
-                  placeholder="Party Title"
-                  value={formData.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
-                />
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Party Title *
+                  </label>
+                  <Input
+                    placeholder="Enter party title"
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
+                    required
+                  />
+                </div>
                 
                 <Input
                   placeholder="Theme"
@@ -289,29 +326,46 @@ const HostParty = () => {
                 >
                   Test Create First Tag
                 </Button>*/}
-                <div className="relative">
-                  <Input
-                      type="datetime-local"
-                      placeholder="Date/Time"
-                      value={formData.startTime}
-                      onChange={(e) => handleInputChange('startTime', e.target.value)}
-                      className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20" // add right padding
-                  />
-                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
-                    start-time
-                  </span>
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Start Date & Time *
+                  </label>
+                  <div className="relative">
+                    <Input
+                        type="datetime-local"
+                        placeholder="Select start date and time"
+                        value={formData.startTime}
+                        onChange={(e) => handleInputChange('startTime', e.target.value)}
+                        className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20"
+                        required
+                    />
+                    <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
+                      start-time
+                    </span>
+                  </div>
                 </div>
-                <div className="relative">
-                  <Input
-                      type="datetime-local"
-                      placeholder="Date/Time"
-                      value={formData.endTime}
-                      onChange={(e) => handleInputChange('endTime', e.target.value)}
-                      className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20" // add right padding
-                  />
-                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
-                    end-time
-                  </span>
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    End Date & Time *
+                  </label>
+                  <div className="relative">
+                    <Input
+                        type="datetime-local"
+                        placeholder="Select end date and time"
+                        value={formData.endTime}
+                        onChange={(e) => handleInputChange('endTime', e.target.value)}
+                        className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20"
+                        required
+                    />
+                    <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
+                      end-time
+                    </span>
+                  </div>
+                                     {formData.startTime && formData.endTime && (
+                     <p className="text-xs text-gray-500 dark:text-gray-400">
+                       Duration: {Math.round((new Date(formData.endTime).getTime() - new Date(formData.startTime).getTime()) / (1000 * 60 * 60) * 10) / 10} hours
+                     </p>
+                   )}
                 </div>
                 <div className="flex gap-2">
 {/*                  <Button variant="outline" size="sm" className="bg-white/40 border-white/30">Server</Button>
@@ -343,12 +397,18 @@ const HostParty = () => {
                   )}
                 </div>
                 
-                <Textarea
-                  placeholder="Description/ notes"
-                  value={formData.description}
-                  onChange={(e) => handleInputChange('description', e.target.value)}
-                  className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl min-h-[100px]"
-                />
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Description *
+                  </label>
+                  <Textarea
+                    placeholder="Describe your party and what participants can expect"
+                    value={formData.description}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl min-h-[100px]"
+                    required
+                  />
+                </div>
               </div>
 
               {/* Action Buttons */}

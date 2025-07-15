@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, Calendar, MapPin, Users, Heart, Share2 } from 'lucide-react';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Search, Calendar, MapPin, Users, Heart, Share2, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ModernNavigation from '@/components/ModernNavigation';
 
@@ -13,7 +19,8 @@ const Index = () => {
   const [searchFilters, setSearchFilters] = useState({
     title: '',
     tags: '',
-    host: ''
+    host: '',
+    eventStatus: 'all' // 'all', 'upcoming_active', 'past'
   });
   const [events, setEvents] = useState<any[]>([]);
   const [allEvents, setAllEvents] = useState<any[]>([]); // Store all fetched events
@@ -25,7 +32,8 @@ const Index = () => {
     const fetchParties = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${API_BASE_URL}/parties`);
+        const statusParam = searchFilters.eventStatus !== 'all' ? `?status=${searchFilters.eventStatus}` : '';
+        const response = await fetch(`${API_BASE_URL}/parties${statusParam}`);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const dataWithAttendees = await Promise.all(
@@ -52,25 +60,26 @@ const Index = () => {
       setLoading(false);
     };
     fetchParties();
-  }, []);
+  }, [searchFilters.eventStatus]);
 
-  // Filtering logic
+  // Filtering logic (status filtering is now handled by backend)
   const filterEvents = () => {
     const { title, tags, host } = searchFilters;
     const filtered = allEvents.filter(event => {
       const matchesTitle = title.trim() === '' || (event.title && event.title.toLowerCase().includes(title.toLowerCase()));
       const matchesTags = tags.trim() === '' || (event.tags && event.tags.join(' ').toLowerCase().includes(tags.toLowerCase()));
       const matchesHost = host.trim() === '' || (event.host && event.host.toLowerCase().includes(host.toLowerCase()));
+
       return matchesTitle && matchesTags && matchesHost;
     });
     setEvents(filtered);
   };
 
-  // Filter on input change
+  // Filter on input change (excluding eventStatus which is handled by backend)
   useEffect(() => {
     filterEvents();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchFilters, allEvents]);
+  }, [searchFilters.title, searchFilters.tags, searchFilters.host, allEvents]);
   
 
   const toggleLike = (eventId: string, e: React.MouseEvent) => {
@@ -115,6 +124,38 @@ const Index = () => {
               onChange={(e) => setSearchFilters(prev => ({ ...prev, host: e.target.value }))}
               className="w-40 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl"
             />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="bg-white/80 dark:bg-slate-700/80 border-white/30 text-slate-700 dark:text-slate-300 rounded-xl px-4 py-2 flex items-center gap-2 hover:bg-white/90 dark:hover:bg-slate-600/90 min-w-48"
+                >
+                  <Calendar className="w-4 h-4" />
+                  {searchFilters.eventStatus === 'all' ? 'All Events' : searchFilters.eventStatus === 'upcoming_active' ? 'Upcoming & Active' : 'Past Events'}
+                  <ChevronDown className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 rounded-xl">
+                <DropdownMenuItem 
+                  onClick={() => setSearchFilters(prev => ({ ...prev, eventStatus: 'all' }))}
+                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+                >
+                  All Events
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setSearchFilters(prev => ({ ...prev, eventStatus: 'upcoming_active' }))}
+                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+                >
+                  Upcoming & Active
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => setSearchFilters(prev => ({ ...prev, eventStatus: 'past' }))}
+                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+                >
+                  Past Events
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl px-6 shadow-lg"
               onClick={filterEvents}
               type="button"
