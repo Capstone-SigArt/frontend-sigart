@@ -27,6 +27,8 @@ const EventDetails = () => {
   const [error , setError] = useState(null);
   const [hasJoined, setHasJoined] = useState(false);
   const [artworks, setArtworks] = useState([]);
+  const [availableCharacters, setAvailableCharacters] = useState([]);
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -34,13 +36,51 @@ const EventDetails = () => {
         const response = await fetch(`${API_BASE_URL}/artwork?party_id=${eventId}`);
         if (!response.ok) throw new Error("Failed to fetch artworks");
         const data = await response.json();
-        setArtworks(data);
+
+        const enriched = await Promise.all(
+            data.map(async (art) => {
+              try {
+                const res = await fetch(`${API_BASE_URL}/artworkCharacters/${art.id}`);
+                const characters = res.ok ? await res.json() : [];
+                return { ...art, characters };
+              } catch {
+                return { ...art, characters: [] };
+              }
+            })
+        );
+        setArtworks(enriched);
       } catch (err) {
         console.error("Error fetching artworks:", err);
       }
     };
 
     if (eventId) fetchArtworks();
+  }, [eventId]);
+
+  useEffect(() => {
+    const fetchCharacters = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/partyCharacters/${eventId}`);
+        if (!res.ok) throw new Error("Failed to fetch characters");
+        const data = await res.json();
+
+        const uniqueCharacters = Array.from(
+            data.reduce((map, char) => {
+              const id = String(char.id);
+              if (!map.has(id)) {
+                map.set(id, char);
+              }
+              return map;
+            }, new Map()).values()
+        );
+
+        setAvailableCharacters(uniqueCharacters);
+      } catch (err) {
+        console.error("Error fetching characters:", err);
+      }
+    };
+
+    if (eventId) fetchCharacters();
   }, [eventId]);
 
   useEffect(() => {
@@ -210,6 +250,9 @@ const EventDetails = () => {
   if (!eventData) return null; // just in case
   if(!hostData) return null;
 
+  const bannerUrl = eventData.cover_image?.trim()
+      ? eventData.cover_image.trim()
+      : "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop";
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
       <ModernNavigation 
@@ -231,7 +274,7 @@ const EventDetails = () => {
               {/* Actual Banner Image */}
               <div className="w-full h-48 mb-8 overflow-hidden rounded-2xl border-2 border-sky-300 dark:border-sky-600">
                 <img
-                    src={eventData.cover_image}
+                    src={bannerUrl}
                     alt="Event Banner"
                     className="w-full h-full object-cover"
                 />
@@ -259,10 +302,10 @@ const EventDetails = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="description" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Description</Label>
+                  <Label htmlFor="address" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Address</Label>
                   <Input
-                      id="description"
-                      value={eventData.description}
+                      id="address"
+                      value={eventData.address}
                       readOnly
                       className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   />
@@ -278,28 +321,31 @@ const EventDetails = () => {
                 </div>
               </div>
 
-              {/* Tags and Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-                <div className="flex flex-wrap gap-3">
-                  {/*{eventData.tags.map((tag, index) => (
-                    <span 
-                      key={index}
-                      className="px-4 py-2 bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 text-sky-700 dark:text-sky-300 rounded-full text-sm font-medium border border-sky-200 dark:border-sky-600"
-                    >
-                      {tag}
-                    </span>
-                  ))}*/}
+              {/* Description + Join/Leave Button */}
+              <div className="flex items-end gap-6 mb-8">
+                <div className="flex-1 space-y-2">
+                  <Label htmlFor="description" className="text-sm font-semibold text-slate-700 dark:text-slate-300 text-center block">
+                    Event Description
+                  </Label>
+                  <Textarea
+                      id="description"
+                      value={eventData.description}
+                      readOnly
+                      className="w-full min-h-[100px] bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm resize-none"
+                  />
                 </div>
-                <Button
-                    onClick={handleJoinLeave}
-                    className={`${
-                        hasJoined
-                            ? 'bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600'
-                            : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600'
-                    } text-white rounded-xl shadow-lg px-6`}
-                >
-                  {hasJoined ? 'Leave Event' : 'Join Event'}
-                </Button>
+                <div className="w-auto">
+                  <Button
+                      onClick={handleJoinLeave}
+                      className={`${
+                          hasJoined
+                              ? 'bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600'
+                              : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600'
+                      } text-white rounded-xl shadow-lg px-6 py-3`}
+                  >
+                    {hasJoined ? 'Leave Event' : 'Join Event'}
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -322,10 +368,34 @@ const EventDetails = () => {
                 </div>
               </div>
 
+              {/*Character filter mapping*/}
+              {availableCharacters.length > 0 && (
+                  <div className="mb-4 flex flex-wrap items-center gap-3">
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">Filter by Character:</span>
+                    <select
+                        value={selectedCharacter || ""}
+                        onChange={(e) => setSelectedCharacter(e.target.value || null)}
+                        className="bg-white dark:bg-slate-700 text-slate-700 dark:text-white border rounded-md px-3 py-1"
+                    >
+                      <option value="">All</option>
+                      {availableCharacters.map((char) => (
+                          <option key={char.id} value={char.id}>
+                            {char.name}
+                          </option>
+                      ))}
+                    </select>
+
+                  </div>
+              )}
               {/* Gallery Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Top Row - Attendees with avatars */}
-                {artworks.map((art) => (
+                {artworks
+                    .filter((art) => {
+                      if (!selectedCharacter) return true;
+                      return art.characters?.some((char) => String(char.id) === selectedCharacter);
+                    })
+                    .map((art) => (
                     <Card
                         key={art.id}
                         className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
@@ -333,8 +403,9 @@ const EventDetails = () => {
                           const username = await fetchUsernameById(art.uploader_id)
                           setSelectedArt({
                             id:art.id,
-                            title: art.notes || 'Untitled',
+                            title: art.title || 'Untitled',
                             artist: username,
+                            uploader_id: art.uploader_id,
                             uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
                             toolsUsed: art.tools_used,
                             tags: [],
@@ -355,7 +426,7 @@ const EventDetails = () => {
                         />
                         <div className="p-4">
                           <h4 className="text-md font-semibold text-slate-700 dark:text-slate-200 truncate">
-                            {art.notes || "Untitled"}
+                            {art.title || "Untitled"}
                           </h4>
                           <p className="text-xs text-slate-500 dark:text-slate-400">
                             Uploaded on {dayjs(art.created_at).format("MMM D, YYYY")}
