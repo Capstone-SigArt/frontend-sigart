@@ -27,6 +27,8 @@ const EventDetails = () => {
   const [error , setError] = useState(null);
   const [hasJoined, setHasJoined] = useState(false);
   const [artworks, setArtworks] = useState([]);
+  const [availableCharacters, setAvailableCharacters] = useState([]);
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -34,13 +36,51 @@ const EventDetails = () => {
         const response = await fetch(`${API_BASE_URL}/artwork?party_id=${eventId}`);
         if (!response.ok) throw new Error("Failed to fetch artworks");
         const data = await response.json();
-        setArtworks(data);
+
+        const enriched = await Promise.all(
+            data.map(async (art) => {
+              try {
+                const res = await fetch(`${API_BASE_URL}/artworkCharacters/${art.id}`);
+                const characters = res.ok ? await res.json() : [];
+                return { ...art, characters };
+              } catch {
+                return { ...art, characters: [] };
+              }
+            })
+        );
+        setArtworks(enriched);
       } catch (err) {
         console.error("Error fetching artworks:", err);
       }
     };
 
     if (eventId) fetchArtworks();
+  }, [eventId]);
+
+  useEffect(() => {
+    const fetchCharacters = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/partyCharacters/${eventId}`);
+        if (!res.ok) throw new Error("Failed to fetch characters");
+        const data = await res.json();
+
+        const uniqueCharacters = Array.from(
+            data.reduce((map, char) => {
+              const id = String(char.id);
+              if (!map.has(id)) {
+                map.set(id, char);
+              }
+              return map;
+            }, new Map()).values()
+        );
+
+        setAvailableCharacters(uniqueCharacters);
+      } catch (err) {
+        console.error("Error fetching characters:", err);
+      }
+    };
+
+    if (eventId) fetchCharacters();
   }, [eventId]);
 
   useEffect(() => {
@@ -328,10 +368,34 @@ const EventDetails = () => {
                 </div>
               </div>
 
+              {/*Character filter mapping*/}
+              {availableCharacters.length > 0 && (
+                  <div className="mb-4 flex flex-wrap items-center gap-3">
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">Filter by Character:</span>
+                    <select
+                        value={selectedCharacter || ""}
+                        onChange={(e) => setSelectedCharacter(e.target.value || null)}
+                        className="bg-white dark:bg-slate-700 text-slate-700 dark:text-white border rounded-md px-3 py-1"
+                    >
+                      <option value="">All</option>
+                      {availableCharacters.map((char) => (
+                          <option key={char.id} value={char.id}>
+                            {char.name}
+                          </option>
+                      ))}
+                    </select>
+
+                  </div>
+              )}
               {/* Gallery Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Top Row - Attendees with avatars */}
-                {artworks.map((art) => (
+                {artworks
+                    .filter((art) => {
+                      if (!selectedCharacter) return true;
+                      return art.characters?.some((char) => String(char.id) === selectedCharacter);
+                    })
+                    .map((art) => (
                     <Card
                         key={art.id}
                         className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
