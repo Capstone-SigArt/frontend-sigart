@@ -70,25 +70,25 @@ const Auth = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 dark:from-[#0f172a] dark:via-[#1e293b] dark:to-[#0f172a] flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
-              <Palette className="w-10 h-10 text-white" />
+            <div className="w-20 h-20 bg-gradient-to-r from-[#38bdf8] to-[#f59e0b] rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl shadow-blue-500/20">
+              <Palette className="w-10 h-10 text-white animate-pulse" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#38bdf8] to-[#f59e0b] bg-clip-text text-transparent">
               SigArt
             </h1>
-            <p className="text-slate-600 dark:text-slate-300 mt-2">
+            <p className="text-slate-300 dark:text-slate-400 mt-2">
               Discover Amazing Art Events
             </p>
           </div>
 
           {/* Auth Card */}
-          <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border-white/20 shadow-2xl">
+          <Card className="bg-slate-800/80 dark:bg-slate-900/80 backdrop-blur-xl border border-blue-500/30 shadow-2xl shadow-blue-500/10">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-[#38bdf8] to-[#f59e0b] bg-clip-text text-transparent">
                 {isLogin ? 'Welcome Back' : 'Create Account'}
               </CardTitle>
             </CardHeader>
@@ -102,7 +102,7 @@ const Auth = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required
-                      className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
+                      className="bg-slate-700/60 dark:bg-slate-800/60 border-blue-500/30 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8] text-white placeholder-slate-400"
                     />
                   </div>
                 )}
@@ -114,7 +114,7 @@ const Auth = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
+                    className="bg-slate-700/60 dark:bg-slate-800/60 border-blue-500/30 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8] text-white placeholder-slate-400"
                   />
                 </div>
                 
@@ -125,13 +125,13 @@ const Auth = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-10"
+                    className="bg-slate-700/60 dark:bg-slate-800/60 border-blue-500/30 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8] text-white placeholder-slate-400 pr-10"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 text-slate-400 hover:text-[#38bdf8]"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -144,10 +144,11 @@ const Auth = () => {
                       id="linkCharacter"
                       checked={linkCharacter}
                       onCheckedChange={(checked) => setLinkCharacter(checked as boolean)}
+                      className="border-blue-500/30 data-[state=checked]:bg-[#38bdf8] data-[state=checked]:border-[#38bdf8]"
                     />
                     <label
                       htmlFor="linkCharacter"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-700 dark:text-slate-300"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-300"
                     >
                       Link FFXIV Character after signup
                     </label>
@@ -155,7 +156,7 @@ const Auth = () => {
                 )}
 
                 {error && (
-                  <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-2 rounded-lg">
+                  <div className="text-red-400 text-sm text-center bg-red-900/20 border border-red-500/30 p-2 rounded-lg">
                     {error}
                   </div>
                 )}
@@ -163,7 +164,7 @@ const Auth = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl py-3 shadow-lg"
+                  className="w-full bg-gradient-to-r from-[#38bdf8] to-[#f59e0b] hover:from-[#38bdf8] hover:to-[#f59e0b] hover:opacity-90 text-white rounded-xl py-3 shadow-lg shadow-blue-500/20 transition-all duration-300"
                 >
                   {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Sign Up')}
                 </Button>
@@ -171,10 +172,10 @@ const Auth = () => {
                 {/* Google Login Button */}
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-slate-200 dark:border-slate-600" />
+                    <span className="w-full border-t border-blue-500/30" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-white dark:bg-slate-800 px-2 text-slate-500">Or</span>
+                    <span className="bg-slate-800 dark:bg-slate-900 px-2 text-slate-400">Or</span>
                   </div>
                 </div>
 
@@ -182,7 +183,7 @@ const Auth = () => {
                   type="button"
                   variant="outline"
                   onClick={handleGoogleLogin}
-                  className="w-full border-white/30 bg-white/60 dark:bg-slate-700/60 hover:bg-white/80 dark:hover:bg-slate-700/80 rounded-xl py-3 shadow-lg"
+                  className="w-full border-blue-500/30 bg-slate-700/60 dark:bg-slate-800/60 hover:bg-slate-700/80 dark:hover:bg-slate-800/80 text-white rounded-xl py-3 shadow-lg shadow-blue-500/10 transition-all duration-300"
                 >
                   <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -195,13 +196,14 @@ const Auth = () => {
               </form>
 
               <div className="mt-6 text-center">
-                <p className="text-sm text-slate-600 dark:text-slate-300">
+                <p className="text-sm text-slate-400">
                   {isLogin ? "Don't have an account? " : "Already have an account? "}
                   <button
+                    type="button"
                     onClick={() => setIsLogin(!isLogin)}
-                    className="text-sky-600 hover:text-emerald-600 font-medium transition-colors"
+                    className="text-[#38bdf8] hover:text-[#f59e0b] transition-colors duration-300"
                   >
-                    {isLogin ? 'Sign up' : 'Sign in'}
+                    {isLogin ? 'Sign Up' : 'Sign In'}
                   </button>
                 </p>
               </div>

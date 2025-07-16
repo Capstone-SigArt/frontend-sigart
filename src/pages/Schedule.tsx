@@ -102,33 +102,33 @@ const Schedule = () => {
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] text-slate-300">
       <ModernNavigation 
         title="Schedule" 
         subtitle="View and manage your art events"
       />
 
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
+        <Card className="bg-slate-800/80 backdrop-blur-sm border border-blue-500/30 shadow-xl shadow-blue-500/10 rounded-2xl">
           <CardContent className="p-8">
             <div className="flex items-center justify-center mb-8">
               <Button
                 variant="ghost"
                 size="icon"
-                className="mr-6 bg-white/40 hover:bg-white/60 rounded-full"
+                className="mr-6 bg-slate-900/50 border border-blue-500/30 text-[#38bdf8] hover:bg-slate-800 hover:text-[#f59e0b] rounded-full transition-all duration-300"
                 onClick={handlePrevMonth}
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
 
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent min-w-[150px] text-center">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-[#38bdf8] to-[#f59e0b] bg-clip-text text-transparent min-w-[150px] text-center">
                 {loading ? 'Loading...' : `${currentMonthName} ${currentYear}`}
               </h2>
 
               <Button
                 variant="ghost"
                 size="icon"
-                className="ml-6 bg-white/40 hover:bg-white/60 rounded-full"
+                className="ml-6 bg-slate-900/50 border border-blue-500/30 text-[#38bdf8] hover:bg-slate-800 hover:text-[#f59e0b] rounded-full transition-all duration-300"
                 onClick={handleNextMonth}
               >
                 <ArrowRight className="h-5 w-5" />
@@ -141,7 +141,7 @@ const Schedule = () => {
               {weekDays.map((day) => (
                 <div
                   key={day}
-                  className="h-14 flex items-center justify-center font-semibold text-slate-700 dark:text-slate-300 bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-800 dark:to-emerald-800"
+                  className="h-14 flex items-center justify-center font-semibold text-slate-300 bg-slate-900/50 border border-blue-500/30"
                 >
                   {day}
                 </div>
@@ -150,18 +150,24 @@ const Schedule = () => {
               {calendarDays.map((day, index) => (
                 <div
                   key={index}
-                  className="h-28 bg-white/60 dark:bg-slate-700/60 border border-white/30 p-2 overflow-hidden hover:bg-white/80 transition-all"
+                  className={`h-28 bg-slate-900/50 border border-blue-500/30 p-2 overflow-hidden hover:bg-slate-800/80 transition-all duration-300 ${
+                    day === today.getDate() && 
+                    currentMonthIndex === today.getMonth() && 
+                    currentYear === today.getFullYear()
+                      ? 'ring-2 ring-[#38bdf8] ring-offset-2 ring-offset-slate-900'
+                      : ''
+                  }`}
                 >
                   {day && (
                     <>
-                      <div className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                      <div className="text-sm font-medium text-slate-300 mb-2">
                         {day}
                       </div>
                       <div className="space-y-1">
                         {events[day]?.map((event) => (
                           <div
                             key={event.id}
-                            className="text-xs text-white bg-gradient-to-r from-sky-500 to-emerald-500 px-2 py-1 rounded-md truncate cursor-pointer hover:from-sky-600 hover:to-emerald-600 transition-all shadow-sm"
+                            className="text-xs text-white bg-gradient-to-r from-[#38bdf8] to-[#f59e0b] px-2 py-1 rounded-md truncate cursor-pointer hover:opacity-90 transition-all duration-300 shadow-lg shadow-blue-500/10"
                             onClick={() => handleEventClick(event.id)}
                           >
                             {event.title}

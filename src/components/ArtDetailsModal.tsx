@@ -157,12 +157,12 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999]">
+      <DialogContent className="max-w-2xl bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl border-white/30 dark:border-[#38bdf8]/30 shadow-2xl rounded-2xl z-[9999]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 dark:from-[#38bdf8] dark:to-[#f59e0b] bg-clip-text text-transparent">
             {artData.title}
           </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground text-center">
+          <DialogDescription className="text-sm text-muted-foreground dark:text-slate-300 text-center">
             View artwork details and interact with the community.
           </DialogDescription>
         </DialogHeader>
@@ -170,7 +170,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
         <div className="space-y-4">
           {/* Image Display */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20">
+            <div className="border border-sky-200 dark:border-[#38bdf8]/30 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-[#1e1b4b]/40 dark:to-[#1e3a8a]/40">
               <img 
                 src={artData.imageUrl} 
                 alt={artData.title}
@@ -178,13 +178,13 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
               />
             </div>
             {artData.referenceImageUrl && (
-              <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20">
+              <div className="border border-sky-200 dark:border-[#38bdf8]/30 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-[#1e1b4b]/40 dark:to-[#1e3a8a]/40">
                 <img 
                   src={artData.referenceImageUrl} 
                   alt="Reference"
                   className="w-full h-48 object-cover rounded-xl"
                 />
-                <div className="text-center text-sm text-slate-600 dark:text-slate-400 mt-2 font-medium">
+                <div className="text-center text-sm text-slate-600 dark:text-slate-300 mt-2 font-medium">
                   Reference Image
                 </div>
               </div>
@@ -192,19 +192,19 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           </div>
 
           {/* Artist Info */}
-          <div className="flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-2xl">
+          <div className="flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-[#1e1b4b]/40 dark:to-[#1e3a8a]/40 rounded-2xl">
             <div className="flex items-center gap-3">
-              <Avatar className="w-12 h-12 border-2 border-sky-300">
-                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
+              <Avatar className="w-12 h-12 border-2 border-sky-300 dark:border-[#38bdf8]/50">
+                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 dark:from-[#38bdf8] dark:to-[#818cf8] text-white font-bold">
                   AS
                 </AvatarFallback>
               </Avatar>
               <div className="text-center">
-                <div className="text-sm text-slate-600 dark:text-slate-400">Artist</div>
-                <div className="text-sm text-slate-500 dark:text-slate-500">profile</div>
+                <div className="text-sm text-slate-600 dark:text-white">Artist</div>
+                <div className="text-sm text-slate-500 dark:text-slate-300">profile</div>
               </div>
             </div>
-            <div className="text-slate-700 dark:text-slate-300 font-semibold text-lg">{artData.artist}</div>
+            <div className="text-slate-700 dark:text-white font-semibold text-lg">{artData.artist}</div>
           </div>
 
           {/* Additional Info Toggle */}
@@ -212,7 +212,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
             <Button
               variant="outline"
               onClick={() => setShowAdditionalInfo(!showAdditionalInfo)}
-              className="w-48 rounded-xl border-sky-200 hover:bg-sky-50 dark:border-sky-600 dark:hover:bg-sky-900/30 transition-all"
+              className="w-48 rounded-xl border-sky-200 hover:bg-sky-50 dark:border-[#38bdf8]/30 dark:hover:bg-[#1e293b]/80 transition-all dark:text-white"
             >
               Additional Info {showAdditionalInfo ? '▲' : '▼'}
             </Button>
@@ -220,35 +220,35 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 
           {/* Additional Info Content */}
           {showAdditionalInfo && (
-            <div className="grid grid-cols-2 gap-6 p-6 border border-sky-200 dark:border-sky-600 rounded-2xl bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 backdrop-blur-sm">
+            <div className="grid grid-cols-2 gap-6 p-6 border border-sky-200 dark:border-[#38bdf8]/30 rounded-2xl bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-[#1e1b4b]/40 dark:to-[#1e3a8a]/40 backdrop-blur-sm">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 dark:from-[#38bdf8] dark:to-[#818cf8] rounded-lg flex items-center justify-center">
                     <Calendar className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Uploaded on:</span>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">{artData.uploadDate}</div>
+                    <span className="text-sm font-semibold text-slate-700 dark:text-white">Uploaded on:</span>
+                    <div className="text-sm text-slate-600 dark:text-slate-300">{artData.uploadDate}</div>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-500 dark:from-[#818cf8] dark:to-[#38bdf8] rounded-lg flex items-center justify-center">
                     <Edit className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Tools Used:</span>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">{artData.toolsUsed}</div>
+                    <span className="text-sm font-semibold text-slate-700 dark:text-white">Tools Used:</span>
+                    <div className="text-sm text-slate-600 dark:text-slate-300">{artData.toolsUsed}</div>
                   </div>
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-sky-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-sky-500 dark:from-[#f59e0b] dark:to-[#38bdf8] rounded-lg flex items-center justify-center">
                     <Bookmark className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Tags:</span>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">
+                    <span className="text-sm font-semibold text-slate-700 dark:text-white">Tags:</span>
+                    <div className="text-sm text-slate-600 dark:text-slate-300">
                       {linkedTags.length > 0
                           ? linkedTags.map(tag => tag.name).join(', ')
                           : 'No tags'}
@@ -257,12 +257,12 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-lg flex items-center justify-center mt-0.5">
+                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 dark:from-[#38bdf8] dark:to-[#818cf8] rounded-lg flex items-center justify-center mt-0.5">
                     <Calendar className="h-4 w-4 text-white" />
                   </div>
                   <div>
-                    <div className="text-sm font-semibold text-slate-700 dark:text-slate-300">Additional Notes:</div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400">{artData.additionalNotes}</div>
+                    <div className="text-sm font-semibold text-slate-700 dark:text-white">Additional Notes:</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-300">{artData.additionalNotes}</div>
                   </div>
                 </div>
                 
@@ -274,8 +274,8 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
                   </div>
                   <div className="flex items-center gap-3 flex-1">
                     <div>
-                      <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Likes:</span>
-                      <div className="text-sm text-slate-600 dark:text-slate-400">{likesCount}</div>
+                      <span className="text-sm font-semibold text-slate-700 dark:text-white">Likes:</span>
+                      <div className="text-sm text-slate-600 dark:text-slate-300">{likesCount}</div>
                     </div>
                     <Button
                       variant="outline"
@@ -284,7 +284,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
                       className={`ml-auto px-4 py-1 text-xs rounded-lg transition-all ${
                         isLiked 
                           ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white border-transparent hover:from-pink-600 hover:to-red-600' 
-                          : 'border-sky-200 hover:bg-sky-50 dark:border-sky-600 dark:hover:bg-sky-900/30'
+                          : 'border-sky-200 hover:bg-sky-50 dark:border-[#38bdf8]/30 dark:hover:bg-[#1e293b]/80 dark:text-white'
                       }`}
                     >
                       {isLiked ? 'Unlike' : 'Like'}
@@ -294,23 +294,23 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
               </div>
 
               <div>
-                <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Tagged Characters</div>
+                <div className="text-sm font-semibold text-slate-700 dark:text-white mb-3">Tagged Characters</div>
                 <div className="space-y-3">
                   {linkedCharacters.length === 0 && (
-                      <div className="text-sm text-slate-500 dark:text-slate-400">No linked characters</div>
+                      <div className="text-sm text-slate-500 dark:text-slate-300">No linked characters</div>
                   )}
                   {linkedCharacters.map((character) => (
-                      <div key={character.id} className="flex items-center gap-3 p-2 bg-white/60 dark:bg-slate-700/60 rounded-xl">
-                        <Avatar className="w-8 h-8 border border-sky-300">
+                      <div key={character.id} className="flex items-center gap-3 p-2 bg-white/60 dark:bg-[#1e293b]/60 rounded-xl">
+                        <Avatar className="w-8 h-8 border border-sky-300 dark:border-[#38bdf8]/30">
                           {character.avatar ? (
                               <AvatarImage src={character.avatar} alt={character.name} />
                           ) : (
-                              <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-xs font-bold">
+                              <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 dark:from-[#38bdf8] dark:to-[#818cf8] text-white text-xs font-bold">
                                 {character.name.charAt(0)}
                               </AvatarFallback>
                           )}
                         </Avatar>
-                        <span className="text-sm text-slate-600 dark:text-slate-400">{character.name}</span>
+                        <span className="text-sm text-slate-600 dark:text-white">{character.name}</span>
                       </div>
                   ))}
                 </div>
@@ -319,8 +319,8 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           )}
 
           {/* Note about features */}
-          <div className="text-xs text-slate-600 dark:text-slate-400 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/10 dark:to-emerald-900/10 rounded-xl border border-sky-200 dark:border-sky-600">
-            <strong className="text-slate-700 dark:text-slate-300">Feature Note:</strong> Although not an early priority, likes could be tied to features for party owners to host contests or 
+          <div className="text-xs text-slate-600 dark:text-slate-300 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-[#1e1b4b]/20 dark:to-[#1e3a8a]/20 rounded-xl border border-sky-200 dark:border-[#38bdf8]/30">
+            <strong className="text-slate-700 dark:text-white">Feature Note:</strong> Although not an early priority, likes could be tied to features for party owners to host contests or 
             other events inside their "party" to give a more fun and social atmosphere to each party. Many of the 
             current party hosts like to do giveaways or things of this nature, thus this could be a good way to handle 
             these needs externally.
