@@ -45,42 +45,50 @@
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 98%;
+    /* FF14-inspired cosmic dark theme - based on Heavensward, Shadowbringers, and Endwalker */
+    --background: 230 50% 3%; /* Deep blue-black */
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 98%;
+    --card: 230 45% 6%; /* Dark blue-black for cards */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 230 45% 6%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
+    /* Gold accent from FF14 logo */
+    --primary: 45 100% 60%; /* Gold */
+    --primary-foreground: 230 50% 10%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 98%;
+    /* Deep blue secondary color */
+    --secondary: 230 50% 15%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 65%;
+    /* Muted cosmic blue */
+    --muted: 230 30% 15%;
+    --muted-foreground: 210 20% 80%;
 
-    --accent: 0 0% 10%;
-    --accent-foreground: 0 0% 98%;
+    /* Ethereal accent color - light blue glow */
+    --accent: 200 100% 65%; /* Ethereal blue */
+    --accent-foreground: 230 50% 10%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    /* Destructive red from FF14 battle effects */
+    --destructive: 0 90% 50%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 0 0% 83.9%;
+    /* Subtle borders with cosmic blue */
+    --border: 230 30% 15%;
+    --input: 230 30% 15%;
+    --ring: 200 100% 65%; /* Ethereal blue ring */
 
-    --sidebar-background: 0 0% 0%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 0 0% 98%;
-    --sidebar-primary-foreground: 0 0% 0%;
-    --sidebar-accent: 0 0% 8%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 0 0% 83.9%;
+    /* Sidebar with deep blue theme */
+    --sidebar-background: 230 50% 5%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 45 100% 60%; /* Gold */
+    --sidebar-primary-foreground: 230 50% 10%;
+    --sidebar-accent: 230 40% 12%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 230 30% 15%;
+    --sidebar-ring: 200 100% 65%; /* Ethereal blue */
   }
 }
 
@@ -137,8 +145,27 @@
   }
 
   .dark .glass-morphism {
-    background-color: rgba(0, 0, 0, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.125);
+    background-color: rgba(16, 23, 42, 0.75);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.1);
+  }
+
+  /* FF14-inspired cosmic gradient backgrounds for dark mode */
+  .dark .bg-cosmic-gradient {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  }
+
+  .dark .bg-ethereal-gradient {
+    background: linear-gradient(135deg, #1e1b4b 0%, #1e3a8a 100%);
+  }
+
+  .dark .bg-aether-gradient {
+    background: linear-gradient(135deg, #312e81 0%, #1e40af 50%, #1e3a8a 100%);
+  }
+
+  /* Gold accent gradient for buttons and highlights */
+  .dark .bg-gold-gradient {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   }
 
   /* Sky and emerald gradient backgrounds */
@@ -166,6 +193,15 @@
       rgba(255, 255, 255, 0) 0%, 
       rgba(255, 255, 255, 0.4) 50%, 
       rgba(255, 255, 255, 0) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  .dark .shimmer {
+    background: linear-gradient(90deg, 
+      rgba(56, 189, 248, 0) 0%, 
+      rgba(56, 189, 248, 0.2) 50%, 
+      rgba(56, 189, 248, 0) 100%);
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }
@@ -219,6 +255,20 @@
   }
 }
 
+/* FF14-inspired glow for dark mode */
+.dark .animate-glow {
+  animation: darkGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes darkGlow {
+  from {
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.6);
+  }
+}
+
 /* Modern scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -242,9 +292,28 @@
   background-clip: content-box;
 }
 
+/* FF14-inspired scrollbar for dark mode */
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, rgba(56, 189, 248, 0.6), rgba(37, 99, 235, 0.6));
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, rgba(56, 189, 248, 0.8), rgba(37, 99, 235, 0.8));
+  background-clip: content-box;
+}
+
 /* Enhanced focus states */
 input:focus, button:focus, select:focus {
   outline: 2px solid rgba(139, 92, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* FF14-inspired focus states for dark mode */
+.dark input:focus, .dark button:focus, .dark select:focus {
+  outline: 2px solid rgba(56, 189, 248, 0.5);
   outline-offset: 2px;
 }
 
@@ -259,9 +328,22 @@ button, input, select, .card {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
+.dark .hover-lift:hover {
+  box-shadow: 0 20px 40px rgba(56, 189, 248, 0.15);
+}
+
 /* Updated gradient text animations with sky/emerald theme */
 .gradient-text {
   background: linear-gradient(-45deg, #0ea5e9, #10b981, #22c55e, #06b6d4);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* FF14-inspired gradient text for dark mode */
+.dark .gradient-text {
+  background: linear-gradient(-45deg, #38bdf8, #818cf8, #c084fc, #f59e0b);
   background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -290,6 +372,12 @@ button, input, select, .card {
   animation: spin 1s linear infinite;
 }
 
+/* FF14-inspired spinner for dark mode */
+.dark .spinner {
+  border: 2px solid rgba(56, 189, 248, 0.3);
+  border-top: 2px solid #38bdf8;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -310,6 +398,11 @@ button, input, select, .card {
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: left 0.5s;
+}
+
+/* FF14-inspired card hover effect for dark mode */
+.dark .card-hover::before {
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.2), transparent);
 }
 
 .card-hover:hover::before {

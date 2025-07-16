@@ -120,14 +120,14 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:bg-gradient-to-br dark:from-[#0f172a] dark:via-[#1e1b4b] dark:to-[#1e3a8a]">
       <ModernNavigation 
         title="SigArt" 
         subtitle="Discover Amazing Art Events"
       />
 
       {/* Modern Search Section */}
-      <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border-b border-white/20">
+      <div className="bg-white/60 dark:bg-[#0f172a]/60 backdrop-blur-sm border-b border-white/20 dark:border-[#38bdf8]/20">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex flex-wrap items-center gap-4">
             <div className="relative flex-1 min-w-64">
@@ -136,48 +136,48 @@ const Index = () => {
                 placeholder="Search events..."
                 value={searchFilters.title}
                 onChange={(e) => setSearchFilters(prev => ({ ...prev, title: e.target.value }))}
-                className="pl-10 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl shadow-sm focus:shadow-md transition-shadow"
+                className="pl-10 bg-white/80 dark:bg-[#1e293b]/80 border-white/30 dark:border-[#38bdf8]/30 rounded-xl shadow-sm focus:shadow-md transition-shadow"
               />
             </div>
             <Input
               placeholder="Tags"
               value={searchFilters.tags}
               onChange={(e) => setSearchFilters(prev => ({ ...prev, tags: e.target.value }))}
-              className="w-40 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl"
+              className="w-40 bg-white/80 dark:bg-[#1e293b]/80 border-white/30 dark:border-[#38bdf8]/30 rounded-xl"
             />
             <Input
               placeholder="Host"
               value={searchFilters.host}
               onChange={(e) => setSearchFilters(prev => ({ ...prev, host: e.target.value }))}
-              className="w-40 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl"
+              className="w-40 bg-white/80 dark:bg-[#1e293b]/80 border-white/30 dark:border-[#38bdf8]/30 rounded-xl"
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="bg-white/80 dark:bg-slate-700/80 border-white/30 text-slate-700 dark:text-slate-300 rounded-xl px-4 py-2 flex items-center gap-2 hover:bg-white/90 dark:hover:bg-slate-600/90 min-w-48"
+                  className="bg-white/80 dark:bg-[#1e293b]/80 border-white/30 dark:border-[#38bdf8]/30 text-slate-700 dark:text-slate-300 rounded-xl px-4 py-2 flex items-center gap-2 hover:bg-white/90 dark:hover:bg-[#1e293b]/90 min-w-48"
                 >
                   <Calendar className="w-4 h-4" />
                   {searchFilters.eventStatus === 'all' ? 'All Events' : searchFilters.eventStatus === 'upcoming_active' ? 'Upcoming & Active' : 'Past Events'}
                   <ChevronDown className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 rounded-xl">
+              <DropdownMenuContent className="bg-white/95 dark:bg-[#1e293b]/95 backdrop-blur-xl border-white/30 dark:border-[#38bdf8]/30 rounded-xl">
                 <DropdownMenuItem 
                   onClick={() => setSearchFilters(prev => ({ ...prev, eventStatus: 'all' }))}
-                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-[#0f172a]/80"
                 >
                   All Events
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => setSearchFilters(prev => ({ ...prev, eventStatus: 'upcoming_active' }))}
-                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-[#0f172a]/80"
                 >
                   Upcoming & Active
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => setSearchFilters(prev => ({ ...prev, eventStatus: 'past' }))}
-                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
+                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-[#0f172a]/80"
                 >
                   Past Events
                 </DropdownMenuItem>
@@ -210,7 +210,7 @@ const Index = () => {
               {events.map((event) => (
                 <Card 
                   key={event.id} 
-                  className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
+                  className="group bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-sm border-white/30 dark:border-[#38bdf8]/30 hover:shadow-2xl hover:shadow-emerald-500/20 dark:hover:shadow-[#38bdf8]/30 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
                   onClick={() => handleEventClick(event.id)}
                 >
                   <CardContent className="p-0">
@@ -221,7 +221,7 @@ const Index = () => {
                         className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                       <div
-                          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none transition-colors duration-300 group-hover:bg-gray-700 group-hover:bg-opacity-90"
+                          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent dark:from-[#0f172a]/90 dark:via-[#1e1b4b]/40 dark:to-transparent pointer-events-none transition-colors duration-300 group-hover:bg-gray-700 group-hover:bg-opacity-90 dark:group-hover:bg-[#0f172a] dark:group-hover:bg-opacity-90"
                       />
                       
                       {/* Event Actions */}
@@ -232,7 +232,7 @@ const Index = () => {
                           className={`w-8 h-8 rounded-full backdrop-blur-sm ${
                             false // event.liked (not implemented)
                               ? 'bg-red-500/80 text-white' 
-                              : 'bg-white/20 text-white hover:bg-white/30'
+                              : 'bg-white/20 text-white hover:bg-white/30 dark:bg-[#1e293b]/40 dark:hover:bg-[#1e293b]/60'
                           }`}
                           onClick={(e) => toggleLike(event.id, e)}
                         >
@@ -241,7 +241,7 @@ const Index = () => {
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+                          className="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm dark:bg-[#1e293b]/40 dark:hover:bg-[#1e293b]/60"
                           onClick={(e) => {
                             e.stopPropagation();
                             console.log(`Sharing event ${event.id}`);
@@ -301,7 +301,7 @@ const Index = () => {
                           {(event.tags || []).map((tag: string, index: number) => (
                             <Badge 
                               key={index}
-                              className="bg-white/20 text-white border-white/30 backdrop-blur-sm hover:bg-white/30 transition-colors"
+                              className="bg-white/20 text-white border-white/30 backdrop-blur-sm hover:bg-white/30 transition-colors dark:bg-[#1e293b]/40 dark:border-[#38bdf8]/30 dark:hover:bg-[#1e293b]/60"
                             >
                               {tag}
                             </Badge>
@@ -318,7 +318,7 @@ const Index = () => {
             <div className="text-center mt-12">
               <Button 
                 variant="outline"
-                className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 rounded-xl px-8 py-3 hover:shadow-lg transition-all duration-300"
+                className="bg-white/80 dark:bg-[#1e293b]/80 backdrop-blur-sm border-white/30 dark:border-[#38bdf8]/30 rounded-xl px-8 py-3 hover:shadow-lg transition-all duration-300 dark:text-white dark:hover:bg-[#1e293b] dark:hover:border-[#38bdf8]/50"
               >
                 Load More Events
               </Button>
