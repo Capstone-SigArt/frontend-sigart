@@ -28,6 +28,7 @@ const Index = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  // Fetch events from backend with status filter
   useEffect(() => {
     const fetchParties = async () => {
       setLoading(true);
@@ -36,20 +37,34 @@ const Index = () => {
         const response = await fetch(`${API_BASE_URL}/parties${statusParam}`);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
-        const dataWithAttendees = await Promise.all(
-            data.map(async (event) => {
-              try {
-                const countRes = await fetch(`${API_BASE_URL}/myParties/count/${event.id}`);
-                const { count } = await countRes.json();
-                return { ...event, attendees: count };
-              } catch {
-                return { ...event, attendees: 0 };
-              }
-            })
+        
+        // Fetch additional data for each event
+        const dataWithDetails = await Promise.all(
+          data.map(async (event) => {
+            try {
+              // Fetch attendee count
+              const countRes = await fetch(`${API_BASE_URL}/myParties/count/${event.id}`);
+              const { count } = await countRes.json();
+              
+              // Fetch tags for this party
+              const tagsRes = await fetch(`${API_BASE_URL}/tags/partyTags?party_id=${event.id}`);
+              const tags = await tagsRes.json();
+              
+              // Return enhanced event with attendees and tags
+              return { 
+                ...event, 
+                attendees: count,
+                tags: tags.map((t) => t.name) 
+              };
+            } catch (err) {
+              console.error(`Error fetching details for event ${event.id}:`, err);
+              return { ...event, attendees: 0, tags: [] };
+            }
+          })
         );
 
-        setAllEvents(dataWithAttendees); // Save all events
-        setEvents(dataWithAttendees); // Initially show all
+        setAllEvents(dataWithDetails);
+        setEvents(dataWithDetails);
         setError(null);
       } catch (err) {
         console.error(err);
@@ -62,25 +77,36 @@ const Index = () => {
     fetchParties();
   }, [searchFilters.eventStatus]);
 
-  // Filtering logic (status filtering is now handled by backend)
-  const filterEvents = () => {
-    const { title, tags, host } = searchFilters;
-    const filtered = allEvents.filter(event => {
-      const matchesTitle = title.trim() === '' || (event.title && event.title.toLowerCase().includes(title.toLowerCase()));
-      const matchesTags = tags.trim() === '' || (event.tags && event.tags.join(' ').toLowerCase().includes(tags.toLowerCase()));
-      const matchesHost = host.trim() === '' || (event.host && event.host.toLowerCase().includes(host.toLowerCase()));
-
-      return matchesTitle && matchesTags && matchesHost;
-    });
-    setEvents(filtered);
-  };
-
-  // Filter on input change (excluding eventStatus which is handled by backend)
+  // Apply client-side filters (title, tags, host)
   useEffect(() => {
-    filterEvents();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const { title, tags, host } = searchFilters;
+    
+    // Only filter if we have any filter criteria
+    if (title.trim() || tags.trim() || host.trim()) {
+      const filtered = allEvents.filter(event => {
+        // Title filter
+        const matchesTitle = !title.trim() || 
+          (event.title && event.title.toLowerCase().includes(title.toLowerCase()));
+        
+        // Tags filter (check if any tag includes the search text)
+        const matchesTags = !tags.trim() || 
+          (event.tags && Array.isArray(event.tags) && 
+           event.tags.some(tag => tag.toLowerCase().includes(tags.toLowerCase())));
+        
+        // Host filter (check host name or id)
+        const matchesHost = !host.trim() || 
+          (event.host_id && event.host_id.toLowerCase().includes(host.toLowerCase())) ||
+          (event.hostProfile && event.hostProfile.name && 
+           event.hostProfile.name.toLowerCase().includes(host.toLowerCase()));
+        
+        return matchesTitle && matchesTags && matchesHost;
+      });
+      setEvents(filtered);
+    } else {
+      // If no filters, show all events
+      setEvents(allEvents);
+    }
   }, [searchFilters.title, searchFilters.tags, searchFilters.host, allEvents]);
-  
 
   const toggleLike = (eventId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -156,12 +182,7 @@ const Index = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Button className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl px-6 shadow-lg"
-              onClick={filterEvents}
-              type="button"
-            >
-              Filter
-            </Button>
+            {/* Remove the Filter button since filtering happens automatically on input change */}
           </div>
         </div>
       </div>
@@ -192,85 +213,83 @@ const Index = () => {
                   onClick={() => handleEventClick(event.id)}
                 >
                   <CardContent className="p-0">
-                    {
-                  <div className="relative overflow-hidden">
-                  <img 
-                    src={event.cover_image || "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop"} 
-                    alt={event.title}
-                    className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div
-                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none transition-colors duration-300 group-hover:bg-gray-700 group-hover:bg-opacity-90"
-                  />
-                  
-                  {/* Event Actions */}
-                  <div className="absolute top-4 right-4 flex space-x-2">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className={`w-8 h-8 rounded-full backdrop-blur-sm ${
-                        false // event.liked (not implemented)
-                          ? 'bg-red-500/80 text-white' 
-                          : 'bg-white/20 text-white hover:bg-white/30'
-                      }`}
-                      onClick={(e) => toggleLike(event.id, e)}
-                    >
-                      <Heart className="w-4 h-4" fill={false ? 'currentColor' : 'none'} />
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log(`Sharing event ${event.id}`);
-                      }}
-                    >
-                      <Share2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  
-                  {/* Event Info Overlay */}
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-white font-bold text-xl mb-2 drop-shadow-lg">
-                      {event.title}
-                    </h3>
-                    <p className="text-white/90 text-sm mb-3 drop-shadow">
-                      {event.description}
-                    </p>
-                    
-                    {/* Event Meta */}
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center space-x-4 text-white/80 text-sm">
-                        <div className="flex items-center space-x-1">
-                          <Calendar className="w-4 h-4" />
-                          <span>{event.date ? new Date(event.date).toLocaleDateString() : event.scheduled_at ? new Date(event.scheduled_at).toLocaleDateString() : ''}</span>
+                    <div className="relative overflow-hidden">
+                      <img 
+                        src={event.cover_image || "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop"} 
+                        alt={event.title}
+                        className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div
+                          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none transition-colors duration-300 group-hover:bg-gray-700 group-hover:bg-opacity-90"
+                      />
+                      
+                      {/* Event Actions */}
+                      <div className="absolute top-4 right-4 flex space-x-2">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className={`w-8 h-8 rounded-full backdrop-blur-sm ${
+                            false // event.liked (not implemented)
+                              ? 'bg-red-500/80 text-white' 
+                              : 'bg-white/20 text-white hover:bg-white/30'
+                          }`}
+                          onClick={(e) => toggleLike(event.id, e)}
+                        >
+                          <Heart className="w-4 h-4" fill={false ? 'currentColor' : 'none'} />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            console.log(`Sharing event ${event.id}`);
+                          }}
+                        >
+                          <Share2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      
+                      {/* Event Info Overlay */}
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <h3 className="text-white font-bold text-xl mb-2 drop-shadow-lg">
+                          {event.title}
+                        </h3>
+                        <p className="text-white/90 text-sm mb-3 drop-shadow">
+                          {event.description}
+                        </p>
+                        
+                        {/* Event Meta */}
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-4 text-white/80 text-sm">
+                            <div className="flex items-center space-x-1">
+                              <Calendar className="w-4 h-4" />
+                              <span>{event.date ? new Date(event.date).toLocaleDateString() : event.scheduled_at ? new Date(event.scheduled_at).toLocaleDateString() : ''}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <MapPin className="w-4 h-4" />
+                              <span>{event.address || 'TBA'}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <Users className="w-4 h-4" />
+                              <span>{event.attendees || 0}</span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center space-x-1">
-                          <MapPin className="w-4 h-4" />
-                          <span>{event.address || 'TBA'}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Users className="w-4 h-4" />
-                          <span>{event.attendees || 0}</span>
+                        
+                        {/* Tags */}
+                        <div className="flex flex-wrap gap-2">
+                          {(event.tags || []).map((tag: string, index: number) => (
+                            <Badge 
+                              key={index}
+                              className="bg-white/20 text-white border-white/30 backdrop-blur-sm hover:bg-white/30 transition-colors"
+                            >
+                              {tag}
+                            </Badge>
+                          ))}
                         </div>
                       </div>
                     </div>
-                    
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2">
-                      {(event.tags || []).map((tag: string, index: number) => (
-                        <Badge 
-                          key={index}
-                          className="bg-white/20 text-white border-white/30 backdrop-blur-sm hover:bg-white/30 transition-colors"
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-}
                   </CardContent>
                 </Card>
               ))}
