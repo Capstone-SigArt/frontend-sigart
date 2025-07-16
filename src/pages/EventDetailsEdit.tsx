@@ -5,17 +5,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { useNavigate, useParams } from 'react-router-dom';
-import ModernNavigation from '@/components/ModernNavigation';
 import UploadArtModal from '@/components/UploadArtModal';
 import ArtDetailsModal from '@/components/ArtDetailsModal';
 import { Textarea } from "@/components/ui/textarea";
 import dayjs from 'dayjs';
 import {supabase} from "@/lib/supabase.ts";
-import { Calendar, Clock, Users, MapPin, Share2, MessageCircle, Heart } from 'lucide-react';
-
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 
 const EventDetails = () => {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -29,47 +24,11 @@ const EventDetails = () => {
   const [error , setError] = useState(null);
   const [hasJoined, setHasJoined] = useState(false);
   const [artworks, setArtworks] = useState([]);
-  const [attendeeCount, setAttendeeCount] = useState<number>(0);
-  const [partyTags, setPartyTags] = useState([]);
-
-  const fetchAttendeeCount = async () => {
-    if (!eventId) return;
-    try {
-      const res = await fetch(`${API_BASE_URL}/myParties/count/${eventId}`);
-      if (!res.ok) throw new Error('Failed to fetch attendee count');
-      const { count } = await res.json();
-      setAttendeeCount(count);
-    } catch (err) {
-      console.error('Error fetching attendee count:', err);
-      setAttendeeCount(0);
-    }
-  }; 
-  useEffect(() => {
-
-  
-    if (eventId) fetchAttendeeCount();
-  }, [eventId]);
-
-  useEffect(() => {
-    const fetchPartyTags = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/partyTags?party_id=${eventId}`);
-        if (!response.ok) throw new Error('Failed to fetch party tags');
-        const data = await response.json();
-        console.log("Fetched tags for event", eventId, data); // <--
-        setPartyTags(data);
-      } catch (err) {
-        console.error('Error fetching party tags:', err);
-      }
-    };
-  
-    if (eventId) fetchPartyTags();
-  }, [eventId]);
 
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/artwork?party_id=${eventId}`);
+        const response = await fetch(`http://localhost:3000/artwork?party_id=${eventId}`);
         if (!response.ok) throw new Error("Failed to fetch artworks");
         const data = await response.json();
         setArtworks(data);
@@ -84,7 +43,7 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/partyDetails/${eventId}`);
+        const response = await fetch(`http://localhost:3000/partyDetails/${eventId}`);
         if(!response.ok) throw new Error('failed to fetch party');
         const data = await response.json();
         setEventData(data);
@@ -102,7 +61,7 @@ const EventDetails = () => {
   useEffect(() => {
     const fetchHost = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/profile/${eventData.host_id}`);
+        const response = await fetch(`http://localhost:3000/profile/${eventData.host_id}`);
         if(!response.ok) throw new Error('failed to fetch host data');
         const data = await response.json();
         setHostData(data);
@@ -130,7 +89,7 @@ const EventDetails = () => {
         if (!userId || !eventId) return;
 
         const response = await fetch(
-            `${API_BASE_URL}/partyMember/${userId}/${eventId}`
+            `http://localhost:3000/partyMember/${userId}/${eventId}`
         );
 
         if (response.ok) {
@@ -176,7 +135,7 @@ const EventDetails = () => {
 
   const fetchUsernameById = async (userId: string) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/profile/${userId}`);
+      const res = await fetch(`http://localhost:3000/profile/${userId}`);
       if (!res.ok) throw new Error('Failed to fetch profile');
       const data = await res.json();
       return data.username || userId;
@@ -213,7 +172,7 @@ const EventDetails = () => {
       if(!userId || !eventId) return;
 
       if (!hasJoined) {
-        const response = await fetch('${API_BASE_URL}/partyMember', {
+        const response = await fetch('http://localhost:3000/partyMember', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -225,9 +184,8 @@ const EventDetails = () => {
         });
         if (!response.ok) throw new Error('Failed to join event');
         setHasJoined(true);
-        await fetchAttendeeCount();
       } else {
-        const response = await fetch(`${API_BASE_URL}/partyMember`, {
+        const response = await fetch(`http://localhost:3000/partyMember`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -237,7 +195,6 @@ const EventDetails = () => {
         });
         if (!response.ok) throw new Error('Failed to leave event');
         setHasJoined(false);
-        await fetchAttendeeCount();
       }
     } catch (error) {
       console.error(error);
@@ -245,120 +202,93 @@ const EventDetails = () => {
     }
   };
 
-  if (loading || !eventData || !hostData) {
-    return <div className="min-h-screen flex items-center justify-center">Loading event...</div>;
-  }
-  
-  console.log("start_time raw:", eventData.start_time);
-  console.log("parsed:", dayjs(eventData.start_time, "HH:mm:ss").format("h:mm A"));
-
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading event...</div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
+  if (!eventData) return null; // just in case
+  if(!hostData) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
-      <ModernNavigation 
-        title="Event Details" 
-        subtitle="Join the creative gathering"
-      />
-
       {/* Event Details Content */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl mb-8">
-        <div className="relative h-64 w-full">
-          <img 
-            src={eventData.cover_image} 
-            alt={eventData.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          <div className="absolute top-4 right-4 flex gap-2">
-            {/* Share, Message, etc. */}
-          </div>
-          <div className="absolute bottom-4 left-4 right-4">
-            <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
-              {eventData.title}
-            </h1>
-            <div className="flex items-center gap-3">
-              <Avatar className="w-10 h-10 border-2 border-white/30">
-                <AvatarImage src={hostData.avatar_url || ""} />
-                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
-                  {hostData.username?.charAt(0) || "?"}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="text-white font-medium drop-shadow">Hosted by {hostData.username}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
           <CardContent className="p-8">
             {/* Event Header */}
             <div className="mb-6">
-              {/* Event Details Form */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl">
-                  <Calendar className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-                  <div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">Date</p>
-                    <p className="font-semibold">{dayjs(eventData.date).format("dddd, MMM D, YYYY")}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl">
-                  <Clock className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-                  <div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">Time</p>
-                    <p className="font-semibold">
-                      {eventData.start_time
-                        ? dayjs(`1970-01-01T${eventData.start_time}`).format("h:mm A")
-                        : ""}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl">
-                  <Users className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-                  <div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">Attendees</p>
-                    <p className="font-semibold">{attendeeCount}</p>
-                  </div>
-                </div>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+                {eventData.title}
+              </h2>
+              
+              {/* Banner/Flyer Image Placeholder */}
+              {/* Actual Banner Image */}
+              <div className="w-full h-48 mb-8 overflow-hidden rounded-2xl border-2 border-sky-300 dark:border-sky-600">
+                <img
+                    src={eventData.cover_image}
+                    alt="Event Banner"
+                    className="w-full h-full object-cover"
+                />
               </div>
-              {/* Description */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-lg mb-2">About this Event</h3>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {eventData.description}
-                </p>
+
+
+              {/* Event Details Form */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="space-y-2">
+                  <Label htmlFor="hostName" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Host Name</Label>
+                  <Input
+                    id="hostName"
+                    value={hostData.username}
+                    readOnly
+                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dateTime" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Date/Time</Label>
+                  <Input 
+                    id="dateTime"
+                    value={`${eventData.date} at ${eventData.start_time}`}
+                    readOnly 
+                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Description</Label>
+                  <Input
+                      id="description"
+                      value={eventData.description}
+                      readOnly
+                      className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="theme" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Theme</Label>
+                  <Input 
+                    id="theme" 
+                    value={eventData.theme} 
+                    readOnly 
+                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  />
+                </div>
               </div>
 
               {/* Tags and Action Buttons */}
-              <div className="mb-8">
-                <div className="flex flex-wrap items-center gap-4 mb-4">
-                  <div>
-                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Theme: </span>
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">{eventData.theme}</span>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                {Array.isArray(partyTags) && partyTags.map((tag, index) => (
-                    <Badge 
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+                <div className="flex flex-wrap gap-3">
+                  {/*{eventData.tags.map((tag, index) => (
+                    <span 
                       key={index}
-                      variant="secondary"
-                      className="bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-600"
+                      className="px-4 py-2 bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 text-sky-700 dark:text-sky-300 rounded-full text-sm font-medium border border-sky-200 dark:border-sky-600"
                     >
-                      {tag.name}
-                    </Badge>
-                  ))}
+                      {tag}
+                    </span>
+                  ))}*/}
                 </div>
-              </div>
-
-              {/* Join Button */}
-              <div className="flex justify-center mb-8">
-                <Button 
-                  onClick={handleJoinLeave}
-                  className={`px-8 py-3 rounded-xl shadow-lg transition-all duration-300 ${
-                    hasJoined
-                      ? 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white'
-                      : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white'
-                  }`}
+                <Button
+                    onClick={handleJoinLeave}
+                    className={`${
+                        hasJoined
+                            ? 'bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600'
+                            : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600'
+                    } text-white rounded-xl shadow-lg px-6`}
                 >
                   {hasJoined ? 'Leave Event' : 'Join Event'}
                 </Button>
