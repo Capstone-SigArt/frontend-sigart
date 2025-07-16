@@ -43,7 +43,7 @@ const HostParty = () => {
         endTime: prev.endTime && new Date(prev.endTime) > new Date(value) ? prev.endTime : endTimeString
       }));
     } else {
-      setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ ...prev, [field]: value }));
     }
   };
 
@@ -142,6 +142,8 @@ const HostParty = () => {
         date: formData.startTime.split('T')[0], // extract date from start datetime
         start_time: formData.startTime.split('T')[1] || '',
         end_time: formData.endTime.split('T')[1] || '',
+        start_datetime: formData.startTime, // full start datetime
+        end_datetime: formData.endTime, // full end datetime
         theme: formData.theme,
         address: formData.location,
       };
@@ -154,6 +156,8 @@ const HostParty = () => {
       console.log("start_time:", formData.startTime.split('T')[1] || '');
       console.log("end_time:", formData.endTime.split('T')[1] || '');
       console.log("date:", formData.startTime.split('T')[0]);
+      console.log("start_datetime:", formData.startTime);
+      console.log("end_datetime:", formData.endTime);
       console.log("cover_image:", formData.cover_image || '');
       console.log("address:", formData.location);
       console.log("scheduled_at:", formData.startTime);
@@ -304,13 +308,13 @@ const HostParty = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Party Title *
                   </label>
-                  <Input
+                <Input
                     placeholder="Enter party title"
-                    value={formData.title}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
-                    className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
+                  value={formData.title}
+                  onChange={(e) => handleInputChange('title', e.target.value)}
+                  className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
                     required
-                  />
+                />
                 </div>
                 
                 <Input
@@ -338,36 +342,36 @@ const HostParty = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Start Date & Time *
                   </label>
-                  <div className="relative">
-                    <Input
-                        type="datetime-local"
+                <div className="relative">
+                  <Input
+                      type="datetime-local"
                         placeholder="Select start date and time"
-                        value={formData.startTime}
-                        onChange={(e) => handleInputChange('startTime', e.target.value)}
+                      value={formData.startTime}
+                      onChange={(e) => handleInputChange('startTime', e.target.value)}
                         className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20"
                         required
-                    />
-                    <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
-                      start-time
-                    </span>
-                  </div>
+                  />
+                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
+                    start-time
+                  </span>
+                </div>
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     End Date & Time *
                   </label>
-                  <div className="relative">
-                    <Input
-                        type="datetime-local"
+                <div className="relative">
+                  <Input
+                      type="datetime-local"
                         placeholder="Select end date and time"
-                        value={formData.endTime}
-                        onChange={(e) => handleInputChange('endTime', e.target.value)}
+                      value={formData.endTime}
+                      onChange={(e) => handleInputChange('endTime', e.target.value)}
                         className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20"
                         required
-                    />
-                    <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
-                      end-time
-                    </span>
+                  />
+                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
+                    end-time
+                  </span>
                   </div>
                                      {formData.startTime && formData.endTime && (
                      <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -416,13 +420,13 @@ const HostParty = () => {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Description *
                   </label>
-                  <Textarea
+                <Textarea
                     placeholder="Describe your party and what participants can expect"
-                    value={formData.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl min-h-[100px]"
+                  value={formData.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl min-h-[100px]"
                     required
-                  />
+                />
                 </div>
               </div>
 
