@@ -130,14 +130,14 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-md bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl border-white/30 dark:border-[#38bdf8]/30 shadow-2xl rounded-2xl z-[10000]">
+      <DialogContent className="max-w-md bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[10000]">
         <DialogHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-semibold bg-gradient-to-r from-sky-600 to-emerald-600 dark:from-[#38bdf8] dark:to-[#f59e0b] bg-clip-text text-transparent">
+            <DialogTitle className="text-lg font-semibold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
               Link your FFXIV Character
             </DialogTitle>
           </div>
-          <DialogDescription className="text-sm text-muted-foreground dark:text-slate-300">
+          <DialogDescription className="text-sm text-muted-foreground">
             Search for and link your Final Fantasy XIV characters to your profile.
           </DialogDescription>
         </DialogHeader>
@@ -147,39 +147,41 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
               placeholder="Character Name"
               value={characterName}
               onChange={(e) => setCharacterName(e.target.value)}
-              className="w-full bg-white/60 dark:bg-[#1e293b]/60 border-sky-200 dark:border-[#38bdf8]/30 rounded-xl backdrop-blur-sm"
+              className="w-full bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
             />
             <Input
               placeholder="Datacenter/Server"
               value={datacenter}
               onChange={(e) => setDatacenter(e.target.value)}
-              className="w-full bg-white/60 dark:bg-[#1e293b]/60 border-sky-200 dark:border-[#38bdf8]/30 rounded-xl backdrop-blur-sm"
+              className="w-full bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
             />
             <Button 
               onClick={handleSearch}
               type="button"
-              className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 dark:from-[#1e3a8a] dark:to-[#1e1b4b] dark:hover:from-[#1e3a8a]/90 dark:hover:to-[#1e1b4b]/90 text-white rounded-xl shadow-lg"
+              className="w-full bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white rounded-xl shadow-lg"
             >
               <Search className="w-4 h-4 mr-2" />
               Search
             </Button>
             {searchResults.length > 0 && (
-                <div className="mt-4 max-h-40 overflow-y-auto border border-slate-300 dark:border-[#38bdf8]/30 rounded p-2 bg-white/90 dark:bg-[#1e293b]/80">
-                  <h4 className="text-sm font-semibold mb-2 dark:text-white">Search Results</h4>
+                <div className="mt-4 max-h-40 overflow-y-auto border border-slate-300 rounded p-2 bg-white/90 dark:bg-slate-700/80">
+                  <h4 className="text-sm font-semibold mb-2">Search Results</h4>
                   {searchResults.map((char, index) => (
                       <div
                           key={index}
-                          className="p-2 hover:bg-sky-200 dark:hover:bg-[#1e293b] cursor-pointer rounded flex items-center justify-between"
+                          className="p-2 hover:bg-sky-200 dark:hover:bg-sky-700 cursor-pointer rounded flex items-center justify-between"
                           onClick={() => {
                             setSelectedCharacter(char)
                             setCharacterName(char.Name);
                             setDatacenter(datacenter);
+                            //console.log("This is the selected id" + selectedCharacter.ID);
+                            //setSearchResults([]);
                           }}
                       >
                         <div>
-                          <div className="font-medium dark:text-white">{char.Name}</div>
-                          <div className="text-xs text-muted-foreground dark:text-slate-300">ID: {char.ID}</div>
-                          <div className="text-xs text-muted-foreground dark:text-slate-300">World: {char.World}</div>
+                          <div className="font-medium">{char.Name}</div>
+                          <div className="text-xs text-muted-foreground">ID: {char.ID}</div>
+                          <div className="text-xs text-muted-foreground">World: {char.World}</div>
                         </div>
                         <img
                             src={char.Avatar || char.avatar}
@@ -187,6 +189,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
                             className="w-12 h-12 rounded-full object-cover ml-4"
                         />
                       </div>
+
                   ))}
                 </div>
             )}
@@ -194,16 +197,19 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
 
           <div className="space-y-3 max-h-60 overflow-y-auto">
             {linkedCharacters.map((character, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-[#1e1b4b]/40 dark:to-[#1e3a8a]/40 rounded-xl border border-sky-200 dark:border-[#38bdf8]/30">
+              <div key={index} className="flex items-center justify-between p-3 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border border-sky-200 dark:border-sky-600">
                 <div className="flex items-center space-x-3">
                   <img
                       src={character.avatar}
                       alt={`${character.name} avatar`}
                       className="w-10 h-10 rounded-full object-cover"
                   />
+                  {/*<div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full flex items-center justify-center">
+                    <Plus className="text-white text-sm" />
+                  </div>*/}
                   <div>
-                    <span className="text-sm font-medium text-slate-700 dark:text-white">{character.name}</span>
-                    <Badge variant="secondary" className="ml-2 text-xs bg-sky-100 dark:bg-[#1e293b]/80 text-sky-700 dark:text-[#38bdf8]">
+                    <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{character.name}</span>
+                    <Badge variant="secondary" className="ml-2 text-xs bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300">
                       {character.character_id}
                     </Badge>
                   </div>
@@ -229,7 +235,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
             onClick={handleLinkCharacter}
             type="button"
             disabled={!characterName || !datacenter}
-            className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 dark:from-[#38bdf8] dark:to-[#818cf8] dark:hover:from-[#38bdf8]/90 dark:hover:to-[#818cf8]/90 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Link Character
           </Button>

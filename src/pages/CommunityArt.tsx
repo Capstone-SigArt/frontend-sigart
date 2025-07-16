@@ -189,126 +189,176 @@ const CommunityArt = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] text-slate-300">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
       <ModernNavigation 
         title="Community Showcase" 
         subtitle="Discover amazing artwork from our community"
       />
 
       {/* Search and Filter Section */}
-      <div className="bg-slate-800/80 backdrop-blur-sm border-b border-blue-500/30">
+      <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
+          <div className="flex flex-wrap items-center gap-4 mb-6">
+            <div className="relative flex-1 min-w-64">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
               <Input
-                type="text"
-                placeholder="Search artworks..."
+                placeholder="Search artworks or artists..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-slate-900/50 border border-blue-500/30 text-slate-300 placeholder-slate-500 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8]"
+                className="pl-10 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl shadow-sm focus:shadow-md transition-shadow"
               />
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0">
-              {categories.map(category => (
-                <Button
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  onClick={() => setSelectedCategory(category)}
-                  className={selectedCategory === category 
-                    ? "bg-gradient-to-r from-[#38bdf8] to-[#f59e0b] text-white hover:opacity-90"
-                    : "border-blue-500/30 bg-slate-900/50 text-slate-300 hover:bg-slate-800 hover:text-[#38bdf8]"}
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
+            <Button className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl px-6 shadow-lg">
+              <Filter className="w-4 h-4 mr-2" />
+              Filter
+            </Button>
+          </div>
+
+          {/* Category Filter */}
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+            {categories.map((category) => (
+              <Button
+                key={category}
+                variant={selectedCategory === category ? "default" : "outline"}
+                onClick={() => setSelectedCategory(category)}
+                className={`whitespace-nowrap rounded-full px-4 py-2 transition-all duration-300 ${
+                  selectedCategory === category
+                    ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-lg'
+                    : 'bg-white/40 border-white/30 hover:bg-white/60'
+                }`}
+              >
+                {category}
+              </Button>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Gallery Grid */}
+      {/* Artwork Grid */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="w-12 h-12 border-4 border-[#38bdf8] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-slate-400">Loading amazing artworks...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center py-12">
-            <p className="text-red-400">{error}</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredArtworks.map((artwork) => (
-              <Card 
-                key={artwork.id}
-                className="group bg-slate-800/80 backdrop-blur-sm border border-blue-500/30 shadow-xl shadow-blue-500/10 rounded-2xl hover:shadow-2xl hover:shadow-[#38bdf8]/20 transition-all duration-300 overflow-hidden"
-                onClick={() => handleArtworkClick(artwork)}
-              >
-                <div className="aspect-square overflow-hidden">
-                  <img
-                    src={artwork.image_url && (artwork.image_url.startsWith('http') ? artwork.image_url : `${API_BASE_URL}${artwork.image_url}`)}
-                    alt={artwork.notes || 'Artwork'}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredArtworks.map((artwork) => (
+            <Card 
+              key={artwork.id} 
+              className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
+              onClick={() => handleArtworkClick(artwork)}
+            >
+              <CardContent className="p-0">
+                <div className="relative overflow-hidden">
+                  <img 
+                    src={artwork.image_url}
+                    alt={artwork.notes}
+                    className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                </div>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-slate-300 truncate">
-                      {artwork.notes || 'Untitled'}
-                    </h3>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+                  {/* Action Buttons */}
+                  <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <Button
-                      variant="ghost"
                       size="icon"
-                      className="text-slate-400 hover:text-[#38bdf8]"
+                      variant="ghost"
+                      className={`w-8 h-8 rounded-full backdrop-blur-sm ${
+                        artwork.liked 
+                          ? 'bg-red-500/80 text-white' 
+                          : 'bg-white/20 text-white hover:bg-white/30'
+                      }`}
                       onClick={(e) => toggleLike(artwork.id, e)}
                     >
-                      <Heart className="w-5 h-5" />
+                      <Heart className="w-4 h-4" fill={artwork.liked ? 'currentColor' : 'none'} />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log(`Sharing artwork ${artwork.id}`);
+                      }}
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log(`Downloading artwork ${artwork.id}`);
+                      }}
+                    >
+                      <Download className="w-4 h-4" />
                     </Button>
                   </div>
-                  <p className="text-sm text-slate-400 mb-3">
+
+                  {/* Category Badge */}
+                  <div className="absolute top-4 left-4">
+                    {/*<Badge className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white backdrop-blur-sm">
+                      {artwork.category}
+
+                    </Badge>*/}
+                  </div>
+
+                  {/* Hover Info Overlay */}
+                  <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <p className="text-white/90 text-sm mb-2 drop-shadow-lg">
+                      {artwork.notes}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {artwork.tags.map((tag, index) => (
+                        <Badge 
+                          key={index}
+                          className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white backdrop-blur-sm"
+                        >
+                          {tag.name}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Artwork Info */}
+                <div className="p-4">
+                  <h3 className="font-bold text-lg mb-1">{artwork.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-300 text-sm mb-3">
                     by {artwork.username || artwork.uploader_id}
                   </p>
-                  <div className="flex flex-wrap gap-2">
-                    {artwork.tags && artwork.tags.map((tag, index) => (
-                      <Badge
-                        key={index}
-                        className="bg-[#38bdf8]/20 text-[#38bdf8] border-[#38bdf8]/30"
-                      >
-                        {tag.name}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex items-center justify-between mt-4 text-sm text-slate-400">
-                    <div className="flex items-center space-x-2">
-                      <Eye className="w-4 h-4" />
-                      <span>0</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Heart className="w-4 h-4" />
-                      <span>0</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Share2 className="w-4 h-4" />
-                      <span>0</span>
+                  
+                  {/* Stats */}
+                  <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-1">
+                        <Heart className="w-4 h-4" />
+                        <span>{artwork.likes}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Eye className="w-4 h-4" />
+                        <span>{artwork.views}</span>
+                      </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
-      {/* Art Details Modal */}
-      {selectedArtwork && (
-        <ArtDetailsModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          artwork={selectedArtwork}
-        />
-      )}
+
+        
+        {/* Load More Button */}
+        <div className="text-center mt-12">
+          <Button 
+            variant="outline"
+            className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 rounded-xl px-8 py-3 hover:shadow-lg transition-all duration-300"
+          >
+            Load More Artworks
+          </Button>
+        </div>
+      </div>
+      <ArtDetailsModal
+          open={isModalOpen}
+          onOpenChange={setIsModalOpen}
+          artData={selectedArtwork}
+      />
     </div>
   );
 };

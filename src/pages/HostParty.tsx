@@ -287,202 +287,247 @@ const HostParty = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] text-slate-300">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
       <ModernNavigation 
-        title="Host a Party" 
-        subtitle="Create a new art gathering"
+        title="Host A Party" 
+        subtitle="Create amazing art events"
       />
 
+      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Form Section */}
-          <div className="lg:col-span-2">
-            <Card className="bg-slate-800/80 backdrop-blur-sm border border-blue-500/30 shadow-xl shadow-blue-500/10 rounded-2xl">
+          <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
             <CardContent className="p-8">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-[#38bdf8] to-[#f59e0b] bg-clip-text text-transparent mb-6">
-                  Party Details
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+                Event Details
               </h2>
               
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Party Title
-                    </label>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Party Title *
+                  </label>
                 <Input
-                      type="text"
+                    placeholder="Enter party title"
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
-                      placeholder="Enter party title"
-                      className="bg-slate-900/50 border border-blue-500/30 text-slate-300 placeholder-slate-500 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8]"
+                  className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
+                    required
                 />
-                  </div>
+                </div>
                 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Theme
-                    </label>
                 <Input
-                      type="text"
+                  placeholder="Theme"
                   value={formData.theme}
                   onChange={(e) => handleInputChange('theme', e.target.value)}
-                      placeholder="Enter party theme"
-                      className="bg-slate-900/50 border border-blue-500/30 text-slate-300 placeholder-slate-500 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8]"
+                  className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
                 />
-                  </div>
                 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Tags (comma separated)
-                    </label>
                 <Input
-                      type="text"
+                  placeholder="Tags, separate with commas"
                   value={formData.tags}
                   onChange={(e) => handleInputChange('tags', e.target.value)}
-                      placeholder="art, digital, character design"
-                      className="bg-slate-900/50 border border-blue-500/30 text-slate-300 placeholder-slate-500 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8]"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">
-                        Start Time
-                      </label>
+                  className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
+                />
+                {/*<Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={testCreateTags}
+                >
+                  Test Create First Tag
+                </Button>*/}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Start Date & Time *
+                  </label>
+                <div className="relative">
                   <Input
                       type="datetime-local"
+                        placeholder="Select start date and time"
                       value={formData.startTime}
                       onChange={(e) => handleInputChange('startTime', e.target.value)}
-                        className="bg-slate-900/50 border border-blue-500/30 text-slate-300 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8]"
+                        className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20"
+                        required
                   />
+                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
+                    start-time
+                  </span>
                 </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-2">
-                        End Time
-                      </label>
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    End Date & Time *
+                  </label>
+                <div className="relative">
                   <Input
                       type="datetime-local"
+                        placeholder="Select end date and time"
                       value={formData.endTime}
                       onChange={(e) => handleInputChange('endTime', e.target.value)}
-                        className="bg-slate-900/50 border border-blue-500/30 text-slate-300 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8]"
+                        className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20"
+                        required
                   />
-                    </div>
+                  <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
+                    end-time
+                  </span>
+                  </div>
+                                     {formData.startTime && formData.endTime && (
+                     <p className="text-xs text-gray-500 dark:text-gray-400">
+                       Duration: {(() => {
+                         const start = new Date(formData.startTime);
+                         const end = new Date(formData.endTime);
+                         const diffMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+                         const hours = Math.floor(diffMinutes / 60);
+                         const minutes = Math.round(diffMinutes % 60);
+                         return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+                       })()}
+                     </p>
+                   )}
                 </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Location
-                    </label>
+                <div className="flex gap-2">
+{/*                  <Button variant="outline" size="sm" className="bg-white/40 border-white/30">Server</Button>
+                  <Button variant="outline" size="sm" className="bg-white/40 border-white/30">Datacenter</Button>*/}
                   <Input
-                      type="text"
+                    placeholder="Location/Address"
                     value={formData.location}
                     onChange={(e) => handleInputChange('location', e.target.value)}
-                      placeholder="Enter location"
-                      className="bg-slate-900/50 border border-blue-500/30 text-slate-300 placeholder-slate-500 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8]"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Description
-                    </label>
-                    <Textarea
-                      value={formData.description}
-                      onChange={(e) => handleInputChange('description', e.target.value)}
-                      placeholder="Describe your art party..."
-                      className="bg-slate-900/50 border border-blue-500/30 text-slate-300 placeholder-slate-500 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8] min-h-[120px]"
+                    className="flex-1 bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
                   />
                 </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
-                      Cover Image
+                <div className="flex flex-col gap-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Upload Flyer/Cover Image (Optional)
                   </label>
                   <Input
                       type="file"
-                      onChange={handleImageUpload}
                       accept="image/*"
-                      className="bg-slate-900/50 border border-blue-500/30 text-slate-300 rounded-xl focus:border-[#38bdf8] focus:ring-[#38bdf8]"
+                      onChange={handleImageUpload}
+                      className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
+                  />
+                  {formData.cover_image && (
+                      <img
+                          src={formData.cover_image}
+                          alt="Cover Preview"
+                          className="mt-2 rounded-xl border w-full max-w-sm object-cover"
+                      />
+                  )}
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Description *
+                  </label>
+                <Textarea
+                    placeholder="Describe your party and what participants can expect"
+                  value={formData.description}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
+                  className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl min-h-[100px]"
+                    required
                 />
+                </div>
               </div>
 
-                  <div className="flex space-x-4">
+              {/* Action Buttons */}
+              <div className="flex gap-4 pt-6">
                 <Button 
+                  variant="secondary" 
+                  className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl"
+                  onClick={handleGeneratePreview}
+                >
+                  Generate Preview
+                </Button>
+                <Button 
+                  variant="secondary"
+                  className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl"
                   onClick={handleCreateParty}
-                      className="flex-1 bg-gradient-to-r from-[#38bdf8] to-[#f59e0b] hover:opacity-90 text-white rounded-xl py-3 shadow-lg shadow-blue-500/20 transition-all duration-300"
                 >
                   Create Party
                 </Button>
                 <Button 
-                      onClick={handleCancel}
                   variant="outline"
-                      className="flex-1 border-blue-500/30 bg-slate-900/50 text-slate-300 hover:bg-slate-800 hover:text-[#38bdf8] rounded-xl py-3 transition-all duration-300"
+                  onClick={handleCancel}
+                  className="bg-white/40 border-white/30 rounded-xl"
                 >
                   Cancel
                 </Button>
-                  </div>
               </div>
             </CardContent>
           </Card>
-          </div>
 
           {/* Preview Section */}
-          <div className="lg:col-span-1">
-            <Card className="bg-slate-800/80 backdrop-blur-sm border border-blue-500/30 shadow-xl shadow-blue-500/10 rounded-2xl sticky top-8">
-              <CardContent className="p-6">
-                <h3 className="font-bold text-lg bg-gradient-to-r from-[#38bdf8] to-[#f59e0b] bg-clip-text text-transparent mb-4">
-                  Party Preview
+          <div className="flex flex-col items-center justify-center">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+                Generated Preview
               </h3>
+              <p className="text-slate-600 dark:text-slate-300 mt-2">
+                See how your event will look
+              </p>
+            </div>
             
             {previewGenerated ? (
-                  <div className="space-y-4">
-                    <div className="aspect-video rounded-lg bg-slate-900/50 border border-blue-500/30 overflow-hidden">
-                      {formData.cover_image && (
-                        <img
-                          src={formData.cover_image}
-                          alt="Cover"
-                          className="w-full h-full object-cover"
-                        />
-                      )}
+              <Card className="w-80 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl overflow-hidden">
+                <CardContent className="p-0">
+                  <div className="relative">
+                    <div className="bg-gradient-to-r from-sky-200 to-emerald-200 h-48 flex items-center justify-center">
+                      {/*test for image*/}
+                      <img
+                          /*src="https://pbs.twimg.com/media/F2TPSgZbUAAZs3x?format=jpg&name=4096x4096" //this is a random image I am using just for testing what the images would look like
+                          alt="Event Preview"
+                          className="object-cover w-full h-full"*/
+                          src={formData.cover_image || "https://via.placeholder.com/600x300?text=Event+Flyer"}
+                          alt="Event Preview"
+                          className="object-cover w-full h-full"
+                      />
+                      {/*<span className="text-lg font-medium text-slate-600">Event Image</span>*/}
                     </div>
-                    
-                    <h4 className="text-lg font-semibold text-slate-300">
-                      {formData.title || 'Party Title'}
+                    <div className="p-6">
+                      <h4 className="font-bold text-xl mb-2">
+                        {formData.title || 'Your Event Title'}
                       </h4>
-                    
-                    {formData.theme && (
-                      <Badge className="bg-[#38bdf8]/20 text-[#38bdf8] border-[#38bdf8]/30">
-                        {formData.theme}
-                      </Badge>
-                    )}
-                    
-                    <p className="text-sm text-slate-400">
-                      {formData.description || 'Party description will appear here...'}
-                    </p>
-                    
-                    {formData.tags && (
+                      <p className="text-slate-600 dark:text-slate-300 text-sm mb-4">
+                        {formData.description || 'Your event description will appear here'}
+                      </p>
                       <div className="flex flex-wrap gap-2">
-                        {formData.tags.split(',').map((tag, index) => (
+                        <Badge className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
+                          {formData.theme || 'Theme'}
+                        </Badge>
+                        <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white">
+                          Art Event
+                        </Badge>
+                        {/* Tag badges (on a separate row, wrapped if needed) */}
+                        <div className="flex flex-wrap gap-2">
+                          {formData.tags
+                              .split(',')
+                              .map(tag => tag.trim())
+                              .filter(tag => tag !== '')
+                              .map((tag, index) => (
                                   <Badge
                                       key={index}
-                            className="bg-[#f59e0b]/20 text-[#f59e0b] border-[#f59e0b]/30"
+                                      className="bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-white px-4 py-1 rounded-md"
                                   >
-                            {tag.trim()}
+                                    {tag}
                                   </Badge>
                               ))}
+                        </div>
                       </div>
-                    )}
+                    </div>
                   </div>
-                ) : (
-                  <Button
-                    onClick={handleGeneratePreview}
-                    className="w-full bg-slate-900/50 border border-blue-500/30 text-[#38bdf8] hover:bg-slate-800 hover:text-[#f59e0b] rounded-xl py-3 transition-all duration-300"
-                  >
-                    Generate Preview
-                  </Button>
-                )}
                 </CardContent>
               </Card>
+            ) : (
+              <div className="w-80 h-64 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl flex items-center justify-center bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl text-white">🎨</span>
+                  </div>
+                  <span className="text-slate-600 dark:text-slate-300">Preview will appear here</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

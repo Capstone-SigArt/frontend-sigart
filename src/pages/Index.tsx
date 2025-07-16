@@ -40,11 +40,11 @@ const Index = () => {
         
         // Fetch additional data for each event
         const dataWithDetails = await Promise.all(
-          data.map(async (event) => {
-            try {
+            data.map(async (event) => {
+              try {
               // Fetch attendee count
-              const countRes = await fetch(`${API_BASE_URL}/myParties/count/${event.id}`);
-              const { count } = await countRes.json();
+                const countRes = await fetch(`${API_BASE_URL}/myParties/count/${event.id}`);
+                const { count } = await countRes.json();
               
               // Fetch tags for this party
               const tagsRes = await fetch(`${API_BASE_URL}/tags/partyTags?party_id=${event.id}`);
@@ -59,8 +59,8 @@ const Index = () => {
             } catch (err) {
               console.error(`Error fetching details for event ${event.id}:`, err);
               return { ...event, attendees: 0, tags: [] };
-            }
-          })
+              }
+            })
         );
 
         setAllEvents(dataWithDetails);
@@ -83,7 +83,7 @@ const Index = () => {
     
     // Only filter if we have any filter criteria
     if (title.trim() || tags.trim() || host.trim()) {
-      const filtered = allEvents.filter(event => {
+    const filtered = allEvents.filter(event => {
         // Title filter
         const matchesTitle = !title.trim() || 
           (event.title && event.title.toLowerCase().includes(title.toLowerCase()));
@@ -100,9 +100,9 @@ const Index = () => {
           (event.hostProfile && event.hostProfile.username && 
            event.hostProfile.username.toLowerCase().includes(host.toLowerCase()));
         
-        return matchesTitle && matchesTags && matchesHost;
-      });
-      setEvents(filtered);
+      return matchesTitle && matchesTags && matchesHost;
+    });
+    setEvents(filtered);
     } else {
       // If no filters, show all events
       setEvents(allEvents);
@@ -120,14 +120,14 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:bg-gradient-to-br dark:from-[#0f172a] dark:via-[#1e1b4b] dark:to-[#1e3a8a]">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
       <ModernNavigation 
         title="SigArt" 
         subtitle="Discover Amazing Art Events"
       />
 
       {/* Modern Search Section */}
-      <div className="bg-white/60 dark:bg-[#0f172a]/60 backdrop-blur-sm border-b border-white/20 dark:border-[#38bdf8]/20">
+      <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex flex-wrap items-center gap-4">
             <div className="relative flex-1 min-w-64">
@@ -136,48 +136,48 @@ const Index = () => {
                 placeholder="Search events..."
                 value={searchFilters.title}
                 onChange={(e) => setSearchFilters(prev => ({ ...prev, title: e.target.value }))}
-                className="pl-10 bg-white/80 dark:bg-[#1e293b]/80 border-white/30 dark:border-[#38bdf8]/30 rounded-xl shadow-sm focus:shadow-md transition-shadow"
+                className="pl-10 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl shadow-sm focus:shadow-md transition-shadow"
               />
             </div>
             <Input
               placeholder="Tags"
               value={searchFilters.tags}
               onChange={(e) => setSearchFilters(prev => ({ ...prev, tags: e.target.value }))}
-              className="w-40 bg-white/80 dark:bg-[#1e293b]/80 border-white/30 dark:border-[#38bdf8]/30 rounded-xl"
+              className="w-40 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl"
             />
             <Input
               placeholder="Host"
               value={searchFilters.host}
               onChange={(e) => setSearchFilters(prev => ({ ...prev, host: e.target.value }))}
-              className="w-40 bg-white/80 dark:bg-[#1e293b]/80 border-white/30 dark:border-[#38bdf8]/30 rounded-xl"
+              className="w-40 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl"
             />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="bg-white/80 dark:bg-[#1e293b]/80 border-white/30 dark:border-[#38bdf8]/30 text-slate-700 dark:text-slate-300 rounded-xl px-4 py-2 flex items-center gap-2 hover:bg-white/90 dark:hover:bg-[#1e293b]/90 min-w-48"
+                  className="bg-white/80 dark:bg-slate-700/80 border-white/30 text-slate-700 dark:text-slate-300 rounded-xl px-4 py-2 flex items-center gap-2 hover:bg-white/90 dark:hover:bg-slate-600/90 min-w-48"
                 >
                   <Calendar className="w-4 h-4" />
                   {searchFilters.eventStatus === 'all' ? 'All Events' : searchFilters.eventStatus === 'upcoming_active' ? 'Upcoming & Active' : 'Past Events'}
                   <ChevronDown className="w-4 h-4" />
-                </Button>
+            </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-white/95 dark:bg-[#1e293b]/95 backdrop-blur-xl border-white/30 dark:border-[#38bdf8]/30 rounded-xl">
+              <DropdownMenuContent className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 rounded-xl">
                 <DropdownMenuItem 
                   onClick={() => setSearchFilters(prev => ({ ...prev, eventStatus: 'all' }))}
-                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-[#0f172a]/80"
+                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
                 >
                   All Events
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => setSearchFilters(prev => ({ ...prev, eventStatus: 'upcoming_active' }))}
-                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-[#0f172a]/80"
+                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
                 >
                   Upcoming & Active
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => setSearchFilters(prev => ({ ...prev, eventStatus: 'past' }))}
-                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-[#0f172a]/80"
+                  className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700"
                 >
                   Past Events
                 </DropdownMenuItem>
@@ -210,73 +210,73 @@ const Index = () => {
               {events.map((event) => (
                 <Card 
                   key={event.id} 
-                  className="group bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-sm border-white/30 dark:border-[#38bdf8]/30 hover:shadow-2xl hover:shadow-emerald-500/20 dark:hover:shadow-[#38bdf8]/30 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
+                  className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
                   onClick={() => handleEventClick(event.id)}
                 >
                   <CardContent className="p-0">
-                    <div className="relative overflow-hidden">
-                      <img 
-                        src={event.cover_image || "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop"} 
-                        alt={event.title}
-                        className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div
-                          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent dark:from-[#0f172a]/90 dark:via-[#1e1b4b]/40 dark:to-transparent pointer-events-none transition-colors duration-300 group-hover:bg-gray-700 group-hover:bg-opacity-90 dark:group-hover:bg-[#0f172a] dark:group-hover:bg-opacity-90"
-                      />
-                      
-                      {/* Event Actions */}
-                      <div className="absolute top-4 right-4 flex space-x-2">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className={`w-8 h-8 rounded-full backdrop-blur-sm ${
-                            false // event.liked (not implemented)
-                              ? 'bg-red-500/80 text-white' 
-                              : 'bg-white/20 text-white hover:bg-white/30 dark:bg-[#1e293b]/40 dark:hover:bg-[#1e293b]/60'
-                          }`}
-                          onClick={(e) => toggleLike(event.id, e)}
-                        >
-                          <Heart className="w-4 h-4" fill={false ? 'currentColor' : 'none'} />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          className="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm dark:bg-[#1e293b]/40 dark:hover:bg-[#1e293b]/60"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            console.log(`Sharing event ${event.id}`);
-                          }}
-                        >
-                          <Share2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                      
-                      {/* Event Info Overlay */}
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-white font-bold text-xl mb-2 drop-shadow-lg">
-                          {event.title}
-                        </h3>
-                        <p className="text-white/90 text-sm mb-3 drop-shadow">
-                          {event.description}
-                        </p>
-                        
-                        {/* Event Meta */}
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex items-center space-x-4 text-white/80 text-sm">
-                            <div className="flex items-center space-x-1">
-                              <Calendar className="w-4 h-4" />
-                              <span>{event.date ? new Date(event.date).toLocaleDateString() : event.scheduled_at ? new Date(event.scheduled_at).toLocaleDateString() : ''}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <MapPin className="w-4 h-4" />
-                              <span>{event.address || 'TBA'}</span>
-                            </div>
-                            <div className="flex items-center space-x-1">
-                              <Users className="w-4 h-4" />
-                              <span>{event.attendees || 0}</span>
-                            </div>
-                          </div>
+                  <div className="relative overflow-hidden">
+                  <img 
+                    src={event.cover_image || "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop"} 
+                    alt={event.title}
+                    className="w-full h-56 object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div
+                      className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none transition-colors duration-300 group-hover:bg-gray-700 group-hover:bg-opacity-90"
+                  />
+                  
+                  {/* Event Actions */}
+                  <div className="absolute top-4 right-4 flex space-x-2">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className={`w-8 h-8 rounded-full backdrop-blur-sm ${
+                        false // event.liked (not implemented)
+                          ? 'bg-red-500/80 text-white' 
+                          : 'bg-white/20 text-white hover:bg-white/30'
+                      }`}
+                      onClick={(e) => toggleLike(event.id, e)}
+                    >
+                      <Heart className="w-4 h-4" fill={false ? 'currentColor' : 'none'} />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="w-8 h-8 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log(`Sharing event ${event.id}`);
+                      }}
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  
+                  {/* Event Info Overlay */}
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <h3 className="text-white font-bold text-xl mb-2 drop-shadow-lg">
+                      {event.title}
+                    </h3>
+                    <p className="text-white/90 text-sm mb-3 drop-shadow">
+                      {event.description}
+                    </p>
+                    
+                    {/* Event Meta */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-4 text-white/80 text-sm">
+                        <div className="flex items-center space-x-1">
+                          <Calendar className="w-4 h-4" />
+                          <span>{event.date ? new Date(event.date).toLocaleDateString() : event.scheduled_at ? new Date(event.scheduled_at).toLocaleDateString() : ''}</span>
                         </div>
+                        <div className="flex items-center space-x-1">
+                          <MapPin className="w-4 h-4" />
+                          <span>{event.address || 'TBA'}</span>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <Users className="w-4 h-4" />
+                          <span>{event.attendees || 0}</span>
+                        </div>
+                      </div>
+                    </div>
                         
                         {/* Host Info */}
                         {event.hostProfile && (
@@ -295,20 +295,20 @@ const Index = () => {
                             </span>
                           </div>
                         )}
-                        
-                        {/* Tags */}
-                        <div className="flex flex-wrap gap-2">
-                          {(event.tags || []).map((tag: string, index: number) => (
-                            <Badge 
-                              key={index}
-                              className="bg-white/20 text-white border-white/30 backdrop-blur-sm hover:bg-white/30 transition-colors dark:bg-[#1e293b]/40 dark:border-[#38bdf8]/30 dark:hover:bg-[#1e293b]/60"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
+                    
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2">
+                      {(event.tags || []).map((tag: string, index: number) => (
+                        <Badge 
+                          key={index}
+                          className="bg-white/20 text-white border-white/30 backdrop-blur-sm hover:bg-white/30 transition-colors"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
                     </div>
+                  </div>
+                </div>
                   </CardContent>
                 </Card>
               ))}
@@ -318,7 +318,7 @@ const Index = () => {
             <div className="text-center mt-12">
               <Button 
                 variant="outline"
-                className="bg-white/80 dark:bg-[#1e293b]/80 backdrop-blur-sm border-white/30 dark:border-[#38bdf8]/30 rounded-xl px-8 py-3 hover:shadow-lg transition-all duration-300 dark:text-white dark:hover:bg-[#1e293b] dark:hover:border-[#38bdf8]/50"
+                className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 rounded-xl px-8 py-3 hover:shadow-lg transition-all duration-300"
               >
                 Load More Events
               </Button>

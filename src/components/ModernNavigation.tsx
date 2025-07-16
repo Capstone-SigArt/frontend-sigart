@@ -38,18 +38,18 @@ const ModernNavigation = ({ title, subtitle }: ModernNavigationProps) => {
   return (
     <>
       {/* Modern Header */}
-      <div className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-[#0f172a]/80 border-b border-white/20 dark:border-[#38bdf8]/20 shadow-lg">
+      <div className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 dark:bg-slate-900/80 border-b border-white/20 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-14 h-14 bg-gradient-to-r from-sky-500 to-emerald-500 dark:from-[#38bdf8] dark:to-[#818cf8] rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <Palette className="text-xl text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 dark:from-[#38bdf8] dark:to-[#f59e0b] bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
                   {title}
                 </h1>
-                {subtitle && <p className="text-sm text-muted-foreground dark:text-slate-300">{subtitle}</p>}
+                {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
               </div>
             </div>
             <div className="flex items-center space-x-3">
@@ -61,7 +61,7 @@ const ModernNavigation = ({ title, subtitle }: ModernNavigationProps) => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="sticky top-[88px] z-40 backdrop-blur-lg bg-white/70 dark:bg-[#0f172a]/70 border-b border-white/20 dark:border-[#38bdf8]/20">
+      <div className="sticky top-[88px] z-40 backdrop-blur-lg bg-white/70 dark:bg-slate-800/70 border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex space-x-1 overflow-x-auto py-3 scrollbar-hide">
             {navigationTabs.map((tab) => (
@@ -70,8 +70,8 @@ const ModernNavigation = ({ title, subtitle }: ModernNavigationProps) => {
                 variant={getActiveTab() === tab.name ? "default" : "ghost"}
                 className={`whitespace-nowrap transition-all duration-300 rounded-full px-6 py-2 ${
                   getActiveTab() === tab.name
-                    ? 'bg-gradient-to-r from-sky-500 to-emerald-500 dark:from-[#38bdf8] dark:to-[#818cf8] text-white shadow-lg transform scale-105' 
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-[#1e293b]/50'
+                    ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-lg transform scale-105' 
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700/50'
                 }`}
                 onClick={() => handleTabClick(tab)}
               >
