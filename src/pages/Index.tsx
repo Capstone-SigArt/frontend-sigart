@@ -93,11 +93,12 @@ const Index = () => {
           (event.tags && Array.isArray(event.tags) && 
            event.tags.some(tag => tag.toLowerCase().includes(tags.toLowerCase())));
         
-        // Host filter (check host name or id)
+        // Host filter - check hostProfile.full_name or hostProfile.username
         const matchesHost = !host.trim() || 
-          (event.host_id && event.host_id.toLowerCase().includes(host.toLowerCase())) ||
-          (event.hostProfile && event.hostProfile.name && 
-           event.hostProfile.name.toLowerCase().includes(host.toLowerCase()));
+          (event.hostProfile && event.hostProfile.full_name && 
+           event.hostProfile.full_name.toLowerCase().includes(host.toLowerCase())) ||
+          (event.hostProfile && event.hostProfile.username && 
+           event.hostProfile.username.toLowerCase().includes(host.toLowerCase()));
         
         return matchesTitle && matchesTags && matchesHost;
       });
@@ -276,6 +277,24 @@ const Index = () => {
                             </div>
                           </div>
                         </div>
+                        
+                        {/* Host Info */}
+                        {event.hostProfile && (
+                          <div className="flex items-center mb-3">
+                            <div className="w-5 h-5 rounded-full overflow-hidden bg-slate-300 mr-2">
+                              {event.hostProfile.avatar_url ? (
+                                <img 
+                                  src={event.hostProfile.avatar_url} 
+                                  alt={event.hostProfile.full_name || "Host"} 
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : null}
+                            </div>
+                            <span className="text-white/90 text-sm">
+                              Hosted by {event.hostProfile.full_name || event.hostProfile.username || "Unknown"}
+                            </span>
+                          </div>
+                        )}
                         
                         {/* Tags */}
                         <div className="flex flex-wrap gap-2">
