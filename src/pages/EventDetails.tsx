@@ -302,9 +302,10 @@ const EventDetails = () => {
       />
 
       {/* Event Details Content */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl mb-8">
-        <div className="relative h-64 w-full">
+      <div className="max-w-5xl mx-auto px-4 py-8">
+        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl mb-0">
+        
+        <div className="relative h-64 rounded-t-2xl overflow-hidden">
           <img 
             src={eventData.cover_image} 
             alt={eventData.title}
@@ -362,15 +363,12 @@ const EventDetails = () => {
                   </div>
                 </div>
               </div>
-              {/* Location */}
               <div className="mb-6">
-                <div className="flex items-center gap-3 ">
-                    <MapPinIcon className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-                  <div>
-                    <h3 className="font-semibold text-lg mb-2">Location</h3>
-                  </div>
+                <div className="flex items-center gap-2 mb-2">
+                  <MapPin className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+                  <h3 className="font-semibold text-lg">Location</h3>
                 </div>
-                <p className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl">
+                <p className="text-slate-600 dark:text-slate-300 bg-white/60 dark:bg-slate-700/60 p-3 rounded-xl">
                   {eventData.address}
                 </p>
               </div>
@@ -417,91 +415,96 @@ const EventDetails = () => {
                 </Button>
               </div>
             </div>
-
-            {/* Event Gallery Section */}
-            <div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
-                  Event Gallery
-                </h3>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">
-                    Upload your masterpiece!
-                  </span>
-                  <Button 
-                    onClick={() => setUploadModalOpen(true)}
-                    className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg px-6"
-                  >
-                    Upload Art
-                  </Button>
-                </div>
-              </div>
-
-              {/* Gallery Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* Top Row - Attendees with avatars */}
-                {artworks.map((art) => (
-                    <Card
-                        key={art.id}
-                        className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
-                        onClick={async () => {
-                          const username = await fetchUsernameById(art.uploader_id)
-                          setSelectedArt({
-                            id:art.id,
-                            title: art.notes || 'Untitled',
-                            artist: username,
-                            uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
-                            toolsUsed: art.tools_used,
-                            tags: [],
-                            additionalNotes: art.notes,
-                            likes: 0,
-                            taggedCharacters: [],
-                            imageUrl: art.image_url,
-                            referenceImageUrl: art.reference_url
-                          });
-                          setArtDetailsModalOpen(true);
-                        }}
-                    >
-                      <CardContent className="p-0">
-                        <img
-                            src={art.image_url}
-                            alt="Uploaded artwork"
-                            className="w-full h-48 object-cover rounded-t-2xl"
-                        />
-                        <div className="p-4">
-                          <h4 className="text-md font-semibold text-slate-700 dark:text-slate-200 truncate">
-                            {art.notes || "Untitled"}
-                          </h4>
-                          <p className="text-xs text-slate-500 dark:text-slate-400">
-                            Uploaded on {dayjs(art.created_at).format("MMM D, YYYY")}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                ))}
-
-                {/* Bottom Row - Empty slots */}
-                {[1, 2, 3, 4].map((slot) => (
-                  <Card key={`empty-${slot}`} className="bg-white/40 dark:bg-slate-700/40 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl">
-                    <CardContent className="p-6">
-                      <div className="h-32 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
-                        <div className="text-center">
-                          <div className="text-sm font-medium text-sky-600 dark:text-sky-400 mb-1">
-                            Empty slot
-                          </div>
-                          <div className="text-xs text-slate-500 dark:text-slate-400">
-                            Waiting for artist
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>
+
+      <div className="max-w-5xl mx-auto px-4 pt-2 pb-2">
+        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
+          <CardContent className="p-8">
+            {/* Event Gallery Section */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+                    Event Gallery
+                  </h3>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">
+                      Upload your masterpiece!
+                    </span>
+                    <Button 
+                      onClick={() => setUploadModalOpen(true)}
+                      className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg px-6"
+                    >
+                      Upload Art
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Gallery Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {/* Top Row - Attendees with avatars */}
+                  {artworks.map((art) => (
+                      <Card
+                          key={art.id}
+                          className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
+                          onClick={async () => {
+                            const username = await fetchUsernameById(art.uploader_id)
+                            setSelectedArt({
+                              id:art.id,
+                              title: art.notes || 'Untitled',
+                              artist: username,
+                              uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
+                              toolsUsed: art.tools_used,
+                              tags: [],
+                              additionalNotes: art.notes,
+                              likes: 0,
+                              taggedCharacters: [],
+                              imageUrl: art.image_url,
+                              referenceImageUrl: art.reference_url
+                            });
+                            setArtDetailsModalOpen(true);
+                          }}
+                      >
+                        <CardContent className="p-0">
+                          <img
+                              src={art.image_url}
+                              alt="Uploaded artwork"
+                              className="w-full h-48 object-cover rounded-t-2xl"
+                          />
+                          <div className="p-4">
+                            <h4 className="text-md font-semibold text-slate-700 dark:text-slate-200 truncate">
+                              {art.notes || "Untitled"}
+                            </h4>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                              Uploaded on {dayjs(art.created_at).format("MMM D, YYYY")}
+                            </p>
+                          </div>
+                        </CardContent>
+                      </Card>
+                  ))}
+
+                  {/* Bottom Row - Empty slots */}
+                  {[1, 2, 3, 4].map((slot) => (
+                    <Card key={`empty-${slot}`} className="bg-white/40 dark:bg-slate-700/40 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl">
+                      <CardContent className="p-6">
+                        <div className="h-32 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
+                          <div className="text-center">
+                            <div className="text-sm font-medium text-sky-600 dark:text-sky-400 mb-1">
+                              Empty slot
+                            </div>
+                            <div className="text-xs text-slate-500 dark:text-slate-400">
+                              Waiting for artist
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+          </CardContent>
+        </Card>
+      </div>  
+      
 
       {/* Modals */}
       <UploadArtModal
