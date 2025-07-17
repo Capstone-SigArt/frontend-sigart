@@ -287,7 +287,7 @@ const HostParty = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
       <ModernNavigation 
         title="Host A Party" 
         subtitle="Create amazing art events"
@@ -299,7 +299,7 @@ const HostParty = () => {
           {/* Form Section */}
           <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
             <CardContent className="p-8">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent mb-6">
                 Event Details
               </h2>
               
@@ -434,14 +434,14 @@ const HostParty = () => {
               <div className="flex gap-4 pt-6">
                 <Button 
                   variant="secondary" 
-                  className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl"
+                  className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl"
                   onClick={handleGeneratePreview}
                 >
                   Generate Preview
                 </Button>
                 <Button 
                   variant="secondary"
-                  className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl"
+                  className="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white rounded-xl"
                   onClick={handleCreateParty}
                 >
                   Create Party
@@ -460,7 +460,7 @@ const HostParty = () => {
           {/* Preview Section */}
           <div className="flex flex-col items-center justify-center">
             <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                 Generated Preview
               </h3>
               <p className="text-slate-600 dark:text-slate-300 mt-2">
@@ -472,7 +472,7 @@ const HostParty = () => {
               <Card className="w-80 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl overflow-hidden">
                 <CardContent className="p-0">
                   <div className="relative">
-                    <div className="bg-gradient-to-r from-sky-200 to-emerald-200 h-48 flex items-center justify-center">
+                    <div className="bg-gradient-to-r from-sky-200 to-blue-200 h-48 flex items-center justify-center">
                       {/*test for image*/}
                       <img
                           /*src="https://pbs.twimg.com/media/F2TPSgZbUAAZs3x?format=jpg&name=4096x4096" //this is a random image I am using just for testing what the images would look like
@@ -492,10 +492,10 @@ const HostParty = () => {
                         {formData.description || 'Your event description will appear here'}
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        <Badge className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
+                        <Badge className="bg-gradient-to-r from-sky-500 to-blue-500 text-white">
                           {formData.theme || 'Theme'}
                         </Badge>
-                        <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white">
+                        <Badge className="bg-gradient-to-r from-blue-500 to-green-500 text-white">
                           Art Event
                         </Badge>
                         {/* Tag badges (on a separate row, wrapped if needed) */}
@@ -507,7 +507,7 @@ const HostParty = () => {
                               .map((tag, index) => (
                                   <Badge
                                       key={index}
-                                      className="bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-white px-4 py-1 rounded-md"
+                                      className="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-white px-4 py-1 rounded-md"
                                   >
                                     {tag}
                                   </Badge>
@@ -521,7 +521,7 @@ const HostParty = () => {
             ) : (
               <div className="w-80 h-64 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl flex items-center justify-center bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-sky-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl text-white">🎨</span>
                   </div>
                   <span className="text-slate-600 dark:text-slate-300">Preview will appear here</span>

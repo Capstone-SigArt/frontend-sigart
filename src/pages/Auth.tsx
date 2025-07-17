@@ -70,14 +70,14 @@ const Auth = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+            <div className="w-20 h-20 bg-gradient-to-r from-sky-500 to-blue-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
               <Palette className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
               SigArt
             </h1>
             <p className="text-slate-600 dark:text-slate-300 mt-2">
@@ -88,7 +88,7 @@ const Auth = () => {
           {/* Auth Card */}
           <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border-white/20 shadow-2xl">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                 {isLogin ? 'Welcome Back' : 'Create Account'}
               </CardTitle>
             </CardHeader>
@@ -163,7 +163,7 @@ const Auth = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl py-3 shadow-lg"
+                  className="w-full bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl py-3 shadow-lg"
                 >
                   {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Sign Up')}
                 </Button>
@@ -199,7 +199,7 @@ const Auth = () => {
                   {isLogin ? "Don't have an account? " : "Already have an account? "}
                   <button
                     onClick={() => setIsLogin(!isLogin)}
-                    className="text-sky-600 hover:text-emerald-600 font-medium transition-colors"
+                    className="text-sky-600 hover:text-blue-600 font-medium transition-colors"
                   >
                     {isLogin ? 'Sign up' : 'Sign in'}
                   </button>

@@ -28,7 +28,7 @@ const Studio = () => {
   // Loading state
   if (isLoadingProfile || isChecking) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-sky-600" />
           <p className="text-slate-600 dark:text-slate-300">Loading your studio...</p>
@@ -69,7 +69,7 @@ const Studio = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
       <ModernNavigation 
         title="My Studio" 
         subtitle="Showcase your artistic journey"
@@ -81,16 +81,16 @@ const Studio = () => {
           <div className="lg:col-span-1">
             <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl sticky top-8">
               <CardHeader className="text-center pb-4">
-                <Avatar className="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-sky-500 to-emerald-500">
+                <Avatar className="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-sky-500 to-blue-500">
                   {profileData.avatarUrl ? (
                     <AvatarImage src={profileData.avatarUrl} alt={profileData.characterName} />
                   ) : (
-                    <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-2xl">
+                    <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white text-2xl">
                       <User className="h-12 w-12" />
                     </AvatarFallback>
                   )}
                 </Avatar>
-                <CardTitle className="text-xl bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+                <CardTitle className="text-xl bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                   {profileData.characterName}
                 </CardTitle>
                 <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -108,8 +108,8 @@ const Studio = () => {
                     </div>
                     <div className="text-xs text-slate-600 dark:text-slate-300">Artworks</div>
                   </div>
-                  <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl">
-                    <div className="text-lg font-bold text-emerald-600">0</div>
+                  <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                    <div className="text-lg font-bold text-blue-600">0</div>
                     <div className="text-xs text-slate-600 dark:text-slate-300">Likes</div>
                   </div>
                   <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
@@ -123,7 +123,7 @@ const Studio = () => {
                 </div>
                 {/*<Button
                   onClick={() => setShowUploadModal(true)}
-                  className="w-full bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg"
+                  className="w-full bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl shadow-lg"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Upload New Art
@@ -146,7 +146,7 @@ const Studio = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-sky-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                     <Star className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-slate-700 dark:text-slate-300">4.8</h3>
@@ -154,9 +154,9 @@ const Studio = () => {
                 </CardContent>
               </Card>
               
-              <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300">
+              <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                     <Users className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-slate-700 dark:text-slate-300">
@@ -182,7 +182,7 @@ const Studio = () => {
             {/* Artwork Gallery */}
             <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
               <CardHeader>
-                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+                <CardTitle className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                   My Artwork Gallery
                 </CardTitle>
               </CardHeader>
@@ -198,7 +198,7 @@ const Studio = () => {
                     </p>
                     <Button 
                       onClick={() => setShowUploadModal(true)}
-                      className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white"
+                      className="bg-gradient-to-r from-sky-500 to-blue-500 text-white"
                     >
                       Upload Your First Artwork
                     </Button>
@@ -213,7 +213,7 @@ const Studio = () => {
                         /*onClick={() => handleArtClick(artwork)}*/
                       >
                         <Card className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 group-hover:scale-105">
-                          <div className="aspect-square bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 rounded-t-2xl flex items-center justify-center overflow-hidden">
+                          <div className="aspect-square bg-gradient-to-br from-sky-100 to-blue-100 dark:from-sky-900/30 dark:to-blue-900/30 rounded-t-2xl flex items-center justify-center overflow-hidden">
                             <img 
                               src={artwork.image_url} 
                               alt={artwork.title}

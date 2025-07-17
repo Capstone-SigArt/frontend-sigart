@@ -103,7 +103,7 @@ const ChangePasswordModal = ({ open, onOpenChange }: ChangePasswordModalProps) =
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
             Change Password
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground text-center">
@@ -202,7 +202,7 @@ const ChangePasswordModal = ({ open, onOpenChange }: ChangePasswordModalProps) =
             <Button
               onClick={handleSave}
               disabled={isLoading || success}
-              className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl"
+              className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl"
             >
               {isLoading ? (
                 <>

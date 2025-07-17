@@ -22,7 +22,7 @@ const UserStudio = () => {
   // Loading state
   if (isLoadingProfile || isChecking) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-sky-600" />
           <p className="text-slate-600 dark:text-slate-300">Loading your studio...</p>
@@ -49,7 +49,7 @@ const UserStudio = () => {
     : getDefaultSpecialties();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
       <ModernNavigation 
         title="Artist Studio" 
         subtitle="Showcase your creative journey"
@@ -62,11 +62,11 @@ const UserStudio = () => {
             <div className="flex flex-col lg:flex-row gap-8">
               {/* Profile Picture and Basic Info */}
               <div className="flex-shrink-0 text-center lg:text-left">
-                <Avatar className="w-32 h-32 mx-auto lg:mx-0 bg-gradient-to-r from-sky-500 to-emerald-500 mb-4">
+                <Avatar className="w-32 h-32 mx-auto lg:mx-0 bg-gradient-to-r from-sky-500 to-blue-500 mb-4">
                   {profileData.avatarUrl ? (
                     <AvatarImage src={profileData.avatarUrl} alt={profileData.characterName} />
                   ) : (
-                  <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-3xl">
+                  <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white text-3xl">
                     <User className="h-16 w-16" />
                   </AvatarFallback>
                   )}
@@ -107,7 +107,7 @@ const UserStudio = () => {
                   <h3 className="font-semibold text-slate-700 dark:text-slate-300 mb-3">Specialties</h3>
                   <div className="flex flex-wrap gap-2">
                     {specialties.map((specialty, index) => (
-                      <Badge key={index} className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
+                      <Badge key={index} className="bg-gradient-to-r from-sky-500 to-blue-500 text-white">
                         #{specialty}
                       </Badge>
                     ))}
@@ -134,7 +134,7 @@ const UserStudio = () => {
                       <div className="text-sm text-slate-500 dark:text-slate-400">Artworks</div>
                     </div>
                     <div className="text-center p-3 bg-white/40 dark:bg-slate-700/40 rounded-xl">
-                      <div className="text-2xl font-bold text-emerald-600">0</div>
+                      <div className="text-2xl font-bold text-blue-600">0</div>
                       <div className="text-sm text-slate-500 dark:text-slate-400">Likes</div>
                     </div>
                     <div className="text-center p-3 bg-white/40 dark:bg-slate-700/40 rounded-xl">
@@ -196,7 +196,7 @@ const UserStudio = () => {
           <div className="lg:col-span-2">
             <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
               <CardContent className="p-8">
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent mb-6">
                   My Artwork
                 </h3>
                 
@@ -209,7 +209,7 @@ const UserStudio = () => {
                     <p className="text-slate-500 dark:text-slate-400 mb-4">
                       No artworks uploaded yet
                     </p>
-                    <Button className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
+                    <Button className="bg-gradient-to-r from-sky-500 to-blue-500 text-white">
                       Upload Your First Artwork
                     </Button>
                   </div>
@@ -251,7 +251,7 @@ const UserStudio = () => {
           <div className="space-y-6">
             <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
               <CardContent className="p-6">
-                <h3 className="text-xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-4">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent mb-4">
                   Recent Events
                 </h3>
                 
@@ -283,8 +283,8 @@ const UserStudio = () => {
                       <Badge 
                         className={`mt-2 ${
                           event.type === 'Hosted' 
-                            ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white' 
-                            : 'bg-gradient-to-r from-emerald-500 to-green-500 text-white'
+                            ? 'bg-gradient-to-r from-sky-500 to-blue-500 text-white' 
+                            : 'bg-gradient-to-r from-blue-500 to-green-500 text-white'
                         }`}
                       >
                         {event.type}
@@ -311,7 +311,7 @@ const UserStudio = () => {
                   </div>
                   <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                     <div 
-                      className="bg-gradient-to-r from-sky-500 to-emerald-500 h-2 rounded-full transition-all duration-300"
+                      className="bg-gradient-to-r from-sky-500 to-blue-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: profile?.about && profile?.full_name ? '85%' : '45%' }}
                     />
                   </div>

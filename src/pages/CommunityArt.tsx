@@ -189,7 +189,7 @@ const CommunityArt = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
       <ModernNavigation 
         title="Community Showcase" 
         subtitle="Discover amazing artwork from our community"
@@ -208,7 +208,7 @@ const CommunityArt = () => {
                 className="pl-10 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl shadow-sm focus:shadow-md transition-shadow"
               />
             </div>
-            <Button className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl px-6 shadow-lg">
+            <Button className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl px-6 shadow-lg">
               <Filter className="w-4 h-4 mr-2" />
               Filter
             </Button>
@@ -223,7 +223,7 @@ const CommunityArt = () => {
                 onClick={() => setSelectedCategory(category)}
                 className={`whitespace-nowrap rounded-full px-4 py-2 transition-all duration-300 ${
                   selectedCategory === category
-                    ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-sky-500 to-blue-500 text-white shadow-lg'
                     : 'bg-white/40 border-white/30 hover:bg-white/60'
                 }`}
               >
@@ -240,7 +240,7 @@ const CommunityArt = () => {
           {filteredArtworks.map((artwork) => (
             <Card 
               key={artwork.id} 
-              className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
+              className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
               onClick={() => handleArtworkClick(artwork)}
             >
               <CardContent className="p-0">
@@ -292,7 +292,7 @@ const CommunityArt = () => {
 
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4">
-                    {/*<Badge className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white backdrop-blur-sm">
+                    {/*<Badge className="bg-gradient-to-r from-sky-500 to-blue-500 text-white backdrop-blur-sm">
                       {artwork.category}
 
                     </Badge>*/}
@@ -307,7 +307,7 @@ const CommunityArt = () => {
                       {artwork.tags.map((tag, index) => (
                         <Badge 
                           key={index}
-                          className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white backdrop-blur-sm"
+                          className="bg-gradient-to-r from-sky-500 to-blue-500 text-white backdrop-blur-sm"
                         >
                           {tag.name}
                         </Badge>

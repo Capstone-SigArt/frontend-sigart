@@ -159,7 +159,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
             {artData.title}
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground text-center">
@@ -170,7 +170,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
         <div className="space-y-4">
           {/* Image Display */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20">
+            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20">
               <img 
                 src={artData.imageUrl} 
                 alt={artData.title}
@@ -178,7 +178,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
               />
             </div>
             {artData.referenceImageUrl && (
-              <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20">
+              <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20">
                 <img 
                   src={artData.referenceImageUrl} 
                   alt="Reference"
@@ -192,10 +192,10 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           </div>
 
           {/* Artist Info */}
-          <div className="flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-2xl">
+          <div className="flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-2xl">
             <div className="flex items-center gap-3">
               <Avatar className="w-12 h-12 border-2 border-sky-300">
-                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
+                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white font-bold">
                   AS
                 </AvatarFallback>
               </Avatar>
@@ -220,10 +220,10 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
 
           {/* Additional Info Content */}
           {showAdditionalInfo && (
-            <div className="grid grid-cols-2 gap-6 p-6 border border-sky-200 dark:border-sky-600 rounded-2xl bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 backdrop-blur-sm">
+            <div className="grid grid-cols-2 gap-6 p-6 border border-sky-200 dark:border-sky-600 rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 backdrop-blur-sm">
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-blue-500 rounded-lg flex items-center justify-center">
                     <Calendar className="h-4 w-4 text-white" />
                   </div>
                   <div>
@@ -233,7 +233,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-green-500 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
                     <Edit className="h-4 w-4 text-white" />
                   </div>
                   <div>
@@ -257,7 +257,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
                 </div>
                 
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-lg flex items-center justify-center mt-0.5">
+                  <div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-blue-500 rounded-lg flex items-center justify-center mt-0.5">
                     <Calendar className="h-4 w-4 text-white" />
                   </div>
                   <div>
@@ -305,7 +305,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
                           {character.avatar ? (
                               <AvatarImage src={character.avatar} alt={character.name} />
                           ) : (
-                              <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-xs font-bold">
+                              <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white text-xs font-bold">
                                 {character.name.charAt(0)}
                               </AvatarFallback>
                           )}
@@ -319,7 +319,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           )}
 
           {/* Note about features */}
-          <div className="text-xs text-slate-600 dark:text-slate-400 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/10 dark:to-emerald-900/10 rounded-xl border border-sky-200 dark:border-sky-600">
+          <div className="text-xs text-slate-600 dark:text-slate-400 p-4 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/10 dark:to-blue-900/10 rounded-xl border border-sky-200 dark:border-sky-600">
             <strong className="text-slate-700 dark:text-slate-300">Feature Note:</strong> Although not an early priority, likes could be tied to features for party owners to host contests or 
             other events inside their "party" to give a more fun and social atmosphere to each party. Many of the 
             current party hosts like to do giveaways or things of this nature, thus this could be a good way to handle 

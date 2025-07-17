@@ -211,7 +211,7 @@ const EventDetails = () => {
   if(!hostData) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
       <ModernNavigation 
         title="Event Details" 
         subtitle="Join the creative gathering"
@@ -223,7 +223,7 @@ const EventDetails = () => {
           <CardContent className="p-8">
             {/* Event Header */}
             <div className="mb-6">
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent mb-6">
                 {eventData.title}
               </h2>
               
@@ -284,7 +284,7 @@ const EventDetails = () => {
                   {/*{eventData.tags.map((tag, index) => (
                     <span 
                       key={index}
-                      className="px-4 py-2 bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 text-sky-700 dark:text-sky-300 rounded-full text-sm font-medium border border-sky-200 dark:border-sky-600"
+                      className="px-4 py-2 bg-gradient-to-r from-sky-100 to-blue-100 dark:from-sky-900/30 dark:to-blue-900/30 text-sky-700 dark:text-sky-300 rounded-full text-sm font-medium border border-sky-200 dark:border-sky-600"
                     >
                       {tag}
                     </span>
@@ -295,7 +295,7 @@ const EventDetails = () => {
                     className={`${
                         hasJoined
                             ? 'bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600'
-                            : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600'
+                            : 'bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600'
                     } text-white rounded-xl shadow-lg px-6`}
                 >
                   {hasJoined ? 'Leave Event' : 'Join Event'}
@@ -306,7 +306,7 @@ const EventDetails = () => {
             {/* Event Gallery Section */}
             <div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                   Event Gallery
                 </h3>
                 <div className="flex items-center gap-3">
@@ -315,7 +315,7 @@ const EventDetails = () => {
                   </span>
                   <Button 
                     onClick={() => setUploadModalOpen(true)}
-                    className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg px-6"
+                    className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl shadow-lg px-6"
                   >
                     Upload Art
                   </Button>
@@ -369,7 +369,7 @@ const EventDetails = () => {
                 {[1, 2, 3, 4].map((slot) => (
                   <Card key={`empty-${slot}`} className="bg-white/40 dark:bg-slate-700/40 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl">
                     <CardContent className="p-6">
-                      <div className="h-32 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
+                      <div className="h-32 bg-gradient-to-br from-sky-100 to-blue-100 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
                         <div className="text-center">
                           <div className="text-sm font-medium text-sky-600 dark:text-sky-400 mb-1">
                             Empty slot

@@ -104,7 +104,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
             return (
                 <div
                     key={char.id}
-                    className="flex items-center justify-between p-3 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border border-sky-200 dark:border-sky-600 hover:bg-sky-100/50 dark:hover:bg-sky-800/30 transition"
+                    className="flex items-center justify-between p-3 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl border border-sky-200 dark:border-sky-600 hover:bg-sky-100/50 dark:hover:bg-sky-800/30 transition"
                 >
                   <div className="flex items-center space-x-3">
                     <Checkbox
@@ -263,7 +263,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
             Upload your art!
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground text-center">
@@ -274,7 +274,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
         <div className="grid grid-cols-2 gap-6">
           {/* Left side - Image upload */}
           <div className="space-y-4">
-            <div className="h-64 border-2 border-dashed border-sky-300 dark:border-sky-600 rounded-2xl flex flex-col items-center justify-center bg-gradient-to-br from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20">
+            <div className="h-64 border-2 border-dashed border-sky-300 dark:border-sky-600 rounded-2xl flex flex-col items-center justify-center bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20">
               {imagePreview ? (
                 <img 
                   src={imagePreview} 
@@ -300,7 +300,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
             />
             <label
               htmlFor="image-upload"
-              className="block w-full text-center py-3 px-4 bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl cursor-pointer transition-all shadow-lg hover:shadow-xl"
+              className="block w-full text-center py-3 px-4 bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl cursor-pointer transition-all shadow-lg hover:shadow-xl"
             >
               Choose Image
             </label>
@@ -411,7 +411,7 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
           </Button>
           <Button
             onClick={handleUpload}
-            className="px-8 bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg"
+            className="px-8 bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl shadow-lg"
             disabled={!title || !selectedImage}
           >
             Upload
