@@ -27,9 +27,6 @@ const ModernNavigation = ({ title, subtitle }: ModernNavigationProps) => {
 
   const getActiveTab = () => {
     const currentPath = location.pathname;
-    if (currentPath.includes('/event/')) {
-      return null;
-    }
     const activeTab = navigationTabs.find(tab => tab.path === currentPath);
     return activeTab?.name || 'Browse';
   };
@@ -65,16 +62,15 @@ const ModernNavigation = ({ title, subtitle }: ModernNavigationProps) => {
 
       {/* Navigation Tabs */}
       <div className="sticky top-[88px] z-40 backdrop-blur-lg bg-white/70 dark:bg-slate-800/70 border-b border-white/20">
-        {/* Mobile: Scrollable */}
-        <div className="w-full overflow-x-auto scrollbar-hide px-4 md:hidden">
-          <div className="flex w-max space-x-1 py-3 snap-x snap-mandatory">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex space-x-1 overflow-x-auto py-3 scrollbar-hide">
             {navigationTabs.map((tab) => (
               <Button
                 key={tab.name}
                 variant={getActiveTab() === tab.name ? "default" : "ghost"}
-                className={`whitespace-nowrap transition-all duration-300 rounded-full px-6 py-2 snap-start ${
+                className={`whitespace-nowrap transition-all duration-300 rounded-full px-6 py-2 ${
                   getActiveTab() === tab.name
-                    ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-lg transform scale-105'
+                    ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-lg transform scale-105' 
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700/50'
                 }`}
                 onClick={() => handleTabClick(tab)}
@@ -83,24 +79,6 @@ const ModernNavigation = ({ title, subtitle }: ModernNavigationProps) => {
               </Button>
             ))}
           </div>
-        </div>
-
-        {/* Desktop: Centered */}
-        <div className="hidden md:flex justify-center py-3 space-x-1 px-4 max-w-7xl mx-auto">
-          {navigationTabs.map((tab) => (
-            <Button
-              key={tab.name}
-              variant={getActiveTab() === tab.name ? "default" : "ghost"}
-              className={`whitespace-nowrap transition-all duration-300 rounded-full px-6 py-2 ${
-                getActiveTab() === tab.name
-                  ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-lg transform scale-105'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/50 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-700/50'
-              }`}
-              onClick={() => handleTabClick(tab)}
-            >
-              {tab.name}
-            </Button>
-          ))}
         </div>
       </div>
     </>

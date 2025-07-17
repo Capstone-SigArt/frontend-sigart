@@ -12,8 +12,6 @@ import ArtDetailsModal from '@/components/ArtDetailsModal';
 import { Textarea } from "@/components/ui/textarea";
 import dayjs from 'dayjs';
 import {supabase} from "@/lib/supabase.ts";
-import { Calendar, Clock, Users, MapPin, Share2, MessageCircle, Heart, MapPinIcon } from 'lucide-react';
-import { Badge } from "@/components/ui/badge";
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 
@@ -31,8 +29,6 @@ const EventDetails = () => {
   const [artworks, setArtworks] = useState([]);
   const [availableCharacters, setAvailableCharacters] = useState([]);
   const [selectedCharacter, setSelectedCharacter] = useState(null);
-  const [attendeeCount, setAttendeeCount] = useState<number>(0);
-  const [partyTags, setPartyTags] = useState([]);
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -151,40 +147,6 @@ const EventDetails = () => {
     checkMembership(); // no need to check userId outside
   }, [eventId]);
 
-  const fetchAttendeeCount = async () => {
-    if (!eventId) return;
-    try {
-      const res = await fetch(`${API_BASE_URL}/myParties/count/${eventId}`);
-      if (!res.ok) throw new Error('Failed to fetch attendee count');
-      const { count } = await res.json();
-      setAttendeeCount(count);
-    } catch (err) {
-      console.error('Error fetching attendee count:', err);
-      setAttendeeCount(0);
-    }
-  }; 
-  useEffect(() => {
-
-  
-    if (eventId) fetchAttendeeCount();
-  }, [eventId]);
-
-  useEffect(() => {
-    const fetchPartyTags = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/partyTags?party_id=${eventId}`);
-        if (!response.ok) throw new Error('Failed to fetch party tags');
-        const data = await response.json();
-        console.log("Fetched tags for event", eventId, data); // <--
-        setPartyTags(data);
-      } catch (err) {
-        console.error('Error fetching party tags:', err);
-      }
-    };
-  
-    if (eventId) fetchPartyTags();
-  }, [eventId]);
-
 
   console.log("Event ID from URL:", eventId);
   console.log(eventData);
@@ -244,14 +206,14 @@ const EventDetails = () => {
     setArtDetailsModalOpen(true);
   };*/
 
-  const handleJoinLeave = async () => {
+  const handleJoinLeave = async() => {
     try {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      const userId = user.id;
-      if (!userId || !eventId) return;
-  
+      const userId = user.id
+      if(!userId || !eventId) return;
+
       if (!hasJoined) {
         const response = await fetch(`${API_BASE_URL}/partyMember`, {
           method: 'POST',
@@ -260,8 +222,8 @@ const EventDetails = () => {
             user_id: userId,
             party_id: eventId,
             role: 'member',
-            joined_at: new Date().toISOString(),
-          }),
+            joined_at: new Date().toISOString()
+          })
         });
         if (!response.ok) throw new Error('Failed to join event');
         setHasJoined(true);
@@ -271,20 +233,17 @@ const EventDetails = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             user_id: userId,
-            party_id: eventId,
-          }),
+            party_id: eventId
+          })
         });
         if (!response.ok) throw new Error('Failed to leave event');
         setHasJoined(false);
       }
-  
-      // Refresh attendee count after join/leave action
-      await fetchAttendeeCount();
     } catch (error) {
       console.error(error);
       alert(`Could not ${hasJoined ? 'leave' : 'join'} the event`);
     }
-  };  
+  };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading event...</div>;
   if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
@@ -302,6 +261,7 @@ const EventDetails = () => {
       />
 
       {/* Event Details Content */}
+
       <div className="max-w-5xl mx-auto px-4 py-8">
         <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl mb-0">
         
@@ -332,35 +292,53 @@ const EventDetails = () => {
             </div>
           </div>
         </div>
+
           <CardContent className="p-8">
             {/* Event Header */}
             <div className="mb-6">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+                {eventData.title}
+              </h2>
+              
+              {/* Banner/Flyer Image Placeholder */}
+              {/* Actual Banner Image */}
+              <div className="w-full h-48 mb-8 overflow-hidden rounded-2xl border-2 border-sky-300 dark:border-sky-600">
+                <img
+                    src={bannerUrl}
+                    alt="Event Banner"
+                    className="w-full h-full object-cover"
+                />
+              </div>
+
+
               {/* Event Details Form */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl">
-                  <Calendar className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-                  <div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">Date</p>
-                    <p className="font-semibold">{dayjs(eventData.date).format("dddd, MMM D, YYYY")}</p>
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="space-y-2">
+                  <Label htmlFor="hostName" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Host Name</Label>
+                  <Input
+                    id="hostName"
+                    value={hostData.username}
+                    readOnly
+                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  />
                 </div>
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl">
-                  <Clock className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-                  <div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">Time</p>
-                    <p className="font-semibold">
-                      {eventData.start_time
-                        ? dayjs(`1970-01-01T${eventData.start_time}`).format("h:mm A")
-                        : ""}
-                    </p>
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dateTime" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Date/Time</Label>
+                  <Input 
+                    id="dateTime"
+                    value={`${eventData.date} at ${eventData.start_time}`}
+                    readOnly 
+                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  />
                 </div>
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl">
-                  <Users className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-                  <div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400">Attendees</p>
-                    <p className="font-semibold">{attendeeCount}</p>
-                  </div>
+                <div className="space-y-2">
+                  <Label htmlFor="address" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Address</Label>
+                  <Input
+                      id="address"
+                      value={eventData.address}
+                      readOnly
+                      className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  />
                 </div>
               </div>
               <div className="mb-6">
@@ -378,41 +356,34 @@ const EventDetails = () => {
                 <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
                   {eventData.description}
                 </p>
+
               </div>
 
-              {/* Tags and Action Buttons */}
-              <div className="mb-8">
-                <div className="flex flex-wrap items-center gap-4 mb-4">
-                  <div>
-                    <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Theme: </span>
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">{eventData.theme}</span>
-                  </div>
+              {/* Description + Join/Leave Button */}
+              <div className="flex items-end gap-6 mb-8">
+                <div className="flex-1 space-y-2">
+                  <Label htmlFor="description" className="text-sm font-semibold text-slate-700 dark:text-slate-300 text-center block">
+                    Event Description
+                  </Label>
+                  <Textarea
+                      id="description"
+                      value={eventData.description}
+                      readOnly
+                      className="w-full min-h-[100px] bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm resize-none"
+                  />
                 </div>
-                <div className="flex flex-wrap gap-2">
-                {Array.isArray(partyTags) && partyTags.map((tag, index) => (
-                    <Badge 
-                      key={index}
-                      variant="secondary"
-                      className="bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-600"
-                    >
-                      {tag.name}
-                    </Badge>
-                  ))}
+                <div className="w-auto">
+                  <Button
+                      onClick={handleJoinLeave}
+                      className={`${
+                          hasJoined
+                              ? 'bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600'
+                              : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600'
+                      } text-white rounded-xl shadow-lg px-6 py-3`}
+                  >
+                    {hasJoined ? 'Leave Event' : 'Join Event'}
+                  </Button>
                 </div>
-              </div>
-
-              {/* Join Button */}
-              <div className="flex justify-center mb-8">
-                <Button 
-                  onClick={handleJoinLeave}
-                  className={`px-8 py-3 rounded-xl shadow-lg transition-all duration-300 ${
-                    hasJoined
-                      ? 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white'
-                      : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white'
-                  }`}
-                >
-                  {hasJoined ? 'Leave Event' : 'Join Event'}
-                </Button>
               </div>
             </div>
           </CardContent>
@@ -440,44 +411,94 @@ const EventDetails = () => {
                   </div>
                 </div>
 
-                {/* Gallery Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {/* Top Row - Attendees with avatars */}
-                  {artworks.map((art) => (
-                      <Card
-                          key={art.id}
-                          className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
-                          onClick={async () => {
-                            const username = await fetchUsernameById(art.uploader_id)
-                            setSelectedArt({
-                              id:art.id,
-                              title: art.notes || 'Untitled',
-                              artist: username,
-                              uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
-                              toolsUsed: art.tools_used,
-                              tags: [],
-                              additionalNotes: art.notes,
-                              likes: 0,
-                              taggedCharacters: [],
-                              imageUrl: art.image_url,
-                              referenceImageUrl: art.reference_url
-                            });
-                            setArtDetailsModalOpen(true);
-                          }}
-                      >
-                        <CardContent className="p-0">
-                          <img
-                              src={art.image_url}
-                              alt="Uploaded artwork"
-                              className="w-full h-48 object-cover rounded-t-2xl"
-                          />
-                          <div className="p-4">
-                            <h4 className="text-md font-semibold text-slate-700 dark:text-slate-200 truncate">
-                              {art.notes || "Untitled"}
-                            </h4>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">
-                              Uploaded on {dayjs(art.created_at).format("MMM D, YYYY")}
-                            </p>
+{/* Character filter mapping */}
+{availableCharacters.length > 0 && (
+  <div className="mb-4 flex flex-wrap items-center gap-3">
+    <span className="font-semibold text-slate-700 dark:text-slate-300">Filter by Character:</span>
+    <select
+      value={selectedCharacter || ""}
+      onChange={(e) => setSelectedCharacter(e.target.value || null)}
+      className="bg-white dark:bg-slate-700 text-slate-700 dark:text-white border rounded-md px-3 py-1"
+    >
+      <option value="">All</option>
+      {availableCharacters.map((char) => (
+        <option key={char.id} value={char.id}>
+          {char.name}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+
+{/* Gallery Grid */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  {artworks
+    .filter((art) => {
+      if (!selectedCharacter) return true;
+      return art.characters?.some((char) => String(char.id) === selectedCharacter);
+    })
+    .map((art) => (
+      <Card
+        key={art.id}
+        className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
+        onClick={async () => {
+          const username = await fetchUsernameById(art.uploader_id);
+          setSelectedArt({
+            id: art.id,
+            title: art.title || "Untitled",
+            artist: username,
+            uploader_id: art.uploader_id,
+            uploadDate: dayjs(art.created_at).format("MMM D, YYYY"),
+            toolsUsed: art.tools_used,
+            tags: [],
+            additionalNotes: art.notes,
+            likes: 0,
+            taggedCharacters: [],
+            imageUrl: art.image_url,
+            referenceImageUrl: art.reference_url,
+          });
+          setArtDetailsModalOpen(true);
+        }}
+      >
+        <CardContent className="p-0">
+          <img
+            src={art.image_url}
+            alt="Uploaded artwork"
+            className="w-full h-48 object-cover rounded-t-2xl"
+          />
+          <div className="p-4">
+            <h4 className="text-md font-semibold text-slate-700 dark:text-slate-200 truncate">
+              {art.title || "Untitled"}
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Uploaded on {dayjs(art.created_at).format("MMM D, YYYY")}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    ))}
+
+  {/* Bottom Row - Empty slots */}
+  {[1, 2, 3, 4].map((slot) => (
+    <Card
+      key={`empty-${slot}`}
+      className="bg-white/40 dark:bg-slate-700/40 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl"
+    >
+      <CardContent className="p-6">
+        <div className="h-32 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-sm font-medium text-sky-600 dark:text-sky-400 mb-1">
+              Empty slot
+            </div>
+            <div className="text-xs text-slate-500 dark:text-slate-400">
+              Waiting for artist
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  ))}
+</div>
                           </div>
                         </CardContent>
                       </Card>
