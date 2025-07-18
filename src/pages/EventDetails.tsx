@@ -261,38 +261,8 @@ const EventDetails = () => {
       />
 
       {/* Event Details Content */}
-
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl mb-0">
-        
-        <div className="relative h-64 rounded-t-2xl overflow-hidden">
-          <img 
-            src={eventData.cover_image} 
-            alt={eventData.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          <div className="absolute top-4 right-4 flex gap-2">
-            {/* Share, Message, etc. */}
-          </div>
-          <div className="absolute bottom-4 left-4 right-4">
-            <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
-              {eventData.title}
-            </h1>
-            <div className="flex items-center gap-3">
-              <Avatar className="w-10 h-10 border-2 border-white/30">
-                <AvatarImage src={hostData.avatar_url || ""} />
-                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
-                  {hostData.username?.charAt(0) || "?"}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="text-white font-medium drop-shadow">Hosted by {hostData.username}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
           <CardContent className="p-8">
             {/* Event Header */}
             <div className="mb-6">
@@ -340,23 +310,15 @@ const EventDetails = () => {
                       className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   />
                 </div>
-              </div>
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <MapPin className="w-5 h-5 text-sky-600 dark:text-sky-400" />
-                  <h3 className="font-semibold text-lg">Location</h3>
+                <div className="space-y-2">
+                  <Label htmlFor="theme" className="text-sm font-semibold text-slate-700 dark:text-slate-300">Theme</Label>
+                  <Input 
+                    id="theme" 
+                    value={eventData.theme} 
+                    readOnly 
+                    className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  />
                 </div>
-                <p className="text-slate-600 dark:text-slate-300 bg-white/60 dark:bg-slate-700/60 p-3 rounded-xl">
-                  {eventData.address}
-                </p>
-              </div>
-              {/* Description */}
-              <div className="mb-6">
-                <h3 className="font-semibold text-lg mb-2">About this Event</h3>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {eventData.description}
-                </p>
-
               </div>
 
               {/* Description + Join/Leave Button */}
@@ -386,146 +348,116 @@ const EventDetails = () => {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
 
-      <div className="max-w-5xl mx-auto px-4 pt-2 pb-2">
-        <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
-          <CardContent className="p-8">
             {/* Event Gallery Section */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                  <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
-                    Event Gallery
-                  </h3>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">
-                      Upload your masterpiece!
-                    </span>
-                    <Button 
-                      onClick={() => setUploadModalOpen(true)}
-                      className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg px-6"
-                    >
-                      Upload Art
-                    </Button>
-                  </div>
+            <div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+                  Event Gallery
+                </h3>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">
+                    Upload your masterpiece!
+                  </span>
+                  <Button 
+                    onClick={() => setUploadModalOpen(true)}
+                    className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg px-6"
+                  >
+                    Upload Art
+                  </Button>
                 </div>
+              </div>
 
-{/* Character filter mapping */}
-{availableCharacters.length > 0 && (
-  <div className="mb-4 flex flex-wrap items-center gap-3">
-    <span className="font-semibold text-slate-700 dark:text-slate-300">Filter by Character:</span>
-    <select
-      value={selectedCharacter || ""}
-      onChange={(e) => setSelectedCharacter(e.target.value || null)}
-      className="bg-white dark:bg-slate-700 text-slate-700 dark:text-white border rounded-md px-3 py-1"
-    >
-      <option value="">All</option>
-      {availableCharacters.map((char) => (
-        <option key={char.id} value={char.id}>
-          {char.name}
-        </option>
-      ))}
-    </select>
-  </div>
-)}
+              {/*Character filter mapping*/}
+              {availableCharacters.length > 0 && (
+                  <div className="mb-4 flex flex-wrap items-center gap-3">
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">Filter by Character:</span>
+                    <select
+                        value={selectedCharacter || ""}
+                        onChange={(e) => setSelectedCharacter(e.target.value || null)}
+                        className="bg-white dark:bg-slate-700 text-slate-700 dark:text-white border rounded-md px-3 py-1"
+                    >
+                      <option value="">All</option>
+                      {availableCharacters.map((char) => (
+                          <option key={char.id} value={char.id}>
+                            {char.name}
+                          </option>
+                      ))}
+                    </select>
 
-{/* Gallery Grid */}
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-  {artworks
-    .filter((art) => {
-      if (!selectedCharacter) return true;
-      return art.characters?.some((char) => String(char.id) === selectedCharacter);
-    })
-    .map((art) => (
-      <Card
-        key={art.id}
-        className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
-        onClick={async () => {
-          const username = await fetchUsernameById(art.uploader_id);
-          setSelectedArt({
-            id: art.id,
-            title: art.title || "Untitled",
-            artist: username,
-            uploader_id: art.uploader_id,
-            uploadDate: dayjs(art.created_at).format("MMM D, YYYY"),
-            toolsUsed: art.tools_used,
-            tags: [],
-            additionalNotes: art.notes,
-            likes: 0,
-            taggedCharacters: [],
-            imageUrl: art.image_url,
-            referenceImageUrl: art.reference_url,
-          });
-          setArtDetailsModalOpen(true);
-        }}
-      >
-        <CardContent className="p-0">
-          <img
-            src={art.image_url}
-            alt="Uploaded artwork"
-            className="w-full h-48 object-cover rounded-t-2xl"
-          />
-          <div className="p-4">
-            <h4 className="text-md font-semibold text-slate-700 dark:text-slate-200 truncate">
-              {art.title || "Untitled"}
-            </h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Uploaded on {dayjs(art.created_at).format("MMM D, YYYY")}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    ))}
-
-  {/* Bottom Row - Empty slots */}
-  {[1, 2, 3, 4].map((slot) => (
-    <Card
-      key={`empty-${slot}`}
-      className="bg-white/40 dark:bg-slate-700/40 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl"
-    >
-      <CardContent className="p-6">
-        <div className="h-32 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
-          <div className="text-center">
-            <div className="text-sm font-medium text-sky-600 dark:text-sky-400 mb-1">
-              Empty slot
-            </div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">
-              Waiting for artist
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  ))}
-</div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                  ))}
-
-                  {/* Bottom Row - Empty slots */}
-                  {[1, 2, 3, 4].map((slot) => (
-                    <Card key={`empty-${slot}`} className="bg-white/40 dark:bg-slate-700/40 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl">
-                      <CardContent className="p-6">
-                        <div className="h-32 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
-                          <div className="text-center">
-                            <div className="text-sm font-medium text-sky-600 dark:text-sky-400 mb-1">
-                              Empty slot
-                            </div>
-                            <div className="text-xs text-slate-500 dark:text-slate-400">
-                              Waiting for artist
-                            </div>
-                          </div>
+                  </div>
+              )}
+              {/* Gallery Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Top Row - Attendees with avatars */}
+                {artworks
+                    .filter((art) => {
+                      if (!selectedCharacter) return true;
+                      return art.characters?.some((char) => String(char.id) === selectedCharacter);
+                    })
+                    .map((art) => (
+                    <Card
+                        key={art.id}
+                        className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
+                        onClick={async () => {
+                          const username = await fetchUsernameById(art.uploader_id)
+                          setSelectedArt({
+                            id:art.id,
+                            title: art.title || 'Untitled',
+                            artist: username,
+                            uploader_id: art.uploader_id,
+                            uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
+                            toolsUsed: art.tools_used,
+                            tags: [],
+                            additionalNotes: art.notes,
+                            likes: 0,
+                            taggedCharacters: [],
+                            imageUrl: art.image_url,
+                            referenceImageUrl: art.reference_url
+                          });
+                          setArtDetailsModalOpen(true);
+                        }}
+                    >
+                      <CardContent className="p-0">
+                        <img
+                            src={art.image_url}
+                            alt="Uploaded artwork"
+                            className="w-full h-48 object-cover rounded-t-2xl"
+                        />
+                        <div className="p-4">
+                          <h4 className="text-md font-semibold text-slate-700 dark:text-slate-200 truncate">
+                            {art.title || "Untitled"}
+                          </h4>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            Uploaded on {dayjs(art.created_at).format("MMM D, YYYY")}
+                          </p>
                         </div>
                       </CardContent>
                     </Card>
-                  ))}
-                </div>
+                ))}
+
+                {/* Bottom Row - Empty slots */}
+                {[1, 2, 3, 4].map((slot) => (
+                  <Card key={`empty-${slot}`} className="bg-white/40 dark:bg-slate-700/40 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl">
+                    <CardContent className="p-6">
+                      <div className="h-32 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="text-sm font-medium text-sky-600 dark:text-sky-400 mb-1">
+                            Empty slot
+                          </div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400">
+                            Waiting for artist
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           </CardContent>
         </Card>
-      </div>  
-      
+      </div>
 
       {/* Modals */}
       <UploadArtModal
