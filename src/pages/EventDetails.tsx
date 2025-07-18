@@ -444,33 +444,56 @@ const EventDetails = () => {
                   </Button>
                 </div>
               </div>
+              {/*Character filter mapping*/}
+              {availableCharacters.length > 0 && (
+                  <div className="mb-4 flex flex-wrap items-center gap-3">
+                    <span className="font-semibold text-slate-700 dark:text-slate-300">Filter by Character:</span>
+                    <select
+                        value={selectedCharacter || ""}
+                        onChange={(e) => setSelectedCharacter(e.target.value || null)}
+                        className="bg-white dark:bg-slate-700 text-slate-700 dark:text-white border rounded-md px-3 py-1"
+                    >
+                      <option value="">All</option>
+                      {availableCharacters.map((char) => (
+                          <option key={char.id} value={char.id}>
+                            {char.name}
+                          </option>
+                      ))}
+                    </select>
 
+                  </div>
+              )}
               {/* Gallery Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Top Row - Attendees with avatars */}
-                {artworks.map((art) => (
-                    <Card
-                        key={art.id}
-                        className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
-                        onClick={async () => {
-                          const username = await fetchUsernameById(art.uploader_id)
-                          setSelectedArt({
-                            id:art.id,
-                            title: art.notes || 'Untitled',
-                            artist: username,
-                            uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
-                            toolsUsed: art.tools_used,
-                            tags: [],
-                            additionalNotes: art.notes,
-                            likes: 0,
-                            taggedCharacters: [],
-                            imageUrl: art.image_url,
-                            referenceImageUrl: art.reference_url,
-                            uploader_id: art.uploader_id
-                          });
-                          setArtDetailsModalOpen(true);
-                        }}
-                    >
+                {artworks
+                    .filter((art) => {
+                      if (!selectedCharacter) return true;
+                      return art.characters?.some((char) => String(char.id) === selectedCharacter);
+                    })
+                    .map((art) => (
+                        <Card
+                            key={art.id}
+                            className="bg-white/60 dark:bg-slate-700/60 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl cursor-pointer hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300 hover:scale-105"
+                            onClick={async () => {
+                              const username = await fetchUsernameById(art.uploader_id)
+                              setSelectedArt({
+                                id:art.id,
+                                title: art.title || 'Untitled',
+                                artist: username,
+                                uploader_id: art.uploader_id,
+                                uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
+                                toolsUsed: art.tools_used,
+                                tags: [],
+                                additionalNotes: art.notes,
+                                likes: 0,
+                                taggedCharacters: [],
+                                imageUrl: art.image_url,
+                                referenceImageUrl: art.reference_url
+                              });
+                              setArtDetailsModalOpen(true);
+                            }}
+                        >
                       <CardContent className="p-0">
                         <img
                             src={art.image_url}
