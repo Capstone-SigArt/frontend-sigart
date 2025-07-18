@@ -465,7 +465,8 @@ const EventDetails = () => {
                             likes: 0,
                             taggedCharacters: [],
                             imageUrl: art.image_url,
-                            referenceImageUrl: art.reference_url
+                            referenceImageUrl: art.reference_url,
+                            uploader_id: art.uploader_id
                           });
                           setArtDetailsModalOpen(true);
                         }}
