@@ -24,6 +24,8 @@ const Index = () => {
   });
   const [events, setEvents] = useState<any[]>([]);
   const [allEvents, setAllEvents] = useState<any[]>([]); // Store all fetched events
+  const [displayedEvents, setDisplayedEvents] = useState<any[]>([]); // Events currently being displayed
+  const [eventsToShow, setEventsToShow] = useState(15); // Number of events to display
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -107,7 +109,20 @@ const Index = () => {
       // If no filters, show all events
       setEvents(allEvents);
     }
+    
+    // Reset pagination when filters change
+    setEventsToShow(15);
   }, [searchFilters.title, searchFilters.tags, searchFilters.host, allEvents]);
+
+  // Update displayed events when events or eventsToShow changes
+  useEffect(() => {
+    setDisplayedEvents(events.slice(0, eventsToShow));
+  }, [events, eventsToShow]);
+
+  // Load more events handler
+  const handleLoadMore = () => {
+    setEventsToShow(prev => prev + 15);
+  };
 
   const toggleLike = (eventId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -207,7 +222,7 @@ const Index = () => {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {events.map((event) => (
+              {displayedEvents.map((event) => (
                 <Card 
                   key={event.id} 
                   className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
@@ -315,14 +330,17 @@ const Index = () => {
             </div>
 
             {/* Load More Button */}
-            <div className="text-center mt-12">
-              <Button 
-                variant="outline"
-                className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 rounded-xl px-8 py-3 hover:shadow-lg transition-all duration-300"
-              >
-                Load More Events
-              </Button>
-            </div>
+            {eventsToShow < events.length && (
+              <div className="text-center mt-12">
+                <Button 
+                  variant="outline"
+                  onClick={handleLoadMore}
+                  className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 rounded-xl px-8 py-3 hover:shadow-lg transition-all duration-300"
+                >
+                  Load More Events
+                </Button>
+              </div>
+            )}
           </>
         )}
       </div>
