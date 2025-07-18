@@ -144,8 +144,8 @@ const Schedule = () => {
               {weekDays.map((day) => (
                 <div
                   key={day}
-                  className="text-[0.65rem] sm:text-sm font-semibold text-center text-slate-700 dark:text-slate-300 bg-gradient-to-r from-sky-100 to-blue-100 dark:from-sky-800 dark:to-blue-800 py-2"
-                >
+
+                  className="text-[0.65rem] sm:text-sm font-semibold text-center text-slate-700 dark:text-slate-300 bg-gradient-to-r from-sky-100 to-blue-100 dark:from-sky-800 dark:to-blue-800 py-2">
                   {day}
                 </div>
               ))}

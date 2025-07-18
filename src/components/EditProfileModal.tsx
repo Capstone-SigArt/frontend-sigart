@@ -104,7 +104,7 @@ const EditProfileModal = ({ open, onOpenChange, profile }: EditProfileModalProps
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
             Edit Profile
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground text-center">
@@ -115,11 +115,11 @@ const EditProfileModal = ({ open, onOpenChange, profile }: EditProfileModalProps
         <div className="space-y-6 pb-4">
           {/* Profile Picture Section */}
           <div className="flex flex-col items-center space-y-4">
-            <Avatar className="w-24 h-24 bg-gradient-to-r from-sky-500 to-emerald-500">
+            <Avatar className="w-24 h-24 bg-gradient-to-r from-sky-500 to-blue-500">
               {formData.avatar_url ? (
                 <AvatarImage src={formData.avatar_url} alt="Profile" />
               ) : (
-                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-2xl">
+                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white text-2xl">
                   <User className="h-12 w-12" />
                 </AvatarFallback>
               )}
@@ -272,7 +272,7 @@ const EditProfileModal = ({ open, onOpenChange, profile }: EditProfileModalProps
               <Button
                 onClick={handleSave}
                 disabled={isLoading}
-                className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl"
               >
                 {isLoading ? (
                   <>

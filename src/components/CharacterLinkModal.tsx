@@ -133,7 +133,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
       <DialogContent className="max-w-md bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[10000]">
         <DialogHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <DialogTitle className="text-lg font-semibold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+            <DialogTitle className="text-lg font-semibold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
               Link your FFXIV Character
             </DialogTitle>
           </div>
@@ -197,14 +197,14 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
 
           <div className="space-y-3 max-h-60 overflow-y-auto">
             {linkedCharacters.map((character, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border border-sky-200 dark:border-sky-600">
+              <div key={index} className="flex items-center justify-between p-3 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl border border-sky-200 dark:border-sky-600">
                 <div className="flex items-center space-x-3">
                   <img
                       src={character.avatar}
                       alt={`${character.name} avatar`}
                       className="w-10 h-10 rounded-full object-cover"
                   />
-                  {/*<div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full flex items-center justify-center">
+                  {/*<div className="w-8 h-8 bg-gradient-to-r from-sky-500 to-blue-500 rounded-full flex items-center justify-center">
                     <Plus className="text-white text-sm" />
                   </div>*/}
                   <div>
@@ -235,7 +235,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
             onClick={handleLinkCharacter}
             type="button"
             disabled={!characterName}
-            className="w-full bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Link Character
           </Button>
