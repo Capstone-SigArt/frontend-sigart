@@ -431,16 +431,11 @@ const EventDetails = () => {
                   Event Gallery
                 </h3>
                 <div className="flex items-center gap-3">
-                  
+
                   <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">
                     Upload your masterpiece!
                   </span>
-                  <Button 
-                    onClick={() => setUploadModalOpen(true)}
-                    
-                    <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">
-                      Upload your masterpiece!
-                    </span>
+
                   <Button
                       onClick={() => setUploadModalOpen(true)}
                      className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl shadow-lg px-6"

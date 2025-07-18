@@ -235,7 +235,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
             onClick={handleLinkCharacter}
             type="button"
             disabled={!characterName}
-            className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed""
+            className="w-full bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Link Character
           </Button>
