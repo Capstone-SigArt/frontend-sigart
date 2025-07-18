@@ -315,3 +315,13 @@ button, input, select, .card {
 .card-hover:hover::before {
   left: 100%;
 }
+
+/*.no-scrollbar {
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}*/

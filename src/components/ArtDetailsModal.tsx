@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Edit, Bookmark, Heart } from 'lucide-react';
-
+import {useNavigate} from 'react-router-dom';
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 
 interface ArtDetailsModalProps {
@@ -14,6 +14,7 @@ interface ArtDetailsModalProps {
     id: string;
     title: string;
     artist: string;
+    uploader_id: string;
     uploadDate: string;
     toolsUsed: string;
     tags: string[];
@@ -25,12 +26,35 @@ interface ArtDetailsModalProps {
   };
 }
 
+const ImageZoomModal = ({ imageUrl, onClose }: { imageUrl: string; onClose: () => void }) => {
+  return (
+      <Dialog open={!!imageUrl} onOpenChange={() => onClose()}>
+        <DialogContent
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-4xl max-h-[90vh] p-0 bg-black/90 rounded-xl flex items-center justify-center cursor-zoom-out z-[10000]"
+        >
+          <img
+              src={imageUrl}
+              alt="Zoomed"
+              className="max-w-full max-h-[85vh] object-contain rounded-xl"
+              /*onClick={onClose} */
+          />
+        </DialogContent>
+      </Dialog>
+  );
+};
+
 const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) => {
+  const navigate = useNavigate();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [linkedCharacters,setLinkedCharacters] = useState([]);
   const [linkedTags,setLinkedTags] = useState([]);
+  const [uploaderProfile, setUploaderProfile] = useState<any | null>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState<number>(artData?.likes || 0);
+  const [zoomImageUrl, setZoomImageUrl] = useState<string | null>(null);
+  const openZoom = (url: string) => setZoomImageUrl(url);
+  const closeZoom = () => setZoomImageUrl(null);
 
 
 
@@ -44,17 +68,19 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
       } = await import("@/lib/supabase").then(m => m.supabase.auth.getUser());
       if (!user) return;
 
-      const [charactersRes, tags, likesRes, likedStatusRes] = await Promise.all([
+      const [charactersRes, tags, likesRes, likedStatusRes,profileRes] = await Promise.all([
         fetch(`${API_BASE_URL}/artworkCharacters/${artData.id}`).then(res => res.json()),
         fetchArtworkLinkedTags(artData.id),
         fetchArtworkLikes(artData.id),
-        fetch(`${API_BASE_URL}/likes/userLiked?user_id=${user.id}&artwork_id=${artData.id}`).then(res => res.json())
+        fetch(`${API_BASE_URL}/likes/userLiked?user_id=${user.id}&artwork_id=${artData.id}`).then(res => res.json()),
+        fetch(`${API_BASE_URL}/profile/${artData.uploader_id}`).then((res) => res.json()),
       ]);
 
       setLinkedCharacters(charactersRes);
       setLinkedTags(tags);
       setLikesCount(likesRes.count ?? 0);
       setIsLiked(likedStatusRes.liked ?? false);
+      setUploaderProfile(profileRes);
     };
 
     fetchAll();
@@ -156,6 +182,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
   }
 
   return (
+      <>
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999]">
         <DialogHeader>
@@ -170,7 +197,9 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
         <div className="space-y-4">
           {/* Image Display */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20">
+
+            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20" onClick = {()=>openZoom(artData.imageUrl)}>
+
               <img 
                 src={artData.imageUrl} 
                 alt={artData.title}
@@ -178,7 +207,9 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
               />
             </div>
             {artData.referenceImageUrl && (
-              <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20">
+              
+              <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20"  onClick = {()=>openZoom(artData.referenceImageUrl)}>
+
                 <img 
                   src={artData.referenceImageUrl} 
                   alt="Reference"
@@ -192,12 +223,23 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           </div>
 
           {/* Artist Info */}
-          <div className="flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-2xl">
+
+          <div
+              onClick={() => navigate(`/user-studio/${artData.uploader_id}`)}
+              className="flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-2xl cursor-pointer hover:brightness-95 transition"
+              role="button"
+              tabIndex={0}
+          >
             <div className="flex items-center gap-3">
               <Avatar className="w-12 h-12 border-2 border-sky-300">
-                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white font-bold">
-                  AS
-                </AvatarFallback>
+                {uploaderProfile?.avatar_url ? (
+                    <AvatarImage src={uploaderProfile.avatar_url} alt={artData.artist} />
+                ) : (
+                    <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
+                      {artData.artist.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                )}
+                
               </Avatar>
               <div className="text-center">
                 <div className="text-sm text-slate-600 dark:text-slate-400">Artist</div>
@@ -328,6 +370,8 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
         </div>
       </DialogContent>
     </Dialog>
+  {zoomImageUrl && <ImageZoomModal imageUrl={zoomImageUrl} onClose={closeZoom} />}
+      </>
   );
 };
 

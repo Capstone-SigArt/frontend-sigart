@@ -7,14 +7,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import { User, Settings, LogOut, Link } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import CharacterLinkModal from '@/components/CharacterLinkModal';
+import { useProfile } from '@/hooks/useProfile';
+
+
 
 const ProfileDropdown = () => {
   const { user, logout } = useAuth();
+  const {profile} = useProfile();
   const navigate = useNavigate();
   const [showCharacterModal, setShowCharacterModal] = useState(false);
 
@@ -40,15 +44,22 @@ const ProfileDropdown = () => {
     setShowCharacterModal(true);
   };
 
+
+
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-12 w-12 rounded-full hover:bg-white/20 dark:hover:bg-slate-700/20">
-            <Avatar className="h-12 w-12 bg-gradient-to-r from-sky-500 to-blue-500 border-2 border-white/30">
-              <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white font-bold">
-                {getInitials(user.email || '')}
-              </AvatarFallback>
+
+            <Avatar className="h-12 w-12 bg-gradient-to-r from-sky-500 to-emerald-500 border-2 border-white/30">
+              {profile?.avatar_url ? (
+                  <AvatarImage src={profile.avatar_url} alt="User avatar" />
+              ) : (
+                  <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
+                    {getInitials(user.email || '')}
+                  </AvatarFallback>
+              )}
             </Avatar>
           </Button>
         </DropdownMenuTrigger>

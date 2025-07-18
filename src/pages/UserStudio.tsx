@@ -6,18 +6,34 @@ import { Button } from "@/components/ui/button";
 import { User, Heart, Eye, Calendar, MapPin, Edit, Loader2 } from 'lucide-react';
 import ModernNavigation from '@/components/ModernNavigation';
 import EditProfileModal from '@/components/EditProfileModal';
-import { useProfile, useUserStats, useUserArtworks, useUserEvents, useEnsureProfile } from '@/hooks/useProfile';
+import {
+  useProfile,
+  useUserStats,
+  useUserArtworks,
+  useUserEvents,
+  useEnsureProfile,
+  useProfileById, useUserStatsById, useUserArtworksById, useUserEventsById, useUserLikesById
+} from '@/hooks/useProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { parseSpecialties, getDefaultSpecialties } from '@/lib/specialties';
+import {useParams} from 'react-router-dom';
 
 const UserStudio = () => {
   const { user } = useAuth();
-  const { profile, isLoading: isLoadingProfile } = useProfile();
-  const { artworkCount, isLoadingArtwork } = useUserStats();
-  const { artworks, isLoading: isLoadingArtworks } = useUserArtworks();
-  const { events, isLoading: isLoadingEvents } = useUserEvents();
+  const{userId} = useParams();
+  const effectiveUserId = userId || user?.id;
+  console.log('Route userId param:', userId);
+  console.log('Effective userId used for profile fetch:', effectiveUserId);
+
+  const { profile, isLoading: isLoadingProfile } = useProfileById(effectiveUserId);
+  console.log('Profile data:', profile);
+  const { artworkCount, isLoadingArtwork } = useUserStatsById(effectiveUserId);
+  const { artworks, isLoading: isLoadingArtworks } = useUserArtworksById(effectiveUserId);
+  const {likesCount, isLoadingLikes} = useUserLikesById(effectiveUserId)
+  const { events, isLoading: isLoadingEvents } = useUserEventsById(effectiveUserId);
   const { isChecking } = useEnsureProfile();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const isOwnProfile = effectiveUserId === user?.id;
 
   // Loading state
   if (isLoadingProfile || isChecking) {
@@ -81,15 +97,17 @@ const UserStudio = () => {
                 <p className="text-sm text-slate-500 dark:text-slate-400">
                   Joined {profileData.joinDate}
                 </p>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-4 border-sky-300 text-sky-600 hover:bg-sky-50 dark:border-sky-600 dark:text-sky-400 dark:hover:bg-sky-900/30"
-                  onClick={() => setIsEditModalOpen(true)}
-                >
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit Profile
-                </Button>
+                {isOwnProfile && (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="mt-4 border-sky-300 text-sky-600 hover:bg-sky-50 dark:border-sky-600 dark:text-sky-400 dark:hover:bg-sky-900/30"
+                        onClick={() => setIsEditModalOpen(true)}
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                )}
               </div>
 
               {/* Profile Details */}
@@ -111,7 +129,7 @@ const UserStudio = () => {
                         #{specialty}
                       </Badge>
                     ))}
-                    {!profile?.specialties && (
+                    {!profile?.specialties && isOwnProfile && (
                       <Badge 
                         variant="outline" 
                         className="border-sky-300 text-sky-600 hover:bg-sky-50 dark:border-sky-600 dark:text-sky-400 dark:hover:bg-sky-900/30 cursor-pointer"
@@ -134,7 +152,11 @@ const UserStudio = () => {
                       <div className="text-sm text-slate-500 dark:text-slate-400">Artworks</div>
                     </div>
                     <div className="text-center p-3 bg-white/40 dark:bg-slate-700/40 rounded-xl">
-                      <div className="text-2xl font-bold text-blue-600">0</div>
+
+                      <div className="text-2xl font-bold text-blue-600">
+                        {isLoadingLikes ? <Loader2 className="w-6 h-6 animate-spin mx-auto" /> : likesCount}
+                      </div>
+
                       <div className="text-sm text-slate-500 dark:text-slate-400">Likes</div>
                     </div>
                     <div className="text-center p-3 bg-white/40 dark:bg-slate-700/40 rounded-xl">
@@ -179,7 +201,7 @@ const UserStudio = () => {
                         Instagram
                       </Badge>
                     )}
-                    {!profile?.facebook && !profile?.twitter && !profile?.instagram && (
+                    {isOwnProfile && !profile?.facebook && !profile?.twitter && !profile?.instagram && (
                       <Badge variant="outline" className="border-sky-300 text-sky-600 hover:bg-sky-50 dark:border-sky-600 dark:text-sky-400 dark:hover:bg-sky-900/30">
                         Add Social Links
                       </Badge>
@@ -231,12 +253,13 @@ const UserStudio = () => {
                         <div className="flex items-center space-x-4 text-sm">
                           <div className="flex items-center space-x-1">
                             <Heart className="w-4 h-4" />
-                              <span>0</span>
+                              <span>{artwork.likes_count ?? 0}</span>
                           </div>
-                          <div className="flex items-center space-x-1">
+                          {/*no view tracking for now so I commented it out*/}
+                          {/*<div className="flex items-center space-x-1">
                             <Eye className="w-4 h-4" />
                               <span>0</span>
-                          </div>
+                          </div>*/}
                         </div>
                       </div>
                     </div>
@@ -297,6 +320,7 @@ const UserStudio = () => {
             </Card>
 
             {/* Profile Status */}
+            {isOwnProfile && (
             <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
               <CardContent className="p-6">
                 <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300 mb-3">
@@ -321,6 +345,7 @@ const UserStudio = () => {
                 </p>
               </CardContent>
             </Card>
+            )}
           </div>
         </div>
       </div>

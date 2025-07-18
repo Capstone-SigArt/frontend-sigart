@@ -172,7 +172,8 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
         reference_url: referenceUrl,
         notes: notesDescription,
         tools_used: toolsUsed,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        title: title
       };
 
       const res = await fetch(`${API_BASE_URL}/artwork`, {
