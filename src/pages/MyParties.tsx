@@ -87,7 +87,7 @@ const MyParties = () => {
           : memberParties;
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
         <ModernNavigation
             title="My Parties"
             subtitle="Manage your art events"
@@ -107,11 +107,11 @@ const MyParties = () => {
             </button>
             <button
                 className={`flex items-center gap-2 px-4 py-2 rounded-2xl border ${
-                    filter === 'member' ? 'bg-emerald-600 text-white' : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300'
+                    filter === 'member' ? 'bg-blue-600 text-white' : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300'
                 }`}
                 onClick={() => setFilter('member')}
             >
-              <Edit className={`w-5 h-5 ${filter === 'member' ? 'text-white' : 'text-emerald-600'}`} />
+              <Edit className={`w-5 h-5 ${filter === 'member' ? 'text-white' : 'text-blue-600'}`} />
               Participating
             </button>
             <button
@@ -131,7 +131,7 @@ const MyParties = () => {
             {filteredParties.map((party) => (
                 <Card
                     key={party.id}
-                    className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2 relative"
+                    className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2 relative"
                     onClick={() => navigate(`/event/${party.id}`)}
                 >
                   <CardContent className="p-0">
@@ -154,7 +154,7 @@ const MyParties = () => {
                               <Bookmark className="w-4 h-4 text-white" />
                             </div>
                         ) : (
-                            <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center shadow-lg">
+                            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
                               <Edit className="w-4 h-4 text-white" />
                             </div>
                         )}

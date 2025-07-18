@@ -106,7 +106,7 @@ const Schedule = () => {
   const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
       <ModernNavigation 
         title="Schedule" 
         subtitle="View and manage your art events"
@@ -125,7 +125,7 @@ const Schedule = () => {
                 <ArrowLeft className="h-5 w-5" />
               </Button>
 
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent min-w-[150px] text-center">
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent min-w-[150px] text-center">
                 {loading ? 'Loading...' : `${currentMonthName} ${currentYear}`}
               </h2>
 
@@ -145,7 +145,7 @@ const Schedule = () => {
               {weekDays.map((day) => (
                 <div
                   key={day}
-                  className="h-14 flex items-center justify-center font-semibold text-slate-700 dark:text-slate-300 bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-800 dark:to-emerald-800"
+                  className="h-14 flex items-center justify-center font-semibold text-slate-700 dark:text-slate-300 bg-gradient-to-r from-sky-100 to-blue-100 dark:from-sky-800 dark:to-blue-800"
                 >
                   {day}
                 </div>
@@ -171,7 +171,9 @@ const Schedule = () => {
                         {(isMobile ? events[day]?.slice(0, 2) : events[day])?.map((event) => (
                           <div
                             key={event.id}
-                            className="text-[0.6rem] sm:text-xs text-white bg-gradient-to-r from-sky-500 to-emerald-500 px-1.5 py-0.5 rounded-md truncate cursor-pointer hover:from-sky-600 hover:to-emerald-600 transition-all shadow-sm"
+
+                            className="text-[0.6rem] sm:text-xs text-white bg-gradient-to-r from-sky-500 to-blue-500 px-1.5 py-0.5 rounded-md truncate cursor-pointer hover:from-sky-600 hover:to-emerald-600 transition-all shadow-sm"
+                            
                             onClick={() => handleEventClick(event.id)}
                           >
                             {event.title}

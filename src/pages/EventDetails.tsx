@@ -295,7 +295,8 @@ const EventDetails = () => {
       ? eventData.cover_image.trim()
       : "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop";
   return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
         <ModernNavigation
             title="Event Details"
             subtitle="Join the creative gathering"
@@ -314,6 +315,7 @@ const EventDetails = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute top-4 right-4 flex gap-2">
                 {/* Share, Message, etc. */}
+
               </div>
               <div className="absolute bottom-4 left-4 right-4">
                 <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
@@ -380,6 +382,7 @@ const EventDetails = () => {
                   </p>
                 </div>
 
+
                 {/* Tags and Action Buttons */}
                 <div className="mb-8">
                   <div className="flex flex-wrap items-center gap-4 mb-4">
@@ -424,16 +427,23 @@ const EventDetails = () => {
             <CardContent className="p-8">
               {/* Event Gallery Section */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                   Event Gallery
                 </h3>
                 <div className="flex items-center gap-3">
+                  
+                  <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">
+                    Upload your masterpiece!
+                  </span>
+                  <Button 
+                    onClick={() => setUploadModalOpen(true)}
+                    
                     <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">
                       Upload your masterpiece!
                     </span>
                   <Button
                       onClick={() => setUploadModalOpen(true)}
-                      className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg px-6"
+                     className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl shadow-lg px-6"
                   >
                     Upload Art
                   </Button>
@@ -485,9 +495,10 @@ const EventDetails = () => {
 
                 {/* Bottom Row - Empty slots */}
                 {[1, 2, 3, 4].map((slot) => (
+                      
                     <Card key={`empty-${slot}`} className="bg-white/40 dark:bg-slate-700/40 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl">
                       <CardContent className="p-6">
-                        <div className="h-32 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
+                        <div className="h-32 bg-gradient-to-br from-sky-100 to-blue-100 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
                           <div className="text-center">
                             <div className="text-sm font-medium text-sky-600 dark:text-sky-400 mb-1">
                               Empty slot
@@ -495,6 +506,7 @@ const EventDetails = () => {
                             <div className="text-xs text-slate-500 dark:text-slate-400">
                               Waiting for artist
                             </div>
+                            
                           </div>
                         </div>
                       </CardContent>

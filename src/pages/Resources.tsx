@@ -49,7 +49,7 @@ const Resources = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
       <ModernNavigation 
         title="Resources" 
         subtitle="Everything you need for your artistic journey"
@@ -61,7 +61,7 @@ const Resources = () => {
           <div className="lg:col-span-1">
             <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl sticky top-8">
               <CardContent className="p-6">
-                <h3 className="font-bold text-lg bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-4">
+                <h3 className="font-bold text-lg bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent mb-4">
                   About Resources
                 </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">
@@ -79,7 +79,7 @@ const Resources = () => {
             {/* What is an Art Party Section */}
             <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
               <CardContent className="p-8">
-                <h2 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent mb-6">
                   What is an Art Party?
                 </h2>
                 <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
@@ -88,23 +88,23 @@ const Resources = () => {
                 <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
                   Whether you're a beginner looking to learn new techniques or an experienced artist wanting to connect with others, art parties provide a supportive environment for creative growth and community building.
                 </p>
-                <div className="bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/50 dark:to-emerald-900/50 rounded-xl p-6">
+                <div className="bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/50 dark:to-blue-900/50 rounded-xl p-6">
                   <h4 className="font-semibold text-slate-700 dark:text-slate-300 mb-3">Benefits of Art Parties:</h4>
                   <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
                     <li className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-blue-500 rounded-full"></span>
                       <span>Learn new techniques from experienced artists</span>
                     </li>
                     <li className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-blue-500 rounded-full"></span>
                       <span>Build connections with fellow artists</span>
                     </li>
                     <li className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-blue-500 rounded-full"></span>
                       <span>Get inspired by different art styles and approaches</span>
                     </li>
                     <li className="flex items-center space-x-2">
-                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full"></span>
+                      <span className="w-2 h-2 bg-gradient-to-r from-sky-500 to-blue-500 rounded-full"></span>
                       <span>Receive constructive feedback on your work</span>
                     </li>
                   </ul>
@@ -115,10 +115,10 @@ const Resources = () => {
             {/* Resource Categories */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {resourceCategories.map((category, index) => (
-                <Card key={index} className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-300">
+                <Card key={index} className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-center space-x-3 mb-6">
-                      <div className="w-12 h-12 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                      <div className="w-12 h-12 bg-gradient-to-r from-sky-500 to-blue-500 rounded-xl flex items-center justify-center">
                         <category.icon className="w-6 h-6 text-white" />
                       </div>
                       <h3 className="text-xl font-bold text-slate-700 dark:text-slate-300">
