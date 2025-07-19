@@ -325,3 +325,46 @@ button, input, select, .card {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }*/
+
+
+
+.noise-overlay {
+  position: relative;
+  overflow: hidden;
+
+  --color1: rgba(220, 198, 255, 0.80); /* pastel lavender */
+
+  --color2: rgba(255, 210, 200, 0.20); /* soft peach */
+
+  --shadow-color: rgba(220, 198, 255, 0.95);
+
+  background-image:
+          repeating-linear-gradient(
+                  45deg,
+                  var(--color1),
+                  var(--color1) 2px,
+                  transparent 3px,
+                  transparent 5px
+          ),
+          repeating-linear-gradient(
+                  -45deg,
+                  var(--color2),
+                  var(--color2) 2px,
+                  transparent 3px,
+                  transparent 5px
+          );
+  background-size: 100px 100px;
+  mix-blend-mode: normal; /* disable blend for light mode */
+  filter: drop-shadow(0 0 3px var(--shadow-color));
+}
+
+.dark .noise-overlay {
+  --color1: rgba(203, 163, 255, 0.12);
+  --color2: rgba(163, 203, 255, 0.1);
+  --shadow-color: rgba(203, 163, 255, 0.5);
+
+  mix-blend-mode: screen; /* only in dark mode */
+}
+
+
+

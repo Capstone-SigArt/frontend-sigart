@@ -65,10 +65,14 @@ const ProfileDropdown = () => {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl p-2" align="end">
           <div className="flex items-center justify-start gap-3 p-3 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl mb-2">
-            <Avatar className="h-10 w-10 bg-gradient-to-r from-sky-500 to-blue-500">
-              <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white text-sm font-bold">
-                {getInitials(user.email || '')}
-              </AvatarFallback>
+            <Avatar className="h-12 w-12 bg-gradient-to-r from-sky-500 to-emerald-500 border-2 border-white/30">
+              {profile?.avatar_url ? (
+                  <AvatarImage src={profile.avatar_url} alt="User avatar" />
+              ) : (
+                  <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
+                    {getInitials(user.email || '')}
+                  </AvatarFallback>
+              )}
             </Avatar>
             <div className="flex flex-col space-y-1 leading-none">
               <p className="font-semibold text-sm text-slate-700 dark:text-slate-300">{user.email}</p>
