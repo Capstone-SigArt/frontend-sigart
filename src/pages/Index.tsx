@@ -120,7 +120,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-blue-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-blue-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 noise-overlay">
       <ModernNavigation 
         title="SigArt" 
         subtitle="Discover Amazing Art Events"
@@ -285,13 +285,13 @@ const Index = () => {
                               {event.hostProfile.avatar_url ? (
                                 <img 
                                   src={event.hostProfile.avatar_url} 
-                                  alt={event.hostProfile.full_name || "Host"} 
+                                  alt={event.hostProfile.username || "Host"}
                                   className="w-full h-full object-cover"
                                 />
                               ) : null}
                             </div>
                             <span className="text-white/90 text-sm">
-                              Hosted by {event.hostProfile.full_name || event.hostProfile.username || "Unknown"}
+                              Hosted by {event.hostProfile.username || "Unknown"}
                             </span>
                           </div>
                         )}
