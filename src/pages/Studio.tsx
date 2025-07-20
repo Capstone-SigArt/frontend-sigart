@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,6 +11,8 @@ import EditProfileModal from '@/components/EditProfileModal';
 import { useProfile, useUserStats, useUserArtworks, useUserEvents,useUserLikesById, useEnsureProfile } from '@/hooks/useProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { parseSpecialties, getDefaultSpecialties } from '@/lib/specialties';
+
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 
 const Studio = () => {
   const { user } = useAuth();
@@ -25,7 +27,30 @@ const Studio = () => {
   const [showArtModal, setShowArtModal] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedArt, setSelectedArt] = useState(null);
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [isLoadingFollowCounts, setIsLoadingFollowCounts] = useState(true);
 
+  useEffect(() => {
+    async function fetchFollowCounts() {
+      if (!profile?.id) return;
+      setIsLoadingFollowCounts(true);
+      try {
+        const res = await fetch(`${API_BASE_URL}/follows/counts/${profile.id}`);
+        if (!res.ok) throw new Error('Failed to fetch follow counts');
+        const data = await res.json();
+        setFollowerCount(data.followerCount ?? 0);
+        setFollowingCount(data.followingCount ?? 0);
+      } catch (error) {
+        console.error('Error fetching follow counts:', error);
+        setFollowerCount(0);
+        setFollowingCount(0);
+      } finally {
+        setIsLoadingFollowCounts(false);
+      }
+    }
+    fetchFollowCounts();
+  }, [profile?.id]);
   // Loading state
   if (isLoadingProfile || isChecking) {
     return (
@@ -37,6 +62,7 @@ const Studio = () => {
       </div>
     );
   }
+
 
   // Profile data with fallbacks
   const profileData = {
@@ -116,11 +142,15 @@ const Studio = () => {
                     <div className="text-xs text-slate-600 dark:text-slate-300">Likes</div>
                   </div>
                   <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
-                    <div className="text-lg font-bold text-green-600">0</div>
+                    <div className="text-lg font-bold text-green-600">
+                      {isLoadingFollowCounts ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : followerCount}
+                    </div>
                     <div className="text-xs text-slate-600 dark:text-slate-300">Followers</div>
                   </div>
                   <div className="p-3 bg-slate-50 dark:bg-slate-800/20 rounded-xl">
-                    <div className="text-lg font-bold text-slate-600">0</div>
+                    <div className="text-lg font-bold text-slate-600">
+                      {isLoadingFollowCounts ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : followingCount}
+                    </div>
                     <div className="text-xs text-slate-600 dark:text-slate-300">Following</div>
                   </div>
                 </div>
