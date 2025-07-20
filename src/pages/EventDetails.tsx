@@ -308,7 +308,7 @@ const EventDetails = () => {
 
             <div className="relative h-64 rounded-t-2xl overflow-hidden">
               <img
-                  src={eventData.cover_image}
+                  src={bannerUrl}
                   alt={eventData.title}
                   className="w-full h-full object-cover"
               />

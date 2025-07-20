@@ -219,7 +219,7 @@ const UserStudio = () => {
             <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
               <CardContent className="p-8">
                 <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent mb-6">
-                  My Artwork
+                  My Recent Artwork
                 </h3>
                 
                 {isLoadingArtworks ? (

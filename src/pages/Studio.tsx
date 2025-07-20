@@ -8,7 +8,7 @@ import ModernNavigation from '@/components/ModernNavigation';
 import UploadArtModal from '@/components/UploadArtModal';
 import ArtDetailsModal from '@/components/ArtDetailsModal';
 import EditProfileModal from '@/components/EditProfileModal';
-import { useProfile, useUserStats, useUserArtworks, useUserEvents, useEnsureProfile } from '@/hooks/useProfile';
+import { useProfile, useUserStats, useUserArtworks, useUserEvents,useUserLikesById, useEnsureProfile } from '@/hooks/useProfile';
 import { useAuth } from '@/contexts/AuthContext';
 import { parseSpecialties, getDefaultSpecialties } from '@/lib/specialties';
 
@@ -17,7 +17,7 @@ const Studio = () => {
   const { profile, isLoading: isLoadingProfile } = useProfile();
   const { artworkCount, isLoadingArtwork } = useUserStats();
   const { artworks, isLoading: isLoadingArtworks } = useUserArtworks();
-  const totalLikes = artworks.reduce((sum, art) => sum + (art.likes_count ?? 0), 0);
+  const { likesCount: totalLikes, isLoadingLikes } = useUserLikesById(user?.id);
   const { events, isLoading: isLoadingEvents } = useUserEvents();
   const { isChecking } = useEnsureProfile();
   
@@ -29,7 +29,7 @@ const Studio = () => {
   // Loading state
   if (isLoadingProfile || isChecking) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-blue-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 noise-overlay">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-sky-600" />
           <p className="text-slate-600 dark:text-slate-300">Loading your studio...</p>
@@ -146,8 +146,8 @@ const Studio = () => {
           {/* Main Content */}
           <div className="lg:col-span-3">
             {/* Stats Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              {/*<Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl hover:shadow-2xl hover:shadow-sky-500/20 transition-all duration-300">
                 <CardContent className="p-6 text-center">
                   <div className="w-12 h-12 bg-gradient-to-r from-sky-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                     <Star className="w-6 h-6 text-white" />
@@ -155,11 +155,11 @@ const Studio = () => {
                   <h3 className="text-2xl font-bold text-slate-700 dark:text-slate-300">4.8</h3>
                   <p className="text-sm text-slate-600 dark:text-slate-400">Average Rating</p>
                 </CardContent>
-              </Card>
+              </Card>*/}
               
               <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-green-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-sky-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                     <Users className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-slate-700 dark:text-slate-300">
@@ -171,7 +171,7 @@ const Studio = () => {
               
               <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-300">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-sky-500 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-sky-500 to-blue-500 rounded-xl flex items-center justify-center mx-auto mb-4">
                     <Calendar className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-slate-700 dark:text-slate-300">
@@ -186,7 +186,7 @@ const Studio = () => {
             <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
-                  My Artwork Gallery
+                  My Recent Artwork Gallery
                 </CardTitle>
               </CardHeader>
               <CardContent>
