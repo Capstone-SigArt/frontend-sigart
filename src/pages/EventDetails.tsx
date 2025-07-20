@@ -308,7 +308,7 @@ const EventDetails = () => {
 
             <div className="relative h-64 rounded-t-2xl overflow-hidden">
               <img
-                  src={eventData.cover_image}
+                  src={bannerUrl}
                   alt={eventData.title}
                   className="w-full h-full object-cover"
               />
@@ -436,12 +436,18 @@ const EventDetails = () => {
                     Upload your masterpiece!
                   </span>
 
-                  <Button
-                      onClick={() => setUploadModalOpen(true)}
-                     className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl shadow-lg px-6"
-                  >
-                    Upload Art
-                  </Button>
+                  {hasJoined ? (
+                      <Button
+                          onClick={() => setUploadModalOpen(true)}
+                          className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl shadow-lg px-6"
+                      >
+                        Upload Art
+                      </Button>
+                  ) : (
+                      <Button disabled className="px-6 rounded-xl bg-gray-300 text-gray-600 cursor-not-allowed">
+                        Join to Upload
+                      </Button>
+                  )}
                 </div>
               </div>
               {/*Character filter mapping*/}
@@ -502,7 +508,7 @@ const EventDetails = () => {
                         />
                         <div className="p-4">
                           <h4 className="text-md font-semibold text-slate-700 dark:text-slate-200 truncate">
-                            {art.notes || "Untitled"}
+                            {art.title || "Untitled"}
                           </h4>
                           <p className="text-xs text-slate-500 dark:text-slate-400">
                             Uploaded on {dayjs(art.created_at).format("MMM D, YYYY")}
