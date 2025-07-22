@@ -321,9 +321,11 @@ const EventDetails = () => {
                 <h1 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
                   {eventData.title}
                 </h1>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition"
+                  onClick={() => navigate(`/user-studio/${hostData.id}`)}
+                >
                   <Avatar className="w-10 h-10 border-2 border-white/30">
-                    <AvatarImage src={hostData.avatar_url || ""} />
+                    <AvatarImage src={hostData.avatar_url} alt={hostData.characterName} />
                     <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
                       {hostData.username?.charAt(0) || "?"}
                     </AvatarFallback>
