@@ -95,40 +95,69 @@ const MyParties = () => {
 
         {/* Filter Buttons */}
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex items-center gap-8">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4 lg:gap-8">
             <button
-                className={`flex items-center gap-2 px-4 py-2 rounded-2xl border ${
-                    filter === 'host' ? 'bg-sky-600 text-white' : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300'
+                className={`flex items-center gap-2 px-3 py-2 sm:px-4 rounded-2xl border text-sm sm:text-base transition-all duration-200 ${
+                    filter === 'host' ? 'bg-sky-600 text-white border-sky-600' : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border-white/30 hover:bg-white/90 dark:hover:bg-slate-700/90'
                 }`}
                 onClick={() => setFilter('host')}
             >
-              <Bookmark className={`w-5 h-5 ${filter === 'host' ? 'text-white' : 'text-sky-600'}`} />
-              Hosted by me
+              <Bookmark className={`w-4 h-4 sm:w-5 sm:h-5 ${filter === 'host' ? 'text-white' : 'text-sky-600'}`} />
+              <span className="hidden sm:inline">Hosted by me</span>
+              <span className="sm:hidden">Hosted</span>
             </button>
             <button
-                className={`flex items-center gap-2 px-4 py-2 rounded-2xl border ${
-                    filter === 'member' ? 'bg-blue-600 text-white' : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300'
+                className={`flex items-center gap-2 px-3 py-2 sm:px-4 rounded-2xl border text-sm sm:text-base transition-all duration-200 ${
+                    filter === 'member' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border-white/30 hover:bg-white/90 dark:hover:bg-slate-700/90'
                 }`}
                 onClick={() => setFilter('member')}
             >
-              <Edit className={`w-5 h-5 ${filter === 'member' ? 'text-white' : 'text-blue-600'}`} />
-              Participating
+              <Edit className={`w-4 h-4 sm:w-5 sm:h-5 ${filter === 'member' ? 'text-white' : 'text-blue-600'}`} />
+              <span className="hidden sm:inline">Participating</span>
+              <span className="sm:hidden">Joined</span>
             </button>
             <button
-                className={`flex items-center gap-2 px-4 py-2 rounded-2xl border ${
-                    filter === 'all' ? 'bg-gray-600 text-white' : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300'
+                className={`flex items-center gap-2 px-3 py-2 sm:px-4 rounded-2xl border text-sm sm:text-base transition-all duration-200 ${
+                    filter === 'all' ? 'bg-gray-600 text-white border-gray-600' : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border-white/30 hover:bg-white/90 dark:hover:bg-slate-700/90'
                 }`}
                 onClick={() => setFilter('all')}
             >
-              All Parties
+              <span className="hidden sm:inline">All Parties</span>
+              <span className="sm:hidden">All</span>
             </button>
           </div>
         </div>
 
         {/* Parties Grid */}
         <div className="max-w-7xl mx-auto px-4 pb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredParties.map((party) => (
+          {loading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-600 mx-auto mb-4"></div>
+                <span className="text-slate-500 dark:text-slate-300 text-lg">Loading your parties...</span>
+              </div>
+            </div>
+          ) : filteredParties.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="text-slate-400 mb-4">
+                <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <h3 className="text-slate-600 dark:text-slate-300 text-lg font-medium mb-2">
+                {filter === 'host' ? 'No hosted parties yet' : 
+                 filter === 'member' ? 'No joined parties yet' : 
+                 'No parties found'}
+              </h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">
+                {filter === 'host' ? 'Start hosting your first art event!' : 
+                 filter === 'member' ? 'Join some exciting art events!' : 
+                 'Start hosting or join art events to see them here.'}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {filteredParties.map((party) => (
                 <Card
                     key={party.id}
                     className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2 relative"
@@ -139,7 +168,7 @@ const MyParties = () => {
                       <img
                           src={party.cover_image || "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop"}
                           alt={party.title}
-                          className="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110"
+                          className="w-full h-40 sm:h-48 object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                       <div
                           className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none transition-colors duration-300 group-hover:bg-gray-700 group-hover:bg-opacity-90"
@@ -148,66 +177,75 @@ const MyParties = () => {
                       <div className="absolute top-4 left-4">
                         {/* Upcoming/Completed badge placeholder */}
                       </div>
-                      <div className="absolute top-4 right-4 z-10">
+                      <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10">
                         {party.isHosted ? (
-                            <div className="w-8 h-8 bg-sky-500 rounded-full flex items-center justify-center shadow-lg">
-                              <Bookmark className="w-4 h-4 text-white" />
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-sky-500 rounded-full flex items-center justify-center shadow-lg">
+                              <Bookmark className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                             </div>
                         ) : (
-                            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
-                              <Edit className="w-4 h-4 text-white" />
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                              <Edit className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                             </div>
                         )}
                       </div>
-                      <div className="absolute bottom-4 left-4 right-12">
-                        <h3 className="text-white font-bold text-lg mb-2 drop-shadow-lg">
+                      <div className="absolute bottom-2 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-12">
+                        <h3 className="text-white font-bold text-base sm:text-lg mb-1 sm:mb-2 drop-shadow-lg line-clamp-2">
                           {party.title}
                         </h3>
-                        <p className="line-clamp-3 text-white/90 text-sm mb-3 drop-shadow">
+                        <p className="line-clamp-2 sm:line-clamp-3 text-white/90 text-xs sm:text-sm mb-2 sm:mb-3 drop-shadow">
                           {party.description}
                         </p>
 
-                        {/* Tags and Attendees in one row */}
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="flex flex-wrap gap-1 max-w-[70%]">
-                            {party.tags?.map((tag, idx) => (
-                                <Badge key={idx} className="bg-white/10 text-white text-xs font-normal px-2 py-0.5 backdrop-blur-sm">
+                        {/* Tags and Attendees - Stack on mobile, row on larger screens */}
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 sm:mb-3 gap-1 sm:gap-0">
+                          <div className="flex flex-wrap gap-1 sm:max-w-[70%]">
+                            {party.tags?.slice(0, 2).map((tag, idx) => (
+                                <Badge key={idx} className="bg-white/10 text-white text-xs font-normal px-1.5 py-0.5 sm:px-2 backdrop-blur-sm">
                                   {tag}
                                 </Badge>
                             ))}
+                            {party.tags?.length > 2 && (
+                                <Badge className="bg-white/10 text-white text-xs font-normal px-1.5 py-0.5 sm:px-2 backdrop-blur-sm">
+                                  +{party.tags.length - 2}
+                                </Badge>
+                            )}
                           </div>
                           <div className="flex items-center space-x-1 text-white/80 text-xs">
                             <Users className="w-3 h-3" />
-                            <span>{party.attendees} attendees</span>
+                            <span className="hidden sm:inline">{party.attendees} attendees</span>
+                            <span className="sm:hidden">{party.attendees}</span>
                           </div>
                         </div>
 
-                        {/* Date and Location below */}
-                        <div className="flex items-center space-x-4 text-white/80 text-xs">
+                        {/* Date and Location - Stack on mobile */}
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 text-white/80 text-xs gap-1 sm:gap-0">
                           <div className="flex items-center space-x-1">
                             <Calendar className="w-3 h-3" />
                             <span>{party.date}</span>
                           </div>
                           <div className="flex items-center space-x-1">
                             <MapPin className="w-3 h-3" />
-                            <span>{party.address}</span>
+                            <span className="truncate">{party.address}</span>
                           </div>
                         </div>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-            ))}
-          </div>
-
-          {/* Load More Button */}
-          <div className="text-center mt-12">
-            <div className="text-slate-400">
-              <svg className="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
+              ))}
             </div>
-          </div>
+          )}
+
+          {/* Load More Button - only show when there are parties */}
+          {!loading && filteredParties.length > 0 && (
+            <div className="text-center mt-8 sm:mt-12">
+              <div className="text-slate-400">
+                <svg className="w-6 h-6 sm:w-8 sm:h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </div>
+            </div>
+          )}
         </div>
       </div>
   );

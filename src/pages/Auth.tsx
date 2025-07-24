@@ -195,8 +195,8 @@ const Auth = () => {
               </form>
 
               <div className="mt-6 text-center">
-                <p className="text-sm text-slate-600 dark:text-slate-300">
-                  {isLogin ? "Don't have an account? " : "Already have an account? "}
+                <p className="text-sm text-muted-foreground">
+                  {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
                   <button
                     onClick={() => setIsLogin(!isLogin)}
                     className="text-sky-600 hover:text-blue-600 font-medium transition-colors"
@@ -204,15 +204,6 @@ const Auth = () => {
                     {isLogin ? 'Sign up' : 'Sign in'}
                   </button>
                 </p>
-              </div>
-
-              {/* Demo Credentials */}
-              <div className="mt-6 p-4 bg-sky-50 dark:bg-sky-900/20 rounded-xl">
-                <h4 className="text-sm font-medium text-sky-800 dark:text-sky-200 mb-2">Demo Credentials:</h4>
-                <div className="text-xs text-sky-700 dark:text-sky-300 space-y-1">
-                  <div>Email: demo@example.com | Password: demo123</div>
-                  <div>Email: artist@example.com | Password: artist123</div>
-                </div>
               </div>
             </CardContent>
           </Card>
