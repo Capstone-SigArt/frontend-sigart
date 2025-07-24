@@ -299,7 +299,7 @@ const HostParty = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-blue-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 noise-overlay">
       <ModernNavigation 
         title="Host A Party" 
         subtitle="Create amazing art events"
@@ -492,7 +492,7 @@ const HostParty = () => {
                           /*src="https://pbs.twimg.com/media/F2TPSgZbUAAZs3x?format=jpg&name=4096x4096" //this is a random image I am using just for testing what the images would look like
                           alt="Event Preview"
                           className="object-cover w-full h-full"*/
-                          src={formData.cover_image || "https://via.placeholder.com/600x300?text=Event+Flyer"}
+                          src={formData.cover_image || "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop"}
                           alt="Event Preview"
                           className="object-cover w-full h-full"
                       />

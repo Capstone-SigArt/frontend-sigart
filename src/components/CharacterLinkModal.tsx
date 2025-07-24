@@ -74,7 +74,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
       alert("Please select a character first");
       return;
     }
-    if (characterName && datacenter) {
+    if (characterName) {
       setLinkedCharacters([...linkedCharacters, { 
         name: characterName, 
         datacenter: datacenter, 
@@ -149,12 +149,13 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
               onChange={(e) => setCharacterName(e.target.value)}
               className="w-full text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
             />
-            <Input
+            {/*<Input
               placeholder="Datacenter/Server"
               value={datacenter}
               onChange={(e) => setDatacenter(e.target.value)}
               className="w-full text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
             />
+
             <Button 
               onClick={handleSearch}
               type="button"
@@ -169,13 +170,13 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
                   {searchResults.map((char, index) => (
                       <div
                           key={index}
-                          className="p-2 hover:bg-sky-200 dark:hover:bg-sky-700 cursor-pointer rounded flex items-center justify-between"
+                          className={`p-2 cursor-pointer rounded flex items-center justify-between
+    ${selectedCharacter?.ID === char.ID
+                              ? 'bg-sky-300 dark:bg-sky-600'
+                              : 'hover:bg-sky-200 dark:hover:bg-sky-700'}`}
                           onClick={() => {
-                            setSelectedCharacter(char)
+                            setSelectedCharacter(char);
                             setCharacterName(char.Name);
-                            setDatacenter(datacenter);
-                            //console.log("This is the selected id" + selectedCharacter.ID);
-                            //setSearchResults([]);
                           }}
                       >
                         <div className="flex-1 min-w-0">

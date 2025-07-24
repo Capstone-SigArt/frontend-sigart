@@ -1,12 +1,12 @@
 // Utility functions for handling user specialties
 
-export const parseSpecialties = (specialtiesString: string | null): string[] => {
-  if (!specialtiesString) return [];
-  
+export const parseSpecialties = (specialtiesString: unknown): string[] => {
+  if (typeof specialtiesString !== 'string') return [];
+
   return specialtiesString
-    .split(',')
-    .map(s => s.trim())
-    .filter(s => s.length > 0);
+      .split(',')
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
 };
 
 export const formatSpecialties = (specialties: string[]): string => {

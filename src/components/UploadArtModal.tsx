@@ -172,7 +172,8 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
         reference_url: referenceUrl,
         notes: notesDescription,
         tools_used: toolsUsed,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
+        title: title
       };
 
       const res = await fetch(`${API_BASE_URL}/artwork`, {
@@ -201,30 +202,27 @@ const UploadArtModal = ({ open, onOpenChange, onUpload,eventId }: UploadArtModal
           .map(t => t.trim())
           .filter(t => t);
 
-      if (tagList.length === 0) {
-        console.log('No tags to test');
-        return;
-      }
+      if (tagList.length > 0) {
+        for (const tag of tagList) {
+          const response = await fetch(`${API_BASE_URL}/tags`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({name: tag}),
+          });
 
-      for (const tag of tagList) {
-        const response = await fetch(`${API_BASE_URL}/tags`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: tag }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.warn(`Tag "${tag}" create failed:`, errorData.message);
-        } else {
-          const data = await response.json();
-          console.log(`Tag "${tag}" created or already exists:`, data);
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.warn(`Tag "${tag}" create failed:`, errorData.message);
+          } else {
+            const data = await response.json();
+            console.log(`Tag "${tag}" created or already exists:`, data);
+          }
         }
-      }
 
-      await associateTagsWithArtwork(savedArtwork.id)
+        await associateTagsWithArtwork(savedArtwork.id)
+      }
 
       onUpload(payload); // trigger re-render in parent
       onOpenChange(false); // close modal

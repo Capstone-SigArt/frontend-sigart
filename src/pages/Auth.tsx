@@ -70,7 +70,7 @@ const Auth = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 flex items-center justify-center p-4">
+      <div className="relative noise-overlay min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-950 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="text-center mb-8">
