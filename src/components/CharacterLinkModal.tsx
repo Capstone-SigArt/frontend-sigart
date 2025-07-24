@@ -149,7 +149,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
               onChange={(e) => setCharacterName(e.target.value)}
               className="w-full text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
             />
-            {/*<Input
+            /*<Input
               placeholder="Datacenter/Server"
               value={datacenter}
               onChange={(e) => setDatacenter(e.target.value)}
