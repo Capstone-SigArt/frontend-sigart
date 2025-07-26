@@ -14,8 +14,33 @@ import dayjs from 'dayjs';
 import {supabase} from "@/lib/supabase.ts";
 import { Calendar, Clock, Users, MapPin, Share2, MessageCircle, Heart, MapPinIcon } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
+import {Dialog, DialogContent,DialogTitle} from "@/components/ui/dialog.tsx";
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
+
+const ImageZoomModal = ({ imageUrl, onClose }: { imageUrl: string; onClose: () => void }) => {
+  return (
+      <Dialog open={!!imageUrl}onOpenChange={(open) => {
+        if (!open) onClose();
+      }}>
+        <DialogContent
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-4xl max-h-[90vh] p-0 bg-black/90 rounded-xl flex items-center justify-center cursor-zoom-out z-[10000]"
+        >
+          <DialogTitle>
+            <VisuallyHidden>Zoomed Image</VisuallyHidden>
+          </DialogTitle>
+          <img
+              src={imageUrl}
+              alt="Zoomed"
+              className="max-w-full max-h-[85vh] object-contain rounded-xl"
+              /*onClick={onClose} */
+          />
+        </DialogContent>
+      </Dialog>
+  );
+};
 
 const EventDetails = () => {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -33,6 +58,9 @@ const EventDetails = () => {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [attendeeCount, setAttendeeCount] = useState<number>(0);
   const [partyTags, setPartyTags] = useState([]);
+  const [zoomImageUrl, setZoomImageUrl] = useState<string | null>(null);
+  const openZoom = (url: string) => setZoomImageUrl(url);
+  const closeZoom = () => setZoomImageUrl(null);
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -307,12 +335,20 @@ const EventDetails = () => {
           <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl mb-0">
 
             <div className="relative h-64 rounded-t-2xl overflow-hidden">
+              <div
+                  className="relative h-64 rounded-t-2xl overflow-hidden cursor-zoom-in"
+                  onClick={() => {
+                    console.log("Banner clicked");
+                    openZoom(bannerUrl);
+                  }}
+              >
               <img
                   src={bannerUrl}
                   alt={eventData.title}
                   className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
               <div className="absolute top-4 right-4 flex gap-2">
                 {/* Share, Message, etc. */}
 
@@ -558,7 +594,11 @@ const EventDetails = () => {
             onOpenChange={setArtDetailsModalOpen}
             artData={selectedArt}
         />
+        {zoomImageUrl && (
+            <ImageZoomModal imageUrl={zoomImageUrl} onClose={closeZoom} />
+        )}
       </div>
+
   );
 };
 

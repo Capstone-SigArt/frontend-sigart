@@ -241,7 +241,7 @@ const Index = () => {
                   
                   {/* Event Actions */}
                   <div className="absolute top-4 right-4 flex space-x-2">
-                    <Button
+                    {/*<Button
                       size="icon"
                       variant="ghost"
                       className={`w-8 h-8 rounded-full backdrop-blur-sm ${
@@ -263,7 +263,7 @@ const Index = () => {
                       }}
                     >
                       <Share2 className="w-4 h-4" />
-                    </Button>
+                    </Button>*/}
                   </div>
                   
                   {/* Event Info Overlay */}

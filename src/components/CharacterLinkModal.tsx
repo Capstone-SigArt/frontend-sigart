@@ -149,12 +149,12 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
               onChange={(e) => setCharacterName(e.target.value)}
               className="w-full text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
             />
-            /*<Input
+            {/*<Input
               placeholder="Datacenter/Server"
               value={datacenter}
               onChange={(e) => setDatacenter(e.target.value)}
               className="w-full text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
-            />
+            />*/}
 
             <Button 
               onClick={handleSearch}
@@ -237,7 +237,7 @@ const CharacterLinkModal = ({ isOpen, onClose }: CharacterLinkModalProps) => {
           <Button 
             onClick={handleLinkCharacter}
             type="button"
-            disabled={!characterName || !datacenter}
+            disabled={!characterName || !selectedCharacter}
             className="w-full text-sm bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Plus className="w-4 h-4 mr-2" />

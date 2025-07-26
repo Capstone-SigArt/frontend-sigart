@@ -17,8 +17,9 @@ const Auth = () => {
   const [username, setUsername] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [linkCharacter, setLinkCharacter] = useState(false);
-  const [showCharacterModal, setShowCharacterModal] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  /*  const [linkCharacter, setLinkCharacter] = useState(false);
+    const [showCharacterModal, setShowCharacterModal] = useState(false);*/
   const { login, register, loginWithGoogle, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -37,14 +38,20 @@ const Auth = () => {
         success = await register(email, password, username);
         if (!success) {
           setError('User already exists');
-        } else if (linkCharacter) {
+        } /*else if (linkCharacter) {
           // Show character linking modal after successful signup
           setShowCharacterModal(true);
-        }
+        }*/
       }
 
-      if (success && !(!isLogin && linkCharacter)) {
-        navigate('/');
+      if (success /*&& !(!isLogin && linkCharacter)*/) {
+        if(!isLogin) {
+        setConfirmationMessage('A confirmation email has been sent. Please check your inbox.');
+        setIsLogin(true);
+      } else {
+          setConfirmationMessage('');
+          navigate('/');
+        }
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -61,10 +68,10 @@ const Auth = () => {
     }
   };
 
-  const handleCharacterModalClose = () => {
+  /*const handleCharacterModalClose = () => {
     setShowCharacterModal(false);
     navigate('/');
-  };
+  };*/
 
   if (loading) return <div>Loading...</div>;
 
@@ -93,6 +100,11 @@ const Auth = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
+              {confirmationMessage && (
+                  <div className="mb-4 p-3 text-green-800 bg-green-100 dark:bg-green-900/20 rounded-lg text-sm text-center">
+                    {confirmationMessage}
+                  </div>
+              )}
               <form onSubmit={handleSubmit} className="space-y-4">
                 {!isLogin && (
                   <div>
@@ -138,7 +150,7 @@ const Auth = () => {
                   </Button>
                 </div>
 
-                {!isLogin && (
+                {/*{!isLogin && (
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="linkCharacter"
@@ -152,7 +164,7 @@ const Auth = () => {
                       Link FFXIV Character after signup
                     </label>
                   </div>
-                )}
+                )}*/}
 
                 {error && (
                   <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-2 rounded-lg">
@@ -210,10 +222,10 @@ const Auth = () => {
         </div>
       </div>
 
-      <CharacterLinkModal
+     {/* <CharacterLinkModal
         isOpen={showCharacterModal}
         onClose={handleCharacterModalClose}
-      />
+      />*/}
     </>
   );
 };
