@@ -93,7 +93,7 @@ SigArt addresses these challenges by providing:
 
 1. **Clone the repository**
    ```bash
-   git clone [repository-url]
+   git clone https://github.com/Capstone-SigArt/frontend-sigart
    cd SigArt/frontend-sigart
    ```
 
@@ -114,24 +114,6 @@ SigArt addresses these challenges by providing:
    ```bash
    npm run dev
    ```
-
-## 📁 Project Structure
-
-```
-frontend-sigart/
-├── src/
-│   ├── components/          # React components
-│   │   ├── ui/             # Reusable UI components
-│   │   └── modals/         # Modal components
-│   ├── pages/              # Page components
-│   ├── contexts/           # React contexts
-│   ├── hooks/              # Custom hooks
-│   ├── services/           # API services
-│   ├── lib/                # Utility libraries
-│   └── integrations/       # Third-party integrations
-├── public/                 # Static assets
-└── package.json
-```
 
 ## 🔮 Future Improvements
 
@@ -162,14 +144,6 @@ This project provided valuable experience in:
 - Node.js and Express for backend API development
 - API design and frontend-backend communication
 - Deployment strategies with Netlify and Render
-
-## 🤝 Contributing
-
-We welcome contributions from the community! Please feel free to submit issues, feature requests, or pull requests.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ---
 
