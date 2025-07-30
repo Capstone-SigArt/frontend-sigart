@@ -1,73 +1,176 @@
-# Welcome to your Lovable project
+# SigArt - Final Fantasy XIV Art Community Platform
 
-## Project info
+A community-driven web application built for Final Fantasy XIV players to connect, create, and share artwork from in-game art events.
 
-**URL**: https://lovable.dev/projects/13ad55e2-8cf0-4ea2-8acd-9d4c9140ab03
+## 🎨 Problem Statement
 
-## How can I edit this code?
+The Final Fantasy XIV art community faces several challenges:
 
-There are several ways of editing your application.
+- **Fragmented Discovery**: Events are announced across multiple platforms (X/Twitter, Bluesky, Discord, Carrd, Custom Websites, etc.), making it difficult for players to find upcoming art parties.
+- **Disorganized Event Management**: Hosts rely on disconnected tools (e.g., Google Forms, spreadsheets) for handling RSVPs, themes, and time coordination.
+- **No Central Archive for Art**: Creations made during parties are often scattered across private Discords or social feeds, with no lasting archive tied to the event.
+- **Lack of Character Integration**: There is no consistent system to connect shared artwork with players' in-game characters or glamours.
+- **Beginner-Unfriendly Onboarding**: New artists or players unfamiliar with the art party scene have no clear, centralized entry point or guide to participate.
 
-**Use Lovable**
+## 🚀 SigArt's Solution
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/13ad55e2-8cf0-4ea2-8acd-9d4c9140ab03) and start prompting.
+SigArt addresses these challenges by providing:
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Centralized Hub**: Create, manage, and discover art parties from a single platform
+- **Artwork Sharing**: Share and browse artwork linked to events and in-game characters
+- **Intuitive Discovery**: Utilize an intuitive tagging and filtering system for easy discovery
+- **Welcoming Onboarding**: Provide a welcoming onboarding process for newcomers to join and contribute
 
-**Use your preferred IDE**
+## 🛠️ Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Frontend
+- **React** + **TypeScript** for the user interface
+- **Tailwind CSS** for styling and responsive design
+- **Netlify** for deployment with automatic GitHub integration
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Backend
+- **Node.js** + **Express** for the API server
+- **Sequelize** ORM for database management
+- **Render** for backend hosting with automatic deployment
 
-Follow these steps:
+### Database & Authentication
+- **Supabase** as the primary database solution
+- **PostgreSQL** for data storage
+- **Google Authentication** for secure login and account creation
+- **Supabase Auth** for email verification and session management
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### External Services
+- **Oracle Cloud** for containerized API that scrapes FFXIV's Lodestone for character data
+- **Cloudflare R2** for robust image storage with free tier and scalability
+- **FFXIV Lodestone API** integration for character linking
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Development Tools
+- **Draw.io** for lo-fidelity wireframing
+- **Agile Development** with 2-week sprints
+- **GitHub** for version control and collaboration
 
-# Step 3: Install the necessary dependencies.
-npm i
+## ✨ Key Features
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### 🎭 Character Integration
+- Link your FFXIV characters to your profile
+- Connect artwork to specific in-game characters and glamours
+- Browse artwork by character associations
+
+### 🎨 Art Party Management
+- Create and manage art parties with themes and schedules
+- RSVP system for event participation
+- Calendar view for upcoming events
+- Party-specific artwork galleries
+
+### 📸 Artwork Sharing
+- Upload artwork with reference images
+- Tag system for easy discovery and filtering
+- Like and interaction system
+- Centralized archive for all event artwork
+
+### 👥 Community Features
+- User profiles with artwork showcases
+- Follow system for connecting with other artists
+- Community art browsing with advanced filtering
+- Resource sharing and discovery
+
+### 🔐 Security & Authentication
+- Google OAuth integration
+- Email verification through Supabase
+- Secure session management
+- Privacy controls for profiles and parties
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn package manager
+- Supabase account
+- Cloudflare R2 account
+- Oracle Cloud account (for character API)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone [repository-url]
+   cd SigArt/frontend-sigart
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env` file in the frontend directory:
+   ```
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   VITE_CLOUDFLARE_R2_URL=your_r2_url
+   ```
+
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+## 📁 Project Structure
+
+```
+frontend-sigart/
+├── src/
+│   ├── components/          # React components
+│   │   ├── ui/             # Reusable UI components
+│   │   └── modals/         # Modal components
+│   ├── pages/              # Page components
+│   ├── contexts/           # React contexts
+│   ├── hooks/              # Custom hooks
+│   ├── services/           # API services
+│   ├── lib/                # Utility libraries
+│   └── integrations/       # Third-party integrations
+├── public/                 # Static assets
+└── package.json
 ```
 
-**Edit a file directly in GitHub**
+## 🔮 Future Improvements
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- **Admin Panel**: Monitoring and content management tools
+- **Organized Storage**: Separate Cloudflare buckets for better organization
+- **Invite System**: Party invite links and codes
+- **Privacy Controls**: Granular privacy settings for profiles and parties
+- **Commission System**: Dedicated section for artist commissions
+- **Enhanced Discovery**: Advanced search and recommendation algorithms
+- **Mobile App**: Native mobile application
+- **Real-time Features**: Live chat and notifications
 
-**Use GitHub Codespaces**
+## 👥 Team
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **Dylan Beach** - Frontend Development & UI/UX
+- **Lupita Sanchez** - Calendar System & Community Features
+- **Artur Voskanyan** - Backend Development & API Integration
 
-## What technologies are used for this project?
+## 📚 Learning Outcomes
 
-This project is built with:
+This project provided valuable experience in:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- Establishing robust project structure for full-stack applications
+- Image upload and management with cloud storage
+- Database design and management with Supabase and PostgreSQL
+- Authentication systems with Google OAuth
+- React and Tailwind CSS for modern frontend development
+- Node.js and Express for backend API development
+- API design and frontend-backend communication
+- Deployment strategies with Netlify and Render
 
-## How can I deploy this project?
+## 🤝 Contributing
 
-Simply open [Lovable](https://lovable.dev/projects/13ad55e2-8cf0-4ea2-8acd-9d4c9140ab03) and click on Share -> Publish.
+We welcome contributions from the community! Please feel free to submit issues, feature requests, or pull requests.
 
-## Can I connect a custom domain to my Lovable project?
+## 📄 License
 
-Yes, you can!
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+**SigArt** - Connecting Final Fantasy XIV artists, one party at a time! 🎨✨
