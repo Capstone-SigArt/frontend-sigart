@@ -77,7 +77,7 @@ const CommunityPartyDetails = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10">
       <ModernNavigation 
         title="Community Party" 
         subtitle="Join the creative gathering"
@@ -129,7 +129,7 @@ const CommunityPartyDetails = () => {
 
               {/* Category Badge */}
               <div className="absolute top-4 left-4">
-                <Badge className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
+                <Badge className="bg-gradient-to-r from-sky-500 to-blue-500 text-white">
                   {partyData.category}
                 </Badge>
               </div>
@@ -142,7 +142,7 @@ const CommunityPartyDetails = () => {
                 <div className="flex items-center gap-3">
                   <Avatar className="w-10 h-10 border-2 border-white/30">
                     <AvatarImage src={partyData.hostAvatar} />
-                    <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
+                    <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white">
                       {partyData.hostName.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
@@ -158,21 +158,21 @@ const CommunityPartyDetails = () => {
             <div className="p-8">
               {/* Date, Time, Location Info */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl">
                   <Calendar className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                   <div>
                     <p className="text-sm text-slate-600 dark:text-slate-400">Date</p>
                     <p className="font-semibold">{partyData.date}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl">
                   <Clock className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                   <div>
                     <p className="text-sm text-slate-600 dark:text-slate-400">Time</p>
                     <p className="font-semibold">{partyData.time}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl">
+                <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl">
                   <Users className="w-5 h-5 text-sky-600 dark:text-sky-400" />
                   <div>
                     <p className="text-sm text-slate-600 dark:text-slate-400">Attendees</p>
@@ -205,7 +205,7 @@ const CommunityPartyDetails = () => {
                 <div className="flex flex-wrap items-center gap-4 mb-4">
                   <div>
                     <span className="text-sm font-medium text-slate-600 dark:text-slate-400">Theme: </span>
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">{partyData.theme}</span>
+                    <span className="font-semibold text-blue-600 dark:text-blue-400">{partyData.theme}</span>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -213,7 +213,7 @@ const CommunityPartyDetails = () => {
                     <Badge 
                       key={index}
                       variant="secondary"
-                      className="bg-gradient-to-r from-sky-100 to-emerald-100 dark:from-sky-900/30 dark:to-emerald-900/30 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-600"
+                      className="bg-gradient-to-r from-sky-100 to-blue-100 dark:from-sky-900/30 dark:to-blue-900/30 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-600"
                     >
                       {tag}
                     </Badge>
@@ -228,7 +228,7 @@ const CommunityPartyDetails = () => {
                   className={`px-8 py-3 rounded-xl shadow-lg transition-all duration-300 ${
                     isJoined
                       ? 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white'
-                      : 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white'
+                      : 'bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white'
                   }`}
                 >
                   {isJoined ? 'Leave Party' : 'Join Party'}
@@ -242,7 +242,7 @@ const CommunityPartyDetails = () => {
         <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
           <CardContent className="p-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                 Party Gallery
               </h3>
               <div className="flex items-center gap-3">
@@ -251,7 +251,7 @@ const CommunityPartyDetails = () => {
                 </span>
                 <Button 
                   onClick={() => setUploadModalOpen(true)}
-                  className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl shadow-lg px-6"
+                  className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl shadow-lg px-6"
                 >
                   Upload Art
                 </Button>
@@ -270,7 +270,7 @@ const CommunityPartyDetails = () => {
                     <div className="flex flex-col items-center space-y-4">
                       <Avatar className="w-20 h-20 border-4 border-sky-200 dark:border-sky-600">
                         <AvatarImage src={attendee.avatar} />
-                        <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-lg font-bold">
+                        <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white text-lg font-bold">
                           {attendee.name.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
@@ -291,7 +291,7 @@ const CommunityPartyDetails = () => {
               {Array.from({ length: Math.max(0, 8 - attendees.length) }).map((_, index) => (
                 <Card key={`empty-${index}`} className="bg-white/40 dark:bg-slate-700/40 backdrop-blur-sm border-white/30 shadow-lg rounded-2xl">
                   <CardContent className="p-6">
-                    <div className="h-32 bg-gradient-to-br from-sky-100 to-emerald-100 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
+                    <div className="h-32 bg-gradient-to-br from-sky-100 to-blue-100 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl border-2 border-dashed border-sky-300 dark:border-sky-600 flex items-center justify-center">
                       <div className="text-center">
                         <div className="text-sm font-medium text-sky-600 dark:text-sky-400 mb-1">
                           Open Slot

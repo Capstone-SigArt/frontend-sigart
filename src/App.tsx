@@ -71,6 +71,11 @@ const App = () => (
                   <UserStudio />
                 </ProtectedRoute>
               } />
+              <Route path="/user-studio/:userId" element={
+                <ProtectedRoute>
+                  <UserStudio />
+                </ProtectedRoute>
+              } />
               <Route path="/resources" element={
                 <ProtectedRoute>
                   <Resources />

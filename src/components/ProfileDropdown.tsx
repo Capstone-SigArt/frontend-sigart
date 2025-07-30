@@ -7,14 +7,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import { User, Settings, LogOut, Link } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import CharacterLinkModal from '@/components/CharacterLinkModal';
+import { useProfile } from '@/hooks/useProfile';
+
+
 
 const ProfileDropdown = () => {
   const { user, logout } = useAuth();
+  const {profile} = useProfile();
   const navigate = useNavigate();
   const [showCharacterModal, setShowCharacterModal] = useState(false);
 
@@ -40,24 +44,35 @@ const ProfileDropdown = () => {
     setShowCharacterModal(true);
   };
 
+
+
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-12 w-12 rounded-full hover:bg-white/20 dark:hover:bg-slate-700/20">
+
             <Avatar className="h-12 w-12 bg-gradient-to-r from-sky-500 to-emerald-500 border-2 border-white/30">
-              <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
-                {getInitials(user.email || '')}
-              </AvatarFallback>
+              {profile?.avatar_url ? (
+                  <AvatarImage src={profile.avatar_url} alt="User avatar" />
+              ) : (
+                  <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
+                    {getInitials(user.email || '')}
+                  </AvatarFallback>
+              )}
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl p-2" align="end">
-          <div className="flex items-center justify-start gap-3 p-3 bg-gradient-to-r from-sky-50 to-emerald-50 dark:from-sky-900/20 dark:to-emerald-900/20 rounded-xl mb-2">
-            <Avatar className="h-10 w-10 bg-gradient-to-r from-sky-500 to-emerald-500">
-              <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-sm font-bold">
-                {getInitials(user.email || '')}
-              </AvatarFallback>
+          <div className="flex items-center justify-start gap-3 p-3 bg-gradient-to-r from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 rounded-xl mb-2">
+            <Avatar className="h-12 w-12 bg-gradient-to-r from-sky-500 to-emerald-500 border-2 border-white/30">
+              {profile?.avatar_url ? (
+                  <AvatarImage src={profile.avatar_url} alt="User avatar" />
+              ) : (
+                  <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white font-bold">
+                    {getInitials(user.email || '')}
+                  </AvatarFallback>
+              )}
             </Avatar>
             <div className="flex flex-col space-y-1 leading-none">
               <p className="font-semibold text-sm text-slate-700 dark:text-slate-300">{user.email}</p>
@@ -75,10 +90,10 @@ const ProfileDropdown = () => {
             <span className="font-medium">My Profile</span>
           </DropdownMenuItem>
           <DropdownMenuItem 
-            className="cursor-pointer rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-900/30 py-3 px-3"
+            className="cursor-pointer rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/30 py-3 px-3"
             onClick={handleLinkCharacterClick}
           >
-            <Link className="mr-3 h-4 w-4 text-emerald-600" />
+            <Link className="mr-3 h-4 w-4 text-blue-600" />
             <span className="font-medium">Link Character</span>
           </DropdownMenuItem>
           <DropdownMenuItem 

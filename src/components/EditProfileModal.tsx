@@ -102,30 +102,30 @@ const EditProfileModal = ({ open, onOpenChange, profile }: EditProfileModalProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+      <DialogContent className="max-w-2xl max-h-[95vh] sm:max-h-[90vh] w-[95vw] sm:w-full bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-white/30 shadow-2xl rounded-2xl z-[9999] overflow-y-auto">
+        <DialogHeader className="pb-4 sm:pb-6">
+          <DialogTitle className="text-xl sm:text-2xl font-bold text-center bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
             Edit Profile
           </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground text-center">
+          <DialogDescription className="text-xs sm:text-sm text-muted-foreground text-center px-2">
             Update your profile information to personalize your artist studio.
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-6 pb-4">
+        <div className="space-y-4 sm:space-y-6 pb-4 px-1">
           {/* Profile Picture Section */}
-          <div className="flex flex-col items-center space-y-4">
-            <Avatar className="w-24 h-24 bg-gradient-to-r from-sky-500 to-emerald-500">
+          <div className="flex flex-col items-center space-y-3 sm:space-y-4">
+            <Avatar className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-r from-sky-500 to-blue-500">
               {formData.avatar_url ? (
                 <AvatarImage src={formData.avatar_url} alt="Profile" />
               ) : (
-                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white text-2xl">
-                  <User className="h-12 w-12" />
+                <AvatarFallback className="bg-gradient-to-r from-sky-500 to-blue-500 text-white text-xl sm:text-2xl">
+                  <User className="h-10 w-10 sm:h-12 sm:w-12" />
                 </AvatarFallback>
               )}
             </Avatar>
-            <div className="text-center">
-              <Label htmlFor="avatar_url" className="text-slate-700 dark:text-slate-300 font-medium">
+            <div className="text-center w-full">
+              <Label htmlFor="avatar_url" className="text-sm sm:text-base text-slate-700 dark:text-slate-300 font-medium">
                 Avatar URL
               </Label>
               <Input
@@ -133,7 +133,7 @@ const EditProfileModal = ({ open, onOpenChange, profile }: EditProfileModalProps
                 value={formData.avatar_url}
                 onChange={(e) => handleInputChange('avatar_url', e.target.value)}
                 placeholder="https://example.com/avatar.jpg"
-                className="mt-2 bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                className="mt-2 text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
               />
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 Enter a URL to your profile image
@@ -142,57 +142,57 @@ const EditProfileModal = ({ open, onOpenChange, profile }: EditProfileModalProps
           </div>
 
           {/* Form Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <div>
-              <Label htmlFor="username" className="text-slate-700 dark:text-slate-300 font-medium">
+              <Label htmlFor="username" className="text-sm sm:text-base text-slate-700 dark:text-slate-300 font-medium">
                 Username
               </Label>
               <Input
                 id="username"
                 value={formData.username}
                 onChange={(e) => handleInputChange('username', e.target.value)}
-                className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                className="text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                 placeholder="Enter your username"
               />
             </div>
 
             <div>
-              <Label htmlFor="full_name" className="text-slate-700 dark:text-slate-300 font-medium">
+              <Label htmlFor="full_name" className="text-sm sm:text-base text-slate-700 dark:text-slate-300 font-medium">
                 Full Name
               </Label>
               <Input
                 id="full_name"
                 value={formData.full_name}
                 onChange={(e) => handleInputChange('full_name', e.target.value)}
-                className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                className="text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                 placeholder="Enter your full name"
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="about" className="text-slate-700 dark:text-slate-300 font-medium">
+            <Label htmlFor="about" className="text-sm sm:text-base text-slate-700 dark:text-slate-300 font-medium">
               About
             </Label>
             <Textarea
               id="about"
               value={formData.about}
               onChange={(e) => handleInputChange('about', e.target.value)}
-              className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm min-h-[100px]"
+              className="text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm min-h-[80px] sm:min-h-[100px]"
               placeholder="Tell us about yourself and your art..."
             />
           </div>
 
           <div>
-            <Label htmlFor="specialties" className="text-slate-700 dark:text-slate-300 font-medium">
+            <Label htmlFor="specialties" className="text-sm sm:text-base text-slate-700 dark:text-slate-300 font-medium">
               Specialties
             </Label>
             <Input
               id="specialties"
               value={formData.specialties}
               onChange={(e) => handleInputChange('specialties', e.target.value)}
-              className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
-              placeholder="e.g., Digital Art, Painting, Photography (separate with commas)"
+              className="text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+              placeholder="e.g., Digital Art, Painting, Photography"
             />
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Separate multiple specialties with commas
@@ -201,45 +201,45 @@ const EditProfileModal = ({ open, onOpenChange, profile }: EditProfileModalProps
 
           {/* Social Media Links */}
           <div>
-            <Label className="text-slate-700 dark:text-slate-300 font-medium mb-3 block">
+            <Label className="text-sm sm:text-base text-slate-700 dark:text-slate-300 font-medium mb-2 sm:mb-3 block">
               Social Media Links
             </Label>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               <div>
-                <Label htmlFor="facebook" className="text-sm text-slate-600 dark:text-slate-400">
+                <Label htmlFor="facebook" className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                   Facebook
                 </Label>
                 <Input
                   id="facebook"
                   value={formData.facebook}
                   onChange={(e) => handleInputChange('facebook', e.target.value)}
-                  className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  className="text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   placeholder="Facebook URL"
                 />
               </div>
 
               <div>
-                <Label htmlFor="twitter" className="text-sm text-slate-600 dark:text-slate-400">
+                <Label htmlFor="twitter" className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                   Twitter/X
                 </Label>
                 <Input
                   id="twitter"
                   value={formData.twitter}
                   onChange={(e) => handleInputChange('twitter', e.target.value)}
-                  className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  className="text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   placeholder="Twitter URL"
                 />
               </div>
 
               <div>
-                <Label htmlFor="instagram" className="text-sm text-slate-600 dark:text-slate-400">
+                <Label htmlFor="instagram" className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                   Instagram
                 </Label>
                 <Input
                   id="instagram"
                   value={formData.instagram}
                   onChange={(e) => handleInputChange('instagram', e.target.value)}
-                  className="bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
+                  className="text-sm bg-white/60 dark:bg-slate-700/60 border-sky-200 dark:border-sky-600 rounded-xl backdrop-blur-sm"
                   placeholder="Instagram URL"
                 />
               </div>
@@ -247,40 +247,45 @@ const EditProfileModal = ({ open, onOpenChange, profile }: EditProfileModalProps
           </div>
 
           {/* Action Buttons */}
-          <div className="flex justify-between items-center pt-4">
+          <div className="flex flex-col sm:flex-row justify-between items-center pt-4 gap-3 sm:gap-0">
             {/* Change Password Button */}
             <Button
               variant="outline"
               onClick={() => setIsPasswordModalOpen(true)}
               disabled={isLoading}
-              className="border-orange-300 text-orange-600 hover:bg-orange-50 dark:border-orange-600 dark:text-orange-400 dark:hover:bg-orange-900/30"
+              className="w-full sm:w-auto text-sm border-orange-300 text-orange-600 hover:bg-orange-50 dark:border-orange-600 dark:text-orange-400 dark:hover:bg-orange-900/30"
             >
               <Lock className="w-4 h-4 mr-2" />
-              Change Password
+              <span className="hidden sm:inline">Change Password</span>
+              <span className="sm:hidden">Password</span>
             </Button>
 
             {/* Save/Cancel Buttons */}
-            <div className="flex space-x-3">
+            <div className="flex space-x-2 sm:space-x-3 w-full sm:w-auto">
               <Button
                 variant="outline"
                 onClick={handleCancel}
                 disabled={isLoading}
-                className="border-sky-300 text-sky-600 hover:bg-sky-50 dark:border-sky-600 dark:text-sky-400 dark:hover:bg-sky-900/30"
+                className="flex-1 sm:flex-none text-sm border-sky-300 text-sky-600 hover:bg-sky-50 dark:border-sky-600 dark:text-sky-400 dark:hover:bg-sky-900/30"
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleSave}
                 disabled={isLoading}
-                className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white shadow-lg hover:shadow-xl"
+                className="flex-1 sm:flex-none text-sm bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white shadow-lg hover:shadow-xl"
               >
                 {isLoading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Saving...
+                    <span className="hidden sm:inline">Saving...</span>
+                    <span className="sm:hidden">Save...</span>
                   </>
                 ) : (
-                  'Save Changes'
+                  <>
+                    <span className="hidden sm:inline">Save Changes</span>
+                    <span className="sm:hidden">Save</span>
+                  </>
                 )}
               </Button>
             </div>

@@ -18,6 +18,8 @@ const CommunityArt = () => {
   const [artworks, setArtworks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [availableTags,setAvailableTags] = useState([]);
+  const [selectedTag, setSelectedTag] = useState(null);
   const [selectedArtwork, setSelectedArtwork] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -26,7 +28,9 @@ const CommunityArt = () => {
   useEffect(() => {
     const fetchArtworks = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/artwork/allArt`);
+        // const response = await fetch(`${API_BASE_URL}/artwork/allArt`);
+        const response = await fetch(`${API_BASE_URL}/artwork/allWithLikes`);
+
         if (!response.ok) throw new Error('Failed to fetch artworks');
 
         const data = await response.json();
@@ -51,8 +55,19 @@ const CommunityArt = () => {
         setLoading(false);
       }
     };
+    const fetchTags = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/tags/artworkTags/allArtworkTags`);
+        if (!res.ok) throw new Error('Failed to fetch tags');
+        const data = await res.json();
+        setAvailableTags(data);
+      } catch (err) {
+        console.error('Error fetching tags:', err);
+      }
+    };
 
     fetchArtworks();
+    fetchTags();
   }, []);
 
   const fetchArtworkLinkedTags = async(artworkId: string) => {
@@ -81,6 +96,7 @@ const CommunityArt = () => {
       return userId; // fallback
     }
   };
+
 
   /*const artworks = [
     {
@@ -158,10 +174,20 @@ const CommunityArt = () => {
   ];*/
 
   const filteredArtworks = artworks.filter(artwork => {
-    const matchesSearch = artwork.notes.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         artwork.uploader_id.toLowerCase().includes(searchQuery.toLowerCase());
-    /*const matchesCategory = selectedCategory === 'All' || artwork.category === selectedCategory;*/
-    return matchesSearch /*&& matchesCategory;*/
+    const notes = artwork.notes || "";
+    const title = artwork.title || "";
+    const artist = artwork.username || "";
+
+    const matchesSearch =
+        notes.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        artist.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesTag = selectedTag
+        ? artwork.tags.some((tag) => tag.id === selectedTag.id)
+        : true;
+
+    return matchesSearch && matchesTag;
   });
 
   const toggleLike = (artworkId: number, e: React.MouseEvent) => {
@@ -172,8 +198,9 @@ const CommunityArt = () => {
   const handleArtworkClick = (art) => {
     setSelectedArtwork({
       id: art.id,
-      title: art.notes || 'Untitled',
-      artist: art.username || art.uploader_id,
+      title: art.title || 'Untitled',
+      artist: art.username,
+      uploader_id: art.uploader_id,
       uploadDate: dayjs(art.created_at).format('MMM D, YYYY'),
       toolsUsed: art.tools_used || '',
       tags: [],
@@ -189,7 +216,7 @@ const CommunityArt = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-blue-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 noise-overlay">
       <ModernNavigation 
         title="Community Showcase" 
         subtitle="Discover amazing artwork from our community"
@@ -208,29 +235,31 @@ const CommunityArt = () => {
                 className="pl-10 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl shadow-sm focus:shadow-md transition-shadow"
               />
             </div>
-            <Button className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl px-6 shadow-lg">
+            <Button className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl px-6 shadow-lg">
               <Filter className="w-4 h-4 mr-2" />
               Filter
             </Button>
           </div>
 
           {/* Category Filter */}
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
-                className={`whitespace-nowrap rounded-full px-4 py-2 transition-all duration-300 ${
-                  selectedCategory === category
-                    ? 'bg-gradient-to-r from-sky-500 to-emerald-500 text-white shadow-lg'
+
+          <div className="flex gap-2 overflow-x-auto no-scrollbar mt-4 whitespace-nowrap pb-4">
+            {availableTags.map((tag) => (
+                <Button
+                    key={tag.id}
+                    variant={selectedTag?.id === tag.id ? "default" : "outline"}
+                    onClick={() => setSelectedTag(selectedTag?.id === tag.id ? null : tag)}
+                    className={`whitespace-nowrap rounded-full px-4 py-2 transition-all duration-300 ${
+                        selectedTag?.id === tag.id
+                            ? 'bg-gradient-to-r from-sky-500 to-blue-500 text-white shadow-lg'
                     : 'bg-white/40 border-white/30 hover:bg-white/60'
-                }`}
-              >
-                {category}
-              </Button>
+                    }`}
+                >
+                  {tag.name}
+                </Button>
             ))}
           </div>
+
         </div>
       </div>
 
@@ -240,7 +269,7 @@ const CommunityArt = () => {
           {filteredArtworks.map((artwork) => (
             <Card 
               key={artwork.id} 
-              className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
+              className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 cursor-pointer rounded-2xl overflow-hidden hover:-translate-y-2"
               onClick={() => handleArtworkClick(artwork)}
             >
               <CardContent className="p-0">
@@ -292,7 +321,7 @@ const CommunityArt = () => {
 
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4">
-                    {/*<Badge className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white backdrop-blur-sm">
+                    {/*<Badge className="bg-gradient-to-r from-sky-500 to-blue-500 text-white backdrop-blur-sm">
                       {artwork.category}
 
                     </Badge>*/}
@@ -307,7 +336,7 @@ const CommunityArt = () => {
                       {artwork.tags.map((tag, index) => (
                         <Badge 
                           key={index}
-                          className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white backdrop-blur-sm"
+                          className="bg-gradient-to-r from-sky-500 to-blue-500 text-white backdrop-blur-sm"
                         >
                           {tag.name}
                         </Badge>

@@ -17,8 +17,9 @@ const Auth = () => {
   const [username, setUsername] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const [linkCharacter, setLinkCharacter] = useState(false);
-  const [showCharacterModal, setShowCharacterModal] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState('');
+  /*  const [linkCharacter, setLinkCharacter] = useState(false);
+    const [showCharacterModal, setShowCharacterModal] = useState(false);*/
   const { login, register, loginWithGoogle, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -37,14 +38,20 @@ const Auth = () => {
         success = await register(email, password, username);
         if (!success) {
           setError('User already exists');
-        } else if (linkCharacter) {
+        } /*else if (linkCharacter) {
           // Show character linking modal after successful signup
           setShowCharacterModal(true);
-        }
+        }*/
       }
 
-      if (success && !(!isLogin && linkCharacter)) {
-        navigate('/');
+      if (success /*&& !(!isLogin && linkCharacter)*/) {
+        if(!isLogin) {
+        setConfirmationMessage('A confirmation email has been sent. Please check your inbox.');
+        setIsLogin(true);
+      } else {
+          setConfirmationMessage('');
+          navigate('/');
+        }
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -61,23 +68,23 @@ const Auth = () => {
     }
   };
 
-  const handleCharacterModalClose = () => {
+  /*const handleCharacterModalClose = () => {
     setShowCharacterModal(false);
     navigate('/');
-  };
+  };*/
 
   if (loading) return <div>Loading...</div>;
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900 flex items-center justify-center p-4">
+      <div className="relative noise-overlay min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-green-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-950 flex items-center justify-center p-4">
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="w-20 h-20 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
+            <div className="w-20 h-20 bg-gradient-to-r from-sky-500 to-blue-500 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-xl">
               <Palette className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
               SigArt
             </h1>
             <p className="text-slate-600 dark:text-slate-300 mt-2">
@@ -88,11 +95,16 @@ const Auth = () => {
           {/* Auth Card */}
           <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border-white/20 shadow-2xl">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+              <CardTitle className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                 {isLogin ? 'Welcome Back' : 'Create Account'}
               </CardTitle>
             </CardHeader>
             <CardContent>
+              {confirmationMessage && (
+                  <div className="mb-4 p-3 text-green-800 bg-green-100 dark:bg-green-900/20 rounded-lg text-sm text-center">
+                    {confirmationMessage}
+                  </div>
+              )}
               <form onSubmit={handleSubmit} className="space-y-4">
                 {!isLogin && (
                   <div>
@@ -138,7 +150,7 @@ const Auth = () => {
                   </Button>
                 </div>
 
-                {!isLogin && (
+                {/*{!isLogin && (
                   <div className="flex items-center space-x-2">
                     <Checkbox
                       id="linkCharacter"
@@ -152,7 +164,7 @@ const Auth = () => {
                       Link FFXIV Character after signup
                     </label>
                   </div>
-                )}
+                )}*/}
 
                 {error && (
                   <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/20 p-2 rounded-lg">
@@ -163,7 +175,7 @@ const Auth = () => {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl py-3 shadow-lg"
+                  className="w-full bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl py-3 shadow-lg"
                 >
                   {loading ? 'Please wait...' : (isLogin ? 'Sign In' : 'Sign Up')}
                 </Button>
@@ -195,34 +207,25 @@ const Auth = () => {
               </form>
 
               <div className="mt-6 text-center">
-                <p className="text-sm text-slate-600 dark:text-slate-300">
-                  {isLogin ? "Don't have an account? " : "Already have an account? "}
+                <p className="text-sm text-muted-foreground">
+                  {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
                   <button
                     onClick={() => setIsLogin(!isLogin)}
-                    className="text-sky-600 hover:text-emerald-600 font-medium transition-colors"
+                    className="text-sky-600 hover:text-blue-600 font-medium transition-colors"
                   >
                     {isLogin ? 'Sign up' : 'Sign in'}
                   </button>
                 </p>
-              </div>
-
-              {/* Demo Credentials */}
-              <div className="mt-6 p-4 bg-sky-50 dark:bg-sky-900/20 rounded-xl">
-                <h4 className="text-sm font-medium text-sky-800 dark:text-sky-200 mb-2">Demo Credentials:</h4>
-                <div className="text-xs text-sky-700 dark:text-sky-300 space-y-1">
-                  <div>Email: demo@example.com | Password: demo123</div>
-                  <div>Email: artist@example.com | Password: artist123</div>
-                </div>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      <CharacterLinkModal
+     {/* <CharacterLinkModal
         isOpen={showCharacterModal}
         onClose={handleCharacterModalClose}
-      />
+      />*/}
     </>
   );
 };

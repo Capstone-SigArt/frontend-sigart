@@ -30,7 +30,21 @@ const HostParty = () => {
   const navigate = useNavigate();
 
   const handleInputChange = (field: string, value: string) => {
+    if (field === 'startTime' && value) {
+      // Auto-set endTime to 2 hours after startTime
+      const startDateTime = new Date(value);
+      const endDateTime = new Date(startDateTime.getTime() + 2 * 60 * 60 * 1000); // Add 2 hours
+      const endTimeString = endDateTime.toISOString().slice(0, 16); // Format as datetime-local
+      
+      setFormData(prev => ({ 
+        ...prev, 
+        [field]: value,
+        // Always update endTime to ensure it's after startTime
+        endTime: prev.endTime && new Date(prev.endTime) > new Date(value) ? prev.endTime : endTimeString
+      }));
+    } else {
     setFormData(prev => ({ ...prev, [field]: value }));
+    }
   };
 
   const handleGeneratePreview = () => {
@@ -91,7 +105,32 @@ const HostParty = () => {
   };
 
   const handleCreateParty = async () => {
-    //console.log('Creating party with data:', formData);
+    // Validation
+    if (!formData.startTime || !formData.endTime) {
+      alert('Please set both start and end times');
+      return;
+    }
+    
+    const startDateTime = new Date(formData.startTime);
+    const endDateTime = new Date(formData.endTime);
+    
+    if (endDateTime <= startDateTime) {
+      alert('End time must be after start time. Please ensure the event has a proper duration.');
+      return;
+    }
+    
+    // Additional check: prevent events with less than 30 minutes duration
+    const durationMinutes = (endDateTime.getTime() - startDateTime.getTime()) / (1000 * 60);
+    if (durationMinutes < 30) {
+      alert('Event duration must be at least 30 minutes. Please adjust your end time.');
+      return;
+    }
+    
+    if (!formData.title || !formData.description) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
     try {
       const payload = {
         host_id: formData.host_id,
@@ -103,6 +142,8 @@ const HostParty = () => {
         date: formData.startTime.split('T')[0], // extract date from start datetime
         start_time: formData.startTime.split('T')[1] || '',
         end_time: formData.endTime.split('T')[1] || '',
+        start_datetime: formData.startTime, // full start datetime
+        end_datetime: formData.endTime, // full end datetime
         theme: formData.theme,
         address: formData.location,
       };
@@ -115,6 +156,8 @@ const HostParty = () => {
       console.log("start_time:", formData.startTime.split('T')[1] || '');
       console.log("end_time:", formData.endTime.split('T')[1] || '');
       console.log("date:", formData.startTime.split('T')[0]);
+      console.log("start_datetime:", formData.startTime);
+      console.log("end_datetime:", formData.endTime);
       console.log("cover_image:", formData.cover_image || '');
       console.log("address:", formData.location);
       console.log("scheduled_at:", formData.startTime);
@@ -154,6 +197,15 @@ const HostParty = () => {
   };
 
   const handleCancel = () => {
+    // Ask for confirmation if form has been filled
+    const hasFormData = formData.title || formData.description || formData.theme || formData.tags || formData.location || formData.startTime || formData.endTime || formData.cover_image;
+    
+    if (hasFormData) {
+      const confirmCancel = window.confirm('Are you sure you want to cancel? All unsaved changes will be lost.');
+      if (!confirmCancel) return;
+    }
+    
+    // Reset form data
     setFormData({
       title: '',
       theme: '',
@@ -168,6 +220,9 @@ const HostParty = () => {
       host_id: '',
     });
     setPreviewGenerated(false);
+    
+    // Navigate back to previous page or home
+    navigate(-1); // Go back to previous page
   };
 
   const handleImageUpload = async(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -244,29 +299,35 @@ const HostParty = () => {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-emerald-50 to-green-100 dark:from-sky-900 dark:via-emerald-900 dark:to-green-900">
+      <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-blue-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 noise-overlay">
       <ModernNavigation 
         title="Host A Party" 
         subtitle="Create amazing art events"
       />
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="max-w-7xl mx-auto px-4 py-4 sm:py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
           {/* Form Section */}
           <Card className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl">
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent mb-6">
+            <CardContent className="p-4 sm:p-8">
+              <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent mb-4 sm:mb-6">
                 Event Details
               </h2>
               
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Party Title *
+                  </label>
                 <Input
-                  placeholder="Party Title"
+                    placeholder="Enter party title"
                   value={formData.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
                   className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl"
+                    required
                 />
+                </div>
                 
                 <Input
                   placeholder="Theme"
@@ -289,29 +350,53 @@ const HostParty = () => {
                 >
                   Test Create First Tag
                 </Button>*/}
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Start Date & Time *
+                  </label>
                 <div className="relative">
                   <Input
                       type="datetime-local"
-                      placeholder="Date/Time"
+                        placeholder="Select start date and time"
                       value={formData.startTime}
                       onChange={(e) => handleInputChange('startTime', e.target.value)}
-                      className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20" // add right padding
+                        className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20"
+                        required
                   />
                   <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
                     start-time
                   </span>
                 </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    End Date & Time *
+                  </label>
                 <div className="relative">
                   <Input
                       type="datetime-local"
-                      placeholder="Date/Time"
+                        placeholder="Select end date and time"
                       value={formData.endTime}
                       onChange={(e) => handleInputChange('endTime', e.target.value)}
-                      className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20" // add right padding
+                        className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl pr-20"
+                        required
                   />
                   <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 text-xs select-none font-semibold">
                     end-time
                   </span>
+                  </div>
+                                     {formData.startTime && formData.endTime && (
+                     <p className="text-xs text-gray-500 dark:text-gray-400">
+                       Duration: {(() => {
+                         const start = new Date(formData.startTime);
+                         const end = new Date(formData.endTime);
+                         const diffMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+                         const hours = Math.floor(diffMinutes / 60);
+                         const minutes = Math.round(diffMinutes % 60);
+                         return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+                       })()}
+                     </p>
+                   )}
                 </div>
                 <div className="flex gap-2">
 {/*                  <Button variant="outline" size="sm" className="bg-white/40 border-white/30">Server</Button>
@@ -343,34 +428,42 @@ const HostParty = () => {
                   )}
                 </div>
                 
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Description *
+                  </label>
                 <Textarea
-                  placeholder="Description/ notes"
+                    placeholder="Describe your party and what participants can expect"
                   value={formData.description}
                   onChange={(e) => handleInputChange('description', e.target.value)}
                   className="bg-white/60 dark:bg-slate-700/60 border-white/30 rounded-xl min-h-[100px]"
+                    required
                 />
+                </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex gap-4 pt-6">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6">
                 <Button 
                   variant="secondary" 
-                  className="bg-gradient-to-r from-sky-500 to-emerald-500 hover:from-sky-600 hover:to-emerald-600 text-white rounded-xl"
+                  className="w-full sm:w-auto text-sm sm:text-base bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                   onClick={handleGeneratePreview}
                 >
-                  Generate Preview
+                  <span className="hidden sm:inline">Generate Preview</span>
+                  <span className="sm:hidden">Preview</span>
                 </Button>
                 <Button 
                   variant="secondary"
-                  className="bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-600 hover:to-green-600 text-white rounded-xl"
+                  className="w-full sm:w-auto text-sm sm:text-base bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                   onClick={handleCreateParty}
                 >
-                  Create Party
+                  <span className="hidden sm:inline">Create Party</span>
+                  <span className="sm:hidden">Create</span>
                 </Button>
                 <Button 
                   variant="outline"
                   onClick={handleCancel}
-                  className="bg-white/40 border-white/30 rounded-xl"
+                  className="w-full sm:w-auto text-sm sm:text-base bg-white/40 dark:bg-slate-700/40 border-white/30 dark:border-slate-600/30 rounded-xl hover:bg-white/60 dark:hover:bg-slate-600/60 transition-all duration-300"
                 >
                   Cancel
                 </Button>
@@ -380,26 +473,26 @@ const HostParty = () => {
 
           {/* Preview Section */}
           <div className="flex flex-col items-center justify-center">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-sky-600 to-emerald-600 bg-clip-text text-transparent">
+            <div className="text-center mb-4 sm:mb-6">
+              <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent">
                 Generated Preview
               </h3>
-              <p className="text-slate-600 dark:text-slate-300 mt-2">
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 mt-2">
                 See how your event will look
               </p>
             </div>
             
             {previewGenerated ? (
-              <Card className="w-80 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl overflow-hidden">
+              <Card className="w-full max-w-sm sm:w-80 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-white/30 shadow-xl rounded-2xl overflow-hidden">
                 <CardContent className="p-0">
                   <div className="relative">
-                    <div className="bg-gradient-to-r from-sky-200 to-emerald-200 h-48 flex items-center justify-center">
+                    <div className="bg-gradient-to-r from-sky-200 to-blue-200 h-48 flex items-center justify-center">
                       {/*test for image*/}
                       <img
                           /*src="https://pbs.twimg.com/media/F2TPSgZbUAAZs3x?format=jpg&name=4096x4096" //this is a random image I am using just for testing what the images would look like
                           alt="Event Preview"
                           className="object-cover w-full h-full"*/
-                          src={formData.cover_image || "https://via.placeholder.com/600x300?text=Event+Flyer"}
+                          src={formData.cover_image || "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop"}
                           alt="Event Preview"
                           className="object-cover w-full h-full"
                       />
@@ -413,10 +506,10 @@ const HostParty = () => {
                         {formData.description || 'Your event description will appear here'}
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        <Badge className="bg-gradient-to-r from-sky-500 to-emerald-500 text-white">
+                        <Badge className="bg-gradient-to-r from-sky-500 to-blue-500 text-white">
                           {formData.theme || 'Theme'}
                         </Badge>
-                        <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white">
+                        <Badge className="bg-gradient-to-r from-blue-500 to-green-500 text-white">
                           Art Event
                         </Badge>
                         {/* Tag badges (on a separate row, wrapped if needed) */}
@@ -428,7 +521,7 @@ const HostParty = () => {
                               .map((tag, index) => (
                                   <Badge
                                       key={index}
-                                      className="bg-emerald-100 text-emerald-800 dark:bg-emerald-800 dark:text-white px-4 py-1 rounded-md"
+                                      className="bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-white px-4 py-1 rounded-md"
                                   >
                                     {tag}
                                   </Badge>
@@ -440,9 +533,9 @@ const HostParty = () => {
                 </CardContent>
               </Card>
             ) : (
-              <div className="w-80 h-64 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl flex items-center justify-center bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm">
+              <div className="w-full max-w-sm sm:w-80 h-64 border-2 border-dashed border-slate-300 dark:border-slate-600 rounded-2xl flex items-center justify-center bg-white/40 dark:bg-slate-800/40 backdrop-blur-sm">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-sky-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl text-white">🎨</span>
                   </div>
                   <span className="text-slate-600 dark:text-slate-300">Preview will appear here</span>

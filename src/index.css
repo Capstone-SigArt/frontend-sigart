@@ -141,13 +141,13 @@
     border: 1px solid rgba(255, 255, 255, 0.125);
   }
 
-  /* Sky and emerald gradient backgrounds */
-  .bg-sky-emerald-gradient {
-    background: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+  /* Sky and blue gradient backgrounds */
+  .bg-sky-blue-gradient {
+    background: linear-gradient(135deg, #0ea5e9 0%, #10b9b9 100%);
   }
 
-  .bg-emerald-green-gradient {
-    background: linear-gradient(135deg, #10b981 0%, #22c55e 100%);
+  .bg-blue-green-gradient {
+    background: linear-gradient(135deg, #10b9b9 0%, #0ea5e9 100%);
   }
 
   /* Enhanced card hover effects */
@@ -259,7 +259,7 @@ button, input, select, .card {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* Updated gradient text animations with sky/emerald theme */
+/* Updated gradient text animations with sky/blue theme */
 .gradient-text {
   background: linear-gradient(-45deg, #0ea5e9, #10b981, #22c55e, #06b6d4);
   background-size: 400% 400%;
@@ -315,3 +315,56 @@ button, input, select, .card {
 .card-hover:hover::before {
   left: 100%;
 }
+
+/*.no-scrollbar {
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}*/
+
+
+
+.noise-overlay {
+  position: relative;
+  overflow: hidden;
+
+  --color1: rgba(220, 198, 255, 0.80); /* pastel lavender */
+
+  --color2: rgba(255, 210, 200, 0.20); /* soft peach */
+
+  --shadow-color: rgba(220, 198, 255, 0.95);
+
+  background-image:
+          repeating-linear-gradient(
+                  45deg,
+                  var(--color1),
+                  var(--color1) 2px,
+                  transparent 3px,
+                  transparent 5px
+          ),
+          repeating-linear-gradient(
+                  -45deg,
+                  var(--color2),
+                  var(--color2) 2px,
+                  transparent 3px,
+                  transparent 5px
+          );
+  background-size: 100px 100px;
+  mix-blend-mode: normal; /* disable blend for light mode */
+  filter: drop-shadow(0 0 3px var(--shadow-color));
+}
+
+.dark .noise-overlay {
+  --color1: rgba(203, 163, 255, 0.12);
+  --color2: rgba(163, 203, 255, 0.1);
+  --shadow-color: rgba(203, 163, 255, 0.5);
+
+  mix-blend-mode: screen; /* only in dark mode */
+}
+
+
+
