@@ -235,10 +235,10 @@ const CommunityArt = () => {
                 className="pl-10 bg-white/80 dark:bg-slate-700/80 border-white/30 rounded-xl shadow-sm focus:shadow-md transition-shadow"
               />
             </div>
-            <Button className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl px-6 shadow-lg">
+           {/* <Button className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl px-6 shadow-lg">
               <Filter className="w-4 h-4 mr-2" />
               Filter
-            </Button>
+            </Button>*/}
           </div>
 
           {/* Category Filter */}
@@ -283,7 +283,7 @@ const CommunityArt = () => {
                   
                   {/* Action Buttons */}
                   <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Button
+                    {/*<Button
                       size="icon"
                       variant="ghost"
                       className={`w-8 h-8 rounded-full backdrop-blur-sm ${
@@ -316,7 +316,7 @@ const CommunityArt = () => {
                       }}
                     >
                       <Download className="w-4 h-4" />
-                    </Button>
+                    </Button>*/}
                   </div>
 
                   {/* Category Badge */}

@@ -66,7 +66,11 @@ const EditProfileModal = ({ open, onOpenChange, profile }: EditProfileModalProps
     try {
       // Only send non-empty values or null for empty strings
       const updates = Object.entries(formData).reduce((acc, [key, value]) => {
-        acc[key] = value.trim() === '' ? null : value.trim();
+        if (typeof value === 'string') {
+          acc[key] = value.trim() === '' ? null : value.trim();
+        } else {
+          acc[key] = value ?? null; // fallback to null if undefined
+        }
         return acc;
       }, {} as any);
 

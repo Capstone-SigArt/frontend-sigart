@@ -83,7 +83,7 @@ const Resources = () => {
                   What is an Art Party?
                 </h2>
                 <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
-                  Art parties are collaborative creative events where artists of all skill levels come together to create, learn, and share their passion for art. These events can range from structured workshops and classes to informal gatherings where participants work on personal projects while enjoying the company of fellow artists.
+                  Art parties are community hosted events that take place in the popular MMORPG Final Fantasy XIV. They are creative events that are structured similarly to a figure or life drawing event. Players gather in a predetermined in-game location to share inspiration derived from created characters, glams, and other artworks. These events are utilized as inspiration for all artists alike and art created at these events are shared for the community to collectively enjoy
                 </p>
                 <p className="text-slate-600 dark:text-slate-300 mb-6 leading-relaxed">
                   Whether you're a beginner looking to learn new techniques or an experienced artist wanting to connect with others, art parties provide a supportive environment for creative growth and community building.

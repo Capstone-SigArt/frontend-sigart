@@ -198,7 +198,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
           {/* Image Display */}
           <div className="grid grid-cols-2 gap-4">
 
-            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20" onClick = {()=>openZoom(artData.imageUrl)}>
+            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 cursor-zoom-in" onClick = {()=>openZoom(artData.imageUrl)}>
 
               <img 
                 src={artData.imageUrl} 
@@ -208,7 +208,7 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
             </div>
             {artData.referenceImageUrl && (
               
-              <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20"  onClick = {()=>openZoom(artData.referenceImageUrl)}>
+              <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 cursor-zoom-in"  onClick = {()=>openZoom(artData.referenceImageUrl)}>
 
                 <img 
                   src={artData.referenceImageUrl} 

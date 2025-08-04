@@ -16,12 +16,12 @@ const ModernNavigation = ({ title, subtitle }: ModernNavigationProps) => {
   const location = useLocation();
 
   const navigationTabs = [
-    { name: 'Browse', path: '/' },
-    { name: 'Schedule', path: '/schedule' },
-    { name: 'Create', path: '/host-party' },
-    { name: 'My Parties', path: '/my-parties' },
+    { name: 'Discover', path: '/' },
     { name: 'Showcase', path: '/community-art' },
+    { name: 'Create', path: '/host-party' },
+    { name: 'Schedule', path: '/schedule' },
     { name: 'My Studio', path: '/studio' },
+    { name: 'My Parties', path: '/my-parties' },
     { name: 'Resources', path: '/resources' }
   ];
 
@@ -63,7 +63,7 @@ const ModernNavigation = ({ title, subtitle }: ModernNavigationProps) => {
       {/* Navigation Tabs */}
       <div className="sticky top-[88px] z-40 backdrop-blur-lg bg-white/70 dark:bg-slate-800/70 border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex space-x-1 overflow-x-auto py-3 scrollbar-hide">
+          <div className="flex space-x-1 overflow-x-auto py-3 px-3 scrollbar-hide">
             {navigationTabs.map((tab) => (
               <Button
                 key={tab.name}

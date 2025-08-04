@@ -75,7 +75,7 @@ const ProfileDropdown = () => {
               )}
             </Avatar>
             <div className="flex flex-col space-y-1 leading-none">
-              <p className="font-semibold text-sm text-slate-700 dark:text-slate-300">{user.email}</p>
+              <p className="font-semibold text-sm text-slate-700 dark:text-slate-300">{profile?.username || user.email}</p>
               <p className="w-[180px] truncate text-xs text-slate-500 dark:text-slate-400">
                 {user.email}
               </p>
@@ -96,13 +96,13 @@ const ProfileDropdown = () => {
             <Link className="mr-3 h-4 w-4 text-blue-600" />
             <span className="font-medium">Link Character</span>
           </DropdownMenuItem>
-          <DropdownMenuItem 
+          {/*<DropdownMenuItem
             className="cursor-pointer rounded-xl hover:bg-green-50 dark:hover:bg-green-900/30 py-3 px-3"
             onClick={handleSettingsClick}
           >
             <Settings className="mr-3 h-4 w-4 text-green-600" />
             <span className="font-medium">Settings</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem>*/}
           <DropdownMenuSeparator className="bg-white/30" />
           <DropdownMenuItem 
             className="cursor-pointer text-red-600 dark:text-red-400 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/30 py-3 px-3"

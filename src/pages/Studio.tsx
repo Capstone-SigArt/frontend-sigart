@@ -229,12 +229,12 @@ const Studio = () => {
                     <p className="text-slate-500 dark:text-slate-400 mb-4">
                       No artworks uploaded yet
                     </p>
-                    <Button 
-                      onClick={() => setShowUploadModal(true)}
-                      className="bg-gradient-to-r from-sky-500 to-blue-500 text-white"
-                    >
-                      Upload Your First Artwork
-                    </Button>
+                    {/*<Button */}
+                    {/*  onClick={() => setShowUploadModal(true)}*/}
+                    {/*  className="bg-gradient-to-r from-sky-500 to-blue-500 text-white"*/}
+                    {/*>*/}
+                    {/*  Upload Your First Artwork*/}
+                    {/*</Button>*/}
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

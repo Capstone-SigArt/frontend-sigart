@@ -18,6 +18,8 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { parseSpecialties, getDefaultSpecialties } from '@/lib/specialties';
 import {useParams} from 'react-router-dom';
+import ArtDetailsModal from "@/components/ArtDetailsModal.tsx";
+import dayjs from "dayjs";
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 
 
@@ -44,6 +46,8 @@ const UserStudio = () => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isFollowLoading, setIsFollowLoading] = useState(false);
   const navigate = useNavigate();
+  const [selectedArt, setSelectedArt] = useState<any | null>(null);
+  const [artDetailsModalOpen, setArtDetailsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!effectiveUserId) return;
@@ -353,9 +357,9 @@ const UserStudio = () => {
                       <p className="text-slate-500 dark:text-slate-400 mb-4">
                         No artworks uploaded yet
                       </p>
-                      <Button className="bg-gradient-to-r from-sky-500 to-blue-500 text-white">
-                        Upload Your First Artwork
-                      </Button>
+                      {/*<Button className="bg-gradient-to-r from-sky-500 to-blue-500 text-white">*/}
+                      {/*  Upload Your First Artwork*/}
+                      {/*</Button>*/}
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -363,6 +367,24 @@ const UserStudio = () => {
                           <div
                               key={artwork.id}
                               className="group relative overflow-hidden rounded-xl bg-white/40 dark:bg-slate-700/40 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                              onClick={() => {
+                                const username = profile.username
+                                setSelectedArt({
+                                  id: artwork.id,
+                                  title: artwork.title || 'Untitled',
+                                  artist: username || 'Unknown',
+                                  uploader_id: artwork.uploader_id,
+                                  uploadDate: dayjs(artwork.created_at).format('MMM D, YYYY'),
+                                  toolsUsed: artwork.tools_used,
+                                  tags: [],
+                                  additionalNotes: artwork.notes,
+                                  likes: artwork.likes_count ?? 0,
+                                  taggedCharacters: [],
+                                  imageUrl: artwork.image_url,
+                                  referenceImageUrl: artwork.reference_url,
+                                });
+                                setArtDetailsModalOpen(true);
+                              }}
                           >
                             <img
                                 src={artwork.image_url}
@@ -511,7 +533,8 @@ const UserStudio = () => {
                       {events.map((event) => (
                           <div
                               key={event.id}
-                              className="p-4 bg-white/40 dark:bg-slate-700/40 rounded-xl"
+                              onClick={() => navigate(`/event/${event.id}`)}
+                              className="p-4 bg-white/40 dark:bg-slate-700/40 rounded-xl cursor-pointer hover:bg-white/60 dark:hover:bg-slate-700/60 transition"
                           >
                             <h4 className="font-semibold text-slate-700 dark:text-slate-300 mb-2">
                               {event.title}
@@ -581,6 +604,13 @@ const UserStudio = () => {
         </div>
       </div>
 
+        {selectedArt && (
+            <ArtDetailsModal
+                open={artDetailsModalOpen}
+                onOpenChange={setArtDetailsModalOpen}
+                artData={selectedArt}
+            />
+        )}
       {/* Edit Profile Modal */}
       <EditProfileModal 
         open={isEditModalOpen}

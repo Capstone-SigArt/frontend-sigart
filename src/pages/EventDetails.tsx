@@ -16,6 +16,7 @@ import { Calendar, Clock, Users, MapPin, Share2, MessageCircle, Heart, MapPinIco
 import { Badge } from "@/components/ui/badge";
 import {Dialog, DialogContent,DialogTitle} from "@/components/ui/dialog.tsx";
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip.tsx";
 
 const API_BASE_URL = import.meta.env.VITE_BACKEND_URL
 
@@ -61,6 +62,7 @@ const EventDetails = () => {
   const [zoomImageUrl, setZoomImageUrl] = useState<string | null>(null);
   const openZoom = (url: string) => setZoomImageUrl(url);
   const closeZoom = () => setZoomImageUrl(null);
+
 
   useEffect(() => {
     const fetchArtworks = async () => {
@@ -319,9 +321,45 @@ const EventDetails = () => {
   if (!eventData) return null; // just in case
   if(!hostData) return null;
 
+  const now = new Date();
+
+// Combine date and time strings to form valid Date objects
+  const eventDate = eventData.date || ''; // e.g. "2025-08-06"
+  const startDateTime = eventDate && eventData.start_time
+      ? new Date(`${eventDate}T${eventData.start_time}`)
+      : null;
+  const endDateTime = eventDate && eventData.end_time
+      ? new Date(`${eventDate}T${eventData.end_time}`)
+      : null;
+
+  console.log("now:", now.toISOString());
+
+  if (startDateTime && !isNaN(startDateTime.getTime())) {
+    console.log("startDateTime:", startDateTime.toISOString());
+  } else {
+    console.log("startDateTime is invalid or missing:", eventData.start_time);
+  }
+
+  if (endDateTime && !isNaN(endDateTime.getTime())) {
+    console.log("endDateTime:", endDateTime.toISOString());
+  } else {
+    console.log("endDateTime is invalid or missing:", eventData.end_time);
+  }
+
+// Enable upload only if joined AND now is within start and end time range
+  const isUploadEnabled =
+      hasJoined &&
+      startDateTime &&
+      endDateTime &&
+      now >= startDateTime &&
+      now <= endDateTime;
+
   const bannerUrl = eventData.cover_image?.trim()
       ? eventData.cover_image.trim()
       : "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&h=300&fit=crop";
+/*
+  console.log("now:", now.toISOString());
+  console.log("startTime:", new Date(eventData.start_time).toISOString());*/
   return (
 
       <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-blue-100 dark:from-blue-900 dark:via-blue-900 dark:to-blue-10 noise-overlay">
@@ -474,7 +512,7 @@ const EventDetails = () => {
                     Upload your masterpiece!
                   </span>
 
-                  {hasJoined ? (
+                  {isUploadEnabled ? (
                       <Button
                           onClick={() => setUploadModalOpen(true)}
                           className="bg-gradient-to-r from-sky-500 to-blue-500 hover:from-sky-600 hover:to-blue-600 text-white rounded-xl shadow-lg px-6"
@@ -482,10 +520,30 @@ const EventDetails = () => {
                         Upload Art
                       </Button>
                   ) : (
-                      <Button disabled className="px-6 rounded-xl bg-gray-300 text-gray-600 cursor-not-allowed">
-                        Join to Upload
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+        <span>
+
+          <Button
+              disabled
+              className="px-6 rounded-xl bg-gray-300 text-gray-600 cursor-not-allowed"
+          >
+            {hasJoined ? "Upload Closed" : "Join to Upload"}
+          </Button>
+        </span>
+                          </TooltipTrigger>
+                          <TooltipContent side="top">
+                            {!hasJoined
+                                ? "You must join the party to upload"
+                                : now < startDateTime
+                                    ? "Upload opens soon"
+                                    : "Upload period has ended"}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                   )}
+
                 </div>
               </div>
               {/*Character filter mapping*/}
