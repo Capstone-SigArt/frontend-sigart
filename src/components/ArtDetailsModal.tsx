@@ -190,20 +190,23 @@ const ArtDetailsModal = ({ open, onOpenChange, artData }: ArtDetailsModalProps) 
             {artData.title}
           </DialogTitle>
           <DialogDescription className="text-sm text-muted-foreground text-center">
-            View artwork details and interact with the community.
+            View artwork details and interact with the community. Click to zoom
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4">
           {/* Image Display */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className={`grid gap-4 ${artData.referenceImageUrl ? 'grid-cols-2' : 'place-items-center'}`}>
 
-            <div className="border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 cursor-zoom-in" onClick = {()=>openZoom(artData.imageUrl)}>
-
-              <img 
-                src={artData.imageUrl} 
-                alt={artData.title}
-                className="w-full h-48 object-cover rounded-xl"
+            <div
+                className={`border border-sky-200 dark:border-sky-600 rounded-2xl p-3 bg-gradient-to-br from-sky-50 to-blue-50 dark:from-sky-900/20 dark:to-blue-900/20 cursor-zoom-in
+  ${!artData.referenceImageUrl ? 'w-2/3 md:w-1/2' : ''}`}
+                onClick={() => openZoom(artData.imageUrl)}
+            >
+              <img
+                  src={artData.imageUrl}
+                  alt={artData.title}
+                  className="w-full h-48 object-cover rounded-xl"
               />
             </div>
             {artData.referenceImageUrl && (
