@@ -141,7 +141,7 @@ const HostParty = () => {
         scheduled_at: formData.startTime, // or a different date/time field
         date: formData.startTime.split('T')[0], // extract date from start datetime
         start_time: formData.startTime.split('T')[1] || '',
-        end_time: formData.endTime.split('T')[1] || '',
+        end_time: formData.endTime || '',
         start_datetime: formData.startTime, // full start datetime
         end_datetime: formData.endTime, // full end datetime
         theme: formData.theme,
@@ -370,11 +370,11 @@ const HostParty = () => {
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    End Date & Time *
+                    End Time *
                   </label>
                 <div className="relative">
                   <Input
-                      type="datetime-local"
+                      type="time"
                         placeholder="Select end date and time"
                       value={formData.endTime}
                       onChange={(e) => handleInputChange('endTime', e.target.value)}
@@ -385,18 +385,28 @@ const HostParty = () => {
                     end-time
                   </span>
                   </div>
-                                     {formData.startTime && formData.endTime && (
-                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                       Duration: {(() => {
-                         const start = new Date(formData.startTime);
-                         const end = new Date(formData.endTime);
-                         const diffMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
-                         const hours = Math.floor(diffMinutes / 60);
-                         const minutes = Math.round(diffMinutes % 60);
-                         return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
-                       })()}
-                     </p>
-                   )}
+                  {formData.startTime && formData.endTime && (
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Duration: {(() => {
+                        const start = new Date(formData.startTime);
+
+                        // Extract date part from startTime
+                        const datePart = formData.startTime.split('T')[0];
+                        const endTime = `${datePart}T${formData.endTime}`;
+                        const end = new Date(endTime);
+
+                        // If the end time is before the start time (e.g., goes past midnight), add a day
+                        if (end < start) {
+                          end.setDate(end.getDate() + 1);
+                        }
+
+                        const diffMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+                        const hours = Math.floor(diffMinutes / 60);
+                        const minutes = Math.round(diffMinutes % 60);
+                        return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+                      })()}
+                      </p>
+                  )}
                 </div>
                 <div className="flex gap-2">
 {/*                  <Button variant="outline" size="sm" className="bg-white/40 border-white/30">Server</Button>

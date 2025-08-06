@@ -427,8 +427,8 @@ const EventDetails = () => {
                     <div>
                       <p className="text-sm text-slate-600 dark:text-slate-400">Time</p>
                       <p className="font-semibold">
-                        {eventData.start_time
-                            ? dayjs(`1970-01-01T${eventData.start_time}`).format("h:mm A")
+                        {eventData.start_time && eventData.end_time
+                            ? `${dayjs(`1970-01-01T${eventData.start_time}`).format("h:mm A")} – ${dayjs(`1970-01-01T${eventData.end_time}`).format("h:mm A")}`
                             : ""}
                       </p>
                     </div>
